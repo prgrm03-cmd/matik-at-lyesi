@@ -4,9 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/",
+    "seed": "node araclar/seedTesti.js",
+    "sema": "node araclar/semaDogrula.js",
+    "iskelet": "node iskelet.js"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "ajv": "8.17.1"
   }
 }

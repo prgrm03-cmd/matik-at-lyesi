@@ -125,7 +125,7 @@ describe('D01.ipucu', () => {
 });
 
 describe('D01.calistir', () => {
-  it('bin seed boyunca animasyon zincirini ve saf başarı sonucunu korur', () => {
+  it('bin seed boyunca animasyon bitse de iskeleti tamamlanmış saymaz', () => {
     for (let seed = 1; seed <= 1000; seed++) {
       const { ctx } = baglam(seed);
       D01.kur(ctx, seed);
@@ -136,7 +136,7 @@ describe('D01.calistir', () => {
       const once = kopya(ctx.durum);
       dondur(ctx.durum);
       const sonuc = D01.basari(ctx);
-      assert.deepEqual(sonuc, { tamam: true, yanParca: false, neden: 'tamam' });
+      assert.deepEqual(sonuc, { tamam: false, yanParca: false, neden: 'yarimKaldi' });
       assert.deepEqual(D01.basari(ctx), sonuc);
       assert.deepEqual(ctx.durum, once);
     }
