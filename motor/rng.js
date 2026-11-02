@@ -61,16 +61,15 @@ export function hash32(metin) {
 /**
  * @param {string} duzenekId
  * @param {number} tekrarSayaci
- * @param {number} zaman
+ * @param {number} [zaman]
  * @returns {number}
  */
-export function seedUret(duzenekId, tekrarSayaci, zaman) {
-  const an = zaman === undefined ? Date.now() : zaman;
+export function seedUret(duzenekId, tekrarSayaci, zaman = Date.now()) {
   if (typeof duzenekId !== 'string' || !Number.isSafeInteger(tekrarSayaci) ||
-      tekrarSayaci < 0 || !Number.isSafeInteger(an) || an < 0) {
+      tekrarSayaci < 0 || !Number.isSafeInteger(zaman) || zaman < 0) {
     throw new Error('PARAMETRE_ARALIK_DISI');
   }
-  return hash32(duzenekId + ':' + tekrarSayaci + ':' + an);
+  return hash32(duzenekId + ':' + tekrarSayaci + ':' + zaman);
 }
 
 // Her üreticinin durumu kendi kapanışında tutulur.
@@ -156,4 +155,5 @@ function haricSec(sayi, min, max, haric, komsuluk) {
     if (sira < uzunluk) return bas + sira;
     sira -= uzunluk;
   }
+  throw new Error('PARAMETRE_ARALIK_DISI');
 }

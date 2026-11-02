@@ -65,8 +65,10 @@ describe('seedUret', () => {
     const saat = baglam.mock.method(Date, 'now', () => 1700000000000);
     dogrula.equal(seedUret('D01', 0), hash32('D01:0:1700000000000'));
     dogrula.equal(saat.mock.callCount(), 1);
+    const seed = seedUret('D01', 2);
+    dogrula.ok(Number.isInteger(seed) && seed >= 0 && seed <= 0xffffffff);
     seedUret('D01', 0, 10);
-    dogrula.equal(saat.mock.callCount(), 1);
+    dogrula.equal(saat.mock.callCount(), 2);
   });
 
   it('Geçersiz sayaç ve zamanı reddeder.', () => {
@@ -77,7 +79,7 @@ describe('seedUret', () => {
   it('Dışa aktarım parametre sayılarını korur.', () => {
     dogrula.equal(rngOlustur.length, 1);
     dogrula.equal(hash32.length, 1);
-    dogrula.equal(seedUret.length, 3);
+    dogrula.equal(seedUret.length, 2);
   });
 });
 
