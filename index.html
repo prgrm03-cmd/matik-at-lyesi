@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <title>Matik</title>
+    <link rel="stylesheet" href="./stil/stil.css">
+    <link rel="stylesheet" href="./stil/tahta.css">
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+    <main id="atolye">
+      <p data-fallback>Tarayıcını güncelle.</p>
+      <output data-hata role="alert" hidden></output>
+      <nav data-dolap></nav>
+      <section data-uygulama hidden>
+        <header class="matik-seridi">
+          <h1 data-baslik></h1>
+          <p data-matik aria-live="polite"></p>
+          <output data-durum aria-live="polite"></output>
+        </header>
+        <div class="tezgah" data-tezgah>
+          <canvas data-sahne tabindex="0" width="1000" height="1000"></canvas>
+        </div>
+        <div class="kemer" data-kemer></div>
+        <aside class="defter" data-defter hidden>
+          <h2 data-etiket="defter"></h2>
+          <button type="button" data-komut="defterKapat" data-etiket="defterKapat"></button>
+        </aside>
+        <footer class="kontroller">
+          <output data-sembol></output>
+          <div data-dugmeler></div>
+          <div class="gezinti">
+            <button type="button" data-ipucu data-komut="ipucu" data-etiket="ipucu"></button>
+            <button type="button" data-komut="defterAc" data-etiket="defterAc"></button>
+            <button type="button" data-dolaba-don data-komut="dolap" data-etiket="dolap"></button>
+          </div>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>

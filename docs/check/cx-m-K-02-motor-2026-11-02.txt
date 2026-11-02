@@ -1,0 +1,63 @@
+K-02 · CX-M · Sözleşme v1.0-taslak · 2026-11-02 (Europe/Istanbul)
+Dal: cx-m/K-02-motor
+Durum: uygulama ve bağımsız inceleme hazır; tam kabul doğrulaması engelli.
+
+Ortam:
+Managed cloud instance container_creation/container_service_failed nedeniyle başlamadı.
+Node, npm, statik sunucu ve gerçek tarayıcı çalıştırılamadı.
+Bu rapor npm run check çıktısı değildir; çalıştırılmayan komutlar yeşil sayılmadı.
+K-04 öncesi biletler §0 npm test + Matematikçe elle kontrol ister.
+K-01 ana dala henüz birleşmedi; geo/ ve motor/rng.js bu dalda değiştirilmedi.
+
+§6.2 komutları (dokuz satır):
+1 lint      ÇALIŞTIRILMADI — K-04 aracı yok; Node ortamı yok.
+2 yasak     ÇALIŞTIRILMADI — K-04 aracı yok; aşağıdaki bağımsız statik tarama yapıldı.
+3 sahiplik  ÇALIŞTIRILMADI — K-04 aracı yok; değişen yollar bilet kapsamıyla karşılaştırıldı.
+4 satir     ÇALIŞTIRILMADI — K-04 aracı yok; V8 ile dosya ve satır uzunlukları tarandı.
+5 sema      ÇALIŞTIRILMADI — K-03 sema.json/Ajv yok; K-02 required kontrolü var.
+6 imza      ÇALIŞTIRILMADI — K-04 aracı yok; D01 dokuz export ve arity bağımsız denetlendi.
+7 test      ÇALIŞTIRILMADI — npm/Node ortamı yok; 72 node:test vakası depoya eklendi.
+8 seed      ÇALIŞTIRILMADI — K-03 aracı yok; D01 1000 seed V8 denetimi aşağıdadır.
+9 boyut     ÇALIŞTIRILMADI — K-04 aracı yok; bağımsız UTF-8 sayımı aşağıdadır.
+
+Gerçekten çalıştırılan denetimler:
+- V8: D01 yedi test gövdesi, 18.030 doğrulama, seed 1..1000; 106 ms.
+  Gerçek K-01 motor/rng.js blob 1d6d55cea3985585ddacc81d5ae7052fc145c8b6 kullanıldı.
+  Parametre/saf çizim/saf başarı/animasyon zinciri; sahne.sayi çağrısı 0.
+  Bu süre Node veya tarayıcı performans kanıtı değildir.
+- V8: son baglam/sembol/zaman kaynaklarında 18/18 test geçti.
+- V8: sahne geometri fixture + sahte DOM ile 15/15 test geçti.
+- V8: giriş/tahta/sunum sahte DOM ile 9/9 test geçti.
+- V8: kayıt/yükleyici/köprü/ilerleme 18 davranış denetimi geçti.
+- V8: gerçek K-01 rng/nokta/tolerans ve K-02 motor kaynakları,
+  sahte UI/çizim/yükleyici bağdaştırıcılarıyla 13/13 entegrasyon denetimi geçti.
+  Seed17 tekrarlanabilirliği; tahta sıfır storage erişimi; frozen 14 alanlı Ctx;
+  girdi→D01; saf çizim; Sonuc; kapalı ctx reddi; çift Çalıştır tek kayıt;
+  I2 JSON metni; sıfır süreli iptal sonrası kayıt olmaması denetlendi.
+- JavaScript kaynaklarının import/export bağları ayrılarak V8 sözdizimi denetimi yapıldı.
+  Bu yöntem gerçek ES modül yüklemesinin veya Node/npm testinin yerini tutmaz.
+- Motor ve D01 dosyalarında 400 satır/dosya ve 100 karakter/satır aşımı yok.
+- D01'de import/DOM/storage/Math.random/zaman erişimi yok; kur çizmez, ciz/basari saftır.
+- K-02 yükleme katkısı: 61.119 UTF-8 bayt (index/main/motor/stil).
+  K-01 geo+RNG ve gelecekteki varlıklar bu katkı hesabına dahil değildir.
+  Tüm birleşik Pages kümesi K-01 sonrası npm run boyut ile yeniden ölçülmelidir.
+
+Gerçek tarayıcı kabulü: ÇALIŞTIRILMADI.
+- Statik sunucuda /index.html?mod=tahta&duzenek=D01&seed=1 açılacak.
+- Telefon 360x640, 390x844, 412x915: pim sürükleme, 24px hayalet, Çalıştır.
+- Tahta 1920x1080: seed17 iki açılış; ses/kayıt/yıldız yok; ipucu=0.
+- Pointer cancel, klavye Tab/ok/Shift+ok/Enter/?, reduced-motion kontrol edilecek.
+- sandbox=allow-scripts iframe: storage hatası görünmeden çalışma denenecek.
+- K-03/K-04 henüz bu dalın parçası değildir.
+
+ADT:
+ADT-002 motor geçmişi ve tur seed etiketi.
+ADT-003 araç açma eşikleri/pilot sırası ve R/E widget dönüş protokolü.
+ADT-004 motor iç bağlantıları, DOM istisnaları ve kayıt oluşturma zamanı.
+Kararlar bekliyor; yeni Ctx/Olay/kayıt şeması veya araç eşiği uydurulmadı.
+D01 tek turlu iskeleti geçici çözümle çalışır; metinler bilete göre TODO-R1.
+
+Birleştirme önkoşulu:
+K-01 → K-02 sırası korunmalı. Çalışan ortamda npm test ve Matematikçe
+gerçek tarayıcı kontrolü tamamlanmadan kabul/yeşil ilan edilmemeli.
+main dalına yazılmadı, birleştirme yapılmadı.

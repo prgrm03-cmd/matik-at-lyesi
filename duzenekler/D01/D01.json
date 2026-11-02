@@ -1,0 +1,68 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D01",
+  "kod": "D01",
+  "surum": "1.0.0",
+  "arac": "A",
+  "baslik": "TODO-R1",
+  "zorluk": 1,
+  "sureDk": 0.5,
+  "kapsam": [
+    "5.3.1"
+  ],
+  "turSayisi": 1,
+  "bayraklar": {
+    "olcuKilidi": false,
+    "kartSayisi": 0,
+    "tahminRafi": false,
+    "sinama": false,
+    "sensorSokme": false,
+    "aciolcerGorunur": false,
+    "yanParca": false
+  },
+  "matik": {
+    "giris": "TODO-R1",
+    "basari": "TODO-R1",
+    "tekrar": "TODO-R1",
+    "yanlisArac": "TODO-R1",
+    "kilit": "TODO-R1"
+  },
+  "ipucu": [
+    {
+      "vurgu": [
+        "pimA"
+      ],
+      "ne": "TODO-R1"
+    },
+    {
+      "metin": "TODO-R1"
+    },
+    {
+      "ne": "TODO-R1"
+    }
+  ],
+  "nedenler": {
+    "tamam": "TODO-R1"
+  },
+  "parametreler": {
+    "konum": {
+      "min": 250,
+      "max": 750,
+      "adim": 1
+    }
+  },
+  "etiketler": {
+    "calistir": "TODO-R1",
+    "ipucu": "TODO-R1",
+    "dolap": "TODO-R1",
+    "defterAc": "TODO-R1",
+    "defterKapat": "TODO-R1",
+    "defter": "TODO-R1",
+    "lazer": "TODO-R1",
+    "pergel": "TODO-R1",
+    "gonye": "TODO-R1",
+    "aciolcer": "TODO-R1",
+    "cetvel": "TODO-R1"
+  },
+  "notlar": "TODO-R1"
+}

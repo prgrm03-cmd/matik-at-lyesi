@@ -1,0 +1,139 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: light;
+  color: #183047;
+  background: #f5f2e9;
+  --metin-olcek: 1;
+  --kenar: #bbc7c9;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--kenar);
+  border-radius: 8px;
+  color: inherit;
+  background: #ffffff;
+  font: inherit;
+  font-size: calc(16px * var(--metin-olcek));
+  cursor: pointer;
+}
+button:disabled { opacity: 0.55; cursor: default; }
+button:focus-visible, canvas:focus-visible {
+  outline: 3px solid #bf5800;
+  outline-offset: -3px;
+}
+h1, h2, p { margin: 0; }
+h1, h2 { font-size: calc(16px * var(--metin-olcek)); }
+p, output { font-size: calc(16px * var(--metin-olcek)); line-height: 1.35; }
+#atolye {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+[data-dolap] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  max-width: 1000px;
+  padding: 20px;
+  margin: auto;
+}
+[data-dolap] button { min-height: 88px; }
+[data-uygulama] {
+  display: grid;
+  grid-template-areas: 'matik' 'sahne' 'kemer' 'kontroller' 'defter';
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(56px, auto) minmax(0, 1fr) auto auto auto;
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  min-height: 400px;
+  max-width: 768px;
+  margin: auto;
+  overflow: auto;
+}
+.matik-seridi {
+  grid-area: matik;
+  min-height: 56px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--kenar);
+}
+[data-matik] { overflow-wrap: anywhere; }
+[data-matik][data-ifade='saskin'] { border-inline-start: 4px dashed currentColor; }
+[data-matik][data-ifade='uzgun'] { border-inline-start: 4px dotted currentColor; }
+[data-durum] { display: block; color: #7d5800; }
+.tezgah {
+  grid-area: sahne;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  background: #fffdf8;
+  touch-action: none;
+}
+.kemer {
+  grid-area: kemer;
+  min-height: 64px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  overflow-x: auto;
+  border-block: 1px solid var(--kenar);
+}
+.kemer > * { flex: 0 0 auto; }
+.kontroller {
+  grid-area: kontroller;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
+}
+[data-dugmeler], .gezinti {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+[data-sembol]:empty { display: none; }
+.defter {
+  grid-area: defter;
+  height: 32vh;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 12px;
+  border-top: 2px solid var(--kenar);
+  background: #ffffff;
+}
+.kivilcim { animation: kivilcim 300ms ease-out; }
+@keyframes kivilcim {
+  from { box-shadow: inset 0 0 0 3px #c28f00; }
+  to { box-shadow: inset 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (orientation: landscape) and (max-width: 768px) {
+  [data-uygulama] {
+    grid-template-areas: 'sahne matik' 'sahne defter' 'kemer kontroller';
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 280px;
+  }
+  .defter { height: auto; max-height: 100%; }
+}
+
+button.vurgu { outline: 3px solid currentColor; outline-offset: -3px; }
+[data-hata] { display: block; padding: 12px; border: 2px solid currentColor; }
