@@ -1,0 +1,44 @@
+K-01 durum kaydı · 2 Kasım 2026 · CX-M
+Dal: cx-m/K-01-geo-rng
+Dayanak main: c347de3bbca1188c1cf18a813331a0231113a6d4
+Okunan belgeler: docs/sozlesme_v1.md ve docs/biletler_v1.md, tamamı.
+
+DURUM: K-01 tamamlanmadı. Kabul raporu değildir.
+npm test: ÇALIŞTIRILAMADI; yeşil sonucu veya Node çalışma süresi yok.
+Neden: bağlı bulut ortamı container_service_failed / environment_startup_failed
+ile açılamadı. exec_command kullanılabilir bir yürütme ortamı bulamadı.
+V8 gövde kontrolleri: 13 nokta/tolerans ve 26 RNG test gövdesi geçti.
+RNG gövde kontrolünde TextEncoder yerine UTF-8 eşdeğeri kullanıldı.
+Bu sonuçlar Node/ESM/npm test doğrulaması yerine geçmez.
+
+Hazırlanan bağımsız bölüm:
+- motor/rng.js: seed'li RNG, yardımcılar ve sabit çıktı vektörleri.
+- geo/nokta.js: uzaklık, orta nokta, yön, ilerleme ve toleranslı eşitlik.
+- geo/tolerans.js: dokuz TOLERANS anahtarı, tAci ve toleransIcinde.
+- test/rng.test.js, test/geo.test.js, test/tolerans.test.js: node:test kaynakları.
+- package.json: ESM, Node >=20, test = node --test test/.
+- docs/hatalar.md: §6.5'in on hata kodu.
+- docs/adt/ADT-001-K01-arayuz-tanimlari.md: karar bekleyen mevcut arayüzler.
+
+Kalan:
+- geo/aci.js, dogru.js, cember.js, kesisim.js, cokgen.js, uretici.js, index.js.
+- §6.3 zorunlu geometri durumlarının tamamı.
+- Kesişim üretimi: 1000 seed x 3 tür.
+- Çokgen ve üçgen üretimi: 1000 seed, dış bükeylik ve yatay taban dışlaması.
+- Gerçek Node 20 üzerinde npm test ve <=10 saniye ölçümü.
+- Biletler §0'a göre Matematikçe'nin elle kontrolü.
+- Tam kabulden sonra §7.3 şablonuyla PR.
+
+npm run check: K-04 henüz yok; biletler §0'daki ön-K-04 istisnası geçerli.
+1 lint: K-04 bekleniyor.
+2 yasak: K-04 bekleniyor.
+3 sahiplik: K-04 bekleniyor.
+4 satir: K-04 bekleniyor.
+5 sema: K-03/K-04 bekleniyor.
+6 imza: K-04 bekleniyor.
+7 test: ÇALIŞTIRILAMADI, yürütme ortamı yok.
+8 seed: K-03 bekleniyor.
+9 boyut: K-04 bekleniyor.
+
+§7.5: “PR yalnız bilet kabul ölçütü karşılanınca.”
+Bu nedenle PR açılmadı; main'e commit veya birleştirme yapılmadı.
