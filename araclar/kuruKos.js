@@ -73,7 +73,7 @@ function gozlemleriDogrula(ctx, gozlem, sonCizim, sonuc) {
 function ilkKurulum(duzenek, ctx, seed, gozlem) {
   duzenek.kur(ctx, seed);
   dogrula(sahneKaydi(ctx).cagrilar.every(c => c.ad === 'pxToBirim'), 'kurCizimYapti');
-  duzenekParametreleriniDogrula(ctx);
+  gozlem.parametreDenetimsiz = duzenekParametreleriniDogrula(ctx);
   if (ctx.mod.tahta) {
     duzenek.tahta(ctx, { metinOlcek: 1.5, ipucuKapali: false, seed,
       toleransGoster: false, dondur: false });

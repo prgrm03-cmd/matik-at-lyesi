@@ -18,6 +18,9 @@ function tohumuDene(birim, seed, ozet) {
   try {
     const kosu = kuruKos(duzenek, veri, seed, { olaylar });
     ozet.sayi += kosu.kayit.sayac.sayi || 0;
+    for (const id of kosu.gozlem.parametreDenetimsiz) {
+      if (!ozet.parametreDenetimsiz.includes(id)) ozet.parametreDenetimsiz.push(id);
+    }
     if (kosu.atlandi) { ozet.atlandi++; return; }
     ipucuTekrariniDene(duzenek, veri, seed);
     ozet.gecti++;
@@ -30,7 +33,10 @@ function tohumuDene(birim, seed, ozet) {
 /** @param {string} kok @returns {Promise<Object>} */
 export async function seedTesti(kok) {
   const bas = performance.now();
-  const ozet = { gecti: 0, atlandi: 0, hata: 0, sayi: 0, ilkHatalar: [], sureMs: 0 };
+  const ozet = {
+    gecti: 0, atlandi: 0, hata: 0, sayi: 0, ilkHatalar: [], sureMs: 0,
+    parametreDenetimsiz: []
+  };
   const kapsam = await kapsamOku(join(kok, 'docs', 'kapsam.json'));
   for (const id of kapsam) {
     const kod = kodBul(id);
@@ -52,6 +58,9 @@ export async function seedTesti(kok) {
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const kok = fileURLToPath(new URL('../', import.meta.url));
   seedTesti(kok).then(ozet => {
+    for (const id of ozet.parametreDenetimsiz) {
+      console.warn(JSON.stringify({ uyari: 'denetimsiz', id, denetim: 'parametreler' }));
+    }
     console.log(JSON.stringify(ozet));
     if (ozet.hata > 0) process.exitCode = 1;
   }).catch(hata => {

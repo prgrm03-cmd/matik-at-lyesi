@@ -11,13 +11,17 @@ export async function kuruCalistir(arg) {
   const seed = seedOku(arg[2]);
   const { duzenek, veri, olaylar } = await kuruDosyasiOku(arg[0], arg[1]);
   const sonuc = kuruKos(duzenek, veri, seed, { olaylar, tahta: arg.includes('--tahta') });
+  const parametreDenetimsiz = sonuc.gozlem.parametreDenetimsiz;
+  for (const id of parametreDenetimsiz) {
+    console.warn(JSON.stringify({ uyari: 'denetimsiz', id, denetim: 'parametreler' }));
+  }
   if (arg.includes('--dokum')) {
     for (const cagri of sonuc.kayit.cagrilar) {
       console.log(JSON.stringify(cagri));
     }
   }
   console.log(JSON.stringify({ id: veri.id, seed, atlandi: sonuc.atlandi,
-    sonuc: sonuc.sonuc, sayi: sonuc.kayit.sayac.sayi || 0 }));
+    sonuc: sonuc.sonuc, sayi: sonuc.kayit.sayac.sayi || 0, parametreDenetimsiz }));
   return sonuc;
 }
 

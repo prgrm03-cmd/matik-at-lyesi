@@ -1,4 +1,4 @@
-import { dogrula, parametreleriDogrula } from './seedKurallari.js';
+import { parametreleriDogrula } from './seedKurallari.js';
 
 const URETICILER = new Set([
   'rastgeleDisBukeyCokgen', 'rastgeleUcgen', 'kesisimGarantiliParametre', 'kesisimCemberCember'
@@ -47,7 +47,9 @@ function fabrikalariIzle(ctx, gozlem) {
 
 /** @param {Ctx} ctx @returns {Object} Yalnız araç içi gözlem kaydı; Ctx'e alan eklemez. */
 export function gozlemBagla(ctx) {
-  const gozlem = { asama: 'kur', geo: [], haric: [], tablolar: [], raflar: [] };
+  const gozlem = {
+    asama: 'kur', geo: [], haric: [], tablolar: [], raflar: [], parametreDenetimsiz: []
+  };
   ctx.rng = rngIzle(ctx.rng, gozlem);
   ctx.geo = { ...ctx.geo };
   for (const ad of URETICILER) {
@@ -62,10 +64,11 @@ export function gozlemBagla(ctx) {
   return gozlem;
 }
 
-/** @param {Ctx} ctx @returns {void} */
+/** @param {Ctx} ctx @returns {string[]} Adaptörü olmayan düzenek kimlikleri. */
 export function duzenekParametreleriniDogrula(ctx) {
-  if (Object.keys(ctx.veri.parametreler).length === 0) return;
+  if (Object.keys(ctx.veri.parametreler).length === 0) return [];
   const uyarlayici = PARAMETRE_UYARLAYICILARI[ctx.id];
-  dogrula(typeof uyarlayici === 'function', 'parametreUyarlayicisiEksik', 'IMZA_EKSIK');
+  if (typeof uyarlayici !== 'function') return [ctx.id];
   parametreleriDogrula(ctx.veri.parametreler, uyarlayici(ctx));
+  return [];
 }

@@ -53,8 +53,11 @@ Geçici çözüm:
    Ctx veya düzenek dışa aktarımlarına yeni alan eklenmez.
    D01 parametre adaptörü mevcut pimler dizisindeki başlangıç x/y
    değerlerini konum aralığına karşı denetler. Yeni düzenekte parametre
-   varsa ve adaptörü yoksa açık denetim eksiği hatası verilir; varsayılan
-   durum alanı veya sessiz geçiş uydurulmaz.
+   varsa ve adaptörü yoksa kuru koşu sürer; CLI "denetimsiz" uyarısı
+   verir, seed özeti parametreDenetimsiz listesinde kimliği bir kez tutar.
+   Bu parametrelerin denetlendiği iddia edilmez; başka ihlaller yine
+   hatadır. Fable'ın PR #4 incelemesinden iletilen zorunlu düzeltme
+   uygulanır (3 Kasım). Varsayılan durum alanı uydurulmaz.
    Halka tampon denetimi tamHaric çağrısının gerçek haric/komsuluk
    girdilerini denetler. Motorun kayıttan geçmiş aktarımı hâlâ ADT-002
    kapsamındadır; bu PR onu çözülmüş saymaz.
@@ -74,8 +77,9 @@ Geçici çözüm:
    aşamaları K-04 kapsamındadır; bu PR onları yeşil göstermeyecektir.
 
 Alternatif: 25 kimliğin beşini çıkarmak teslim listesini eksiltir.
-Yeni zorunlu durum alanları ADT-002'yi gizlice çözer. Kontrol edilmeyen
-durumu başarılı saymak seed raporunu yanıltır. Bu yollar uygulanmaz.
+Yeni zorunlu durum alanları ADT-002'yi gizlice çözer. Denetlenmeyen
+parametreleri sessizce denetlenmiş saymak seed raporunu yanıltır.
+Bu yollar uygulanmaz.
 
 --- Matematikçe ---
 Ön karar: bekliyor; kayıt Fable onayı anlamına gelmez.

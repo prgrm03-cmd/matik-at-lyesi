@@ -31,10 +31,12 @@ describe('parametreleriDogrula', () => {
     assert.throws(() => parametreleriDogrula(araliklar, {}), { message: 'IMZA_EKSIK' });
   });
 
-  it('gelecek düzenek için gözlem uyarlayıcısı yoksa sessizce geçmez', () => {
+  it('eksik adaptörü denetimsiz sayar ve mevcut adaptörün ihlalini reddeder', () => {
     const ctx = { id: 'D02', veri: { parametreler: { aci: { min: 1, max: 90 } } } };
-    assert.throws(() => duzenekParametreleriniDogrula(ctx), hata =>
-      hata.message === 'IMZA_EKSIK' && hata.denetim === 'parametreUyarlayicisiEksik');
+    assert.deepEqual(duzenekParametreleriniDogrula(ctx), ['D02']);
+    assert.deepEqual(duzenekParametreleriniDogrula({
+      id: 'D02', veri: { parametreler: {} }
+    }), []);
     const d01 = { id: 'D01', veri: VERI,
       durum: { pimler: [{ x: 249, y: 250 }, { x: 500, y: 750 }] } };
     assert.throws(() => duzenekParametreleriniDogrula(d01),
@@ -164,6 +166,7 @@ describe('seedTesti', () => {
     assert.equal(ozet.atlandi, 0);
     assert.equal(ozet.gecti, 1000);
     assert.equal(ozet.sayi, 0);
+    assert.deepEqual(ozet.parametreDenetimsiz, []);
     assert.ok(ozet.sureMs < 10000);
   });
 });
@@ -187,6 +190,21 @@ describe('seedTesti', () => {
       assert.equal(ozet.ilkHatalar[0].denetim, 'varyantKimligi');
     } finally {
       await rm(dizin, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('sahneyiDogrula', () => {
+  it('yön etiketlerini kabul ederken koordinat adlarını reddeder', () => {
+    const kayit = anahtar => ({
+      cagrilar: [{ ad: 'etiket', arg: [{ x: 0, y: 0 }, anahtar] }], sayac: {}
+    });
+    for (const anahtar of ['yon', 'yukari', 'yatay', 'xenon']) {
+      assert.doesNotThrow(() => sahneyiDogrula(VERI, kayit(anahtar)));
+    }
+    for (const anahtar of ['x', 'y', 'x1', 'y2', 'xKonum', 'yKonum']) {
+      assert.throws(() => sahneyiDogrula(VERI, kayit(anahtar)),
+        hata => hata.denetim === 'koordinatEtiketi');
     }
   });
 });

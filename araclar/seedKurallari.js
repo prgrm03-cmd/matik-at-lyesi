@@ -69,7 +69,7 @@ export function sahneyiDogrula(veri, kayit) {
     'olcuKilidi', 'OLCU_KILIDI_IHLALI');
   for (const cagri of kayit.cagrilar) {
     if (cagri.ad === 'etiket') {
-      dogrula(typeof cagri.arg[1] === 'string' && !/^[xy]/i.test(cagri.arg[1]),
+      dogrula(typeof cagri.arg[1] === 'string' && !/^[xy](\d|[A-Z]|$)/.test(cagri.arg[1]),
         'koordinatEtiketi');
     }
     if (veri.kod === 'D15' && cagri.ad === 'sayi') {
