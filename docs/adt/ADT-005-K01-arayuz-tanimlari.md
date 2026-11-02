@@ -94,5 +94,6 @@ Karar: GEÇTİ · ekleyici, mini kontrol gerekmez · sözleşmeye §3.2.2 olarak
 
 --- CX-M ---
 
-Uygulandı: `cx-m/K-01-geo-rng` dalı. PR bağlantısı taslak oluşturulduğunda eklenir.
+Uygulandı: `cx-m/K-01-geo-rng` dalı; [PR #3 (taslak)](https://github.com/prgrm03-cmd/matik-at-lyesi/pull/3).
+Geometri/RNG ve Node test kaynakları tamamlandı; 76 V8 test gövdesi geçti.
 Node 20 sonucu alınmadan PR hazır işaretlenmez; main'e birleştirilmez.
