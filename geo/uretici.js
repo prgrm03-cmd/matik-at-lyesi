@@ -1,11 +1,13 @@
 import { ilerle, yonAci, uzaklik } from './nokta.js';
 import { aciFark } from './aci.js';
+import { noktaDogruUzakligi } from './dogru.js';
 import { kesisimDogruDogru } from './kesisim.js';
 import { disBukeyMi, ucgenTuru } from './cokgen.js';
 import { TOLERANS } from './tolerans.js';
 
 const EPS = 1e-6;
 const DENEME_SINIRI = 100;
+const EN_AZ_ARALIK = 40;
 const IZGARA_ADIM = 50;
 const KENAR_TURLERI = ['cesitkenar', 'ikizkenar', 'eskenar'];
 const ACI_TURLERI = ['dar', 'dik', 'genis'];
@@ -115,7 +117,9 @@ export function rastgeleDisBukeyCokgen(rng, n, secenek) {
 }
 
 function ucgenIstegi(rng, tur) {
-  const kenar = tur.kenar === undefined ? rng.sec(KENAR_TURLERI) : tur.kenar;
+  const kenarSecenekleri = tur.aci === 'dik' || tur.aci === 'genis' ?
+    ['cesitkenar', 'ikizkenar'] : KENAR_TURLERI;
+  const kenar = tur.kenar === undefined ? rng.sec(kenarSecenekleri) : tur.kenar;
   if (!KENAR_TURLERI.includes(kenar) ||
       (tur.aci !== undefined && !ACI_TURLERI.includes(tur.aci))) gecersiz();
   const aci = tur.aci === undefined ?
@@ -141,11 +145,11 @@ function ucgenAcilari(rng, tur) {
     const B = rng.tam(50, 80);
     return B === 60 ? null : [180 - 2 * B, B, B];
   }
-  const A = rng.tam(1, 89);
-  const B = rng.tam(1, 89);
+  const A = rng.tam(20, 85);
+  const B = rng.tam(20, 85);
   const C = 180 - A - B;
   const acilar = [A, B, C];
-  return C <= 0 || C >= 90 ||
+  return C < 20 || C > 89 ||
     acilar.some((aci, i) => acilar.some((diger, j) => i !== j && Math.abs(aci - diger) < 5)) ?
     null : acilar;
 }
@@ -236,7 +240,8 @@ function izgaraDisindaMi(P) {
 }
 
 function uzakNoktalar(noktalar) {
-  return noktalar.every((P, i) => noktalar.every((Q, j) => i === j || uzaklik(P, Q) >= 40));
+  return noktalar.every((P, i) =>
+    noktalar.every((Q, j) => i === j || uzaklik(P, Q) >= EN_AZ_ARALIK));
 }
 
 function sensorUret(rng, adet) {
@@ -256,13 +261,11 @@ function sensorUret(rng, adet) {
 
 function alarmUret(rng, sensor, adet) {
   const alarm = [];
-  const A = sensor[0];
-  const B = sensor[1];
-  const uzunluk = uzaklik(A, B);
+  const d = { A: sensor[0], yon: yonAci(sensor[0], sensor[1]) };
   for (let deneme = 0; alarm.length < adet && deneme < DENEME_SINIRI; deneme++) {
     const P = izgaraDisiNokta(rng);
-    const capraz = (B.x - A.x) * (P.y - A.y) - (B.y - A.y) * (P.x - A.x);
-    if (Math.abs(capraz) / uzunluk > EPS && uzakNoktalar([...sensor, ...alarm, P])) alarm.push(P);
+    if (noktaDogruUzakligi(P, d) >= EN_AZ_ARALIK &&
+        uzakNoktalar([...sensor, ...alarm, P])) alarm.push(P);
   }
   if (alarm.length !== adet) gecersiz();
   return alarm;

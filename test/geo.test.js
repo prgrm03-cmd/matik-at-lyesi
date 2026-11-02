@@ -174,12 +174,12 @@ describe('dikme', () => {
 });
 
 describe('hangiTarafta', () => {
-  it('Doğru üstünü sıfır ve iki karşı tarafı zıt işaretlerle bildirir.', () => {
+  it('Doğru üstünü sıfır, yönün sağını bir ve solunu eksi bir olarak bildirir.', () => {
     const d = { A: O, yon: 0 };
     dogrula.equal(geo.hangiTarafta({ x: 50, y: 0 }, d), 0);
-    const alt = geo.hangiTarafta({ x: 50, y: 10 }, d);
-    const ust = geo.hangiTarafta({ x: 50, y: -10 }, d);
-    dogrula.deepEqual([alt, ust].sort(), [-1, 1]);
+    dogrula.equal(geo.hangiTarafta({ x: 50, y: 10 }, d), 1);
+    dogrula.equal(geo.hangiTarafta({ x: 50, y: -10 }, d), -1);
+    dogrula.equal(geo.hangiTarafta({ x: -10, y: 50 }, { A: O, yon: 90 }), 1);
   });
 });
 
@@ -356,5 +356,19 @@ describe('ucgenTuru', () => {
     dogrula.deepEqual(geo.ucgenTuru([100, 100, 180]), { kenar: 'ikizkenar', aci: 'genis' });
     dogrula.throws(() => geo.ucgenTuru([1, 2, 3]), HATA);
     dogrula.throws(() => geo.ucgenTuru([0, 2, 2]), HATA);
+  });
+});
+
+describe('icAcilar', () => {
+  it('Ondalıklı iç açıyı yuvarlamadan korur.', () => {
+    const c = { koseler: [O, { x: 4, y: 0 }, { x: 4, y: 3 }] };
+    yakin(geo.icAcilar(c)[0], 36.86989764584402);
+  });
+});
+
+describe('disAci', () => {
+  it('Ondalıklı dış açıyı yuvarlamadan korur.', () => {
+    const c = { koseler: [O, { x: 4, y: 0 }, { x: 4, y: 3 }] };
+    yakin(geo.disAci(c, 0), 143.13010235415598);
   });
 });

@@ -1,0 +1,63 @@
+K-01 düzeltme kaydı · 4 Kasım 2026 · CX-M
+Dal: cx-m/K-01-geo-rng
+Dayanak main: c347de3bbca1188c1cf18a813331a0231113a6d4
+Fix-up üst commit: 360926b6ac2dacf5c44968fffb5a564f39a98671
+Karar: ADT-005 ek (a)–(e); Fable incelemesi KOŞULLU GEÇTİ.
+PR: https://github.com/prgrm03-cmd/matik-at-lyesi/pull/3
+Sözleşme dosyası değiştirilmedi.
+
+npm test: Matematikçe kutu sonucu bekleniyor
+Node 20.19.2 kutu çıktısı ve süre: Matematikçe dolduracak.
+Hazırlanan test kaynakları: 4 dosya, 80 test.
+PR gövdesinde veya yorumlarında Node sonucu/süre kanıtı bulunmuyor.
+Bağlı ortam environment_startup_failed durumunda; terminal kullanılamıyor.
+PR KOŞULLU ve taslak kalır; yeni commit'in yeşil kanıtı olmadan hazır işaretlenmez.
+
+V8 gövde kontrolü (npm test değildir):
+- Gerçek modül kaynakları ve geo iç bağımlılıkları birlikte çalıştırıldı.
+- ESM ve node:test/node:assert için bellek içi eşdeğer yükleyici kullanıldı.
+- TextEncoder yerine UTF-8 eşdeğeri kullanıldı.
+- Gerçek Node/ESM yükleyicisi ve npm test doğrulanmadı.
+- Test gövdesi: 80 geçti; 0 başarısız.
+- Doğrulama: 218187.
+- Süre: 1565 ms (V8 gövdesi; Node/npm süresi değildir).
+
+Fable koşulları:
+1. icAcilar ve disAci ham döner; ondalıklı açı regresyonları eklendi.
+2. Eksik kenar seçimi istenen açıyla uyumlu; dik/geniş/boş istek ayrı ayrı 1000 seed.
+3. Dar çeşitkenar A/B aralığı 20–85, C aralığı 20–89; 7 tür x 1000 seed'de min açı >=15.
+4. Alarm–sensör doğrusu uzaklığı >=40; 1000 seed'de başarısızlık 0.
+   DENEME_SINIRI=100 korundu; ek RNG tüketimi veya sensör yerleşimi değişikliği yok.
+5. hangiTarafta sağ/sol işareti belgede ve sabit örneklerde tanımlandı.
+6. Rapor istenen 2026-11-04 yoluna taşındı; ADT tarihi/ekleri güncellendi.
+   Node sonucu henüz yok; kullanıcı talimatındaki kutu bekleme yolu uygulandı.
+
+Korunan seed kontrolleri:
+- Çember kesişimi: 3 tür x 1000.
+- Çokgen: n=3..8 için 6 x 1000.
+- Açık üçgen türleri: 7 x 1000; yalnız açı/boş tür istekleri: 3 x 1000.
+- Kol uzunluğu, çember ızgarası, lazer sahneleri, RNG dışlamaları ve açı üreticileri.
+
+Statik denetim:
+- geo/index.js değişmedi; tam 50 dışa aktarım ve bütün parametre sayıları korundu.
+- Geo dışına import, DOM, Date, performance, Math.random veya Math.PI yok.
+- Üreticide trigonometri ve yeni hata kodu yok.
+- Dosya <=400 satır, fonksiyon <=40 satır, satır <=100 karakter.
+
+npm run check: K-04 henüz yok; ön-K-04 istisnası geçerli.
+1 lint: tam ESLint çalıştırılmadı; kaynak sınırları kontrol edildi.
+2 yasak: kaynak taraması geçti; K-04 betiği bekleniyor.
+3 sahiplik: yalnız istenen düzeltme yolları değişti.
+4 satir: kaynak sınırları kontrol edildi.
+5 sema: K-01'de düzenek JSON'u yok.
+6 imza: V8'de 50 dışa aktarım ve parametre sayıları değişmedi.
+7 test: npm test: Matematikçe kutu sonucu bekleniyor; süre Matematikçe dolduracak.
+8 seed: geo.seed.test.js gövdeleri V8'de geçti; K-03 betiği bekleniyor.
+9 boyut: K-04 bekleniyor.
+
+Kutu doğrulaması:
+Bekleniyor. Matematikçe güncel fix-up commit'inde Node 20.19.2 ile npm test çalıştırıp
+tam çıktı, test sayısı ve süreyi PR gövdesine ekleyecek.
+Sonrasında bu bölüm “tamamlandı; yeşil kanıtı PR gövdesinde” olarak güncellenebilir.
+Yeşil kanıt gelene kadar PR KOŞULLU kalır; son onayı Fable verir.
+Main'e birleştirme yapılmaz.

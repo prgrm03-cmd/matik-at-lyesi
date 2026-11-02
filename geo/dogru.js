@@ -64,7 +64,11 @@ export function dogruKenarKesisimi(d) {
   return noktalar.sort((a, b) => a.t - b.t).map((kayit) => kayit.P);
 }
 
-/** @param {Nokta} P @param {Dogru} d @returns {-1|0|1} */
+/**
+ * +1: P, doğrunun yön vektörüne göre sağ tarafta (ekranda, y aşağı; yon:0 için P.y > A.y);
+ * −1: sol; 0: doğru üstünde (≤ EPS).
+ * @param {Nokta} P @param {Dogru} d @returns {-1|0|1}
+ */
 export function hangiTarafta(P, d) {
   noktaDogrula(P);
   const yon = dogruYonu(d);

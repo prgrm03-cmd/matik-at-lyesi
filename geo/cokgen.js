@@ -95,16 +95,16 @@ function icAcilarHam(c) {
     c.koseler[(i + n - 1) % n], yon));
 }
 
-/** @param {Cokgen} c @returns {number[]} */
+/** @param {Cokgen} c @returns {number[]} ham derece */
 export function icAcilar(c) {
-  return icAcilarHam(c).map((aci) => Math.round(aci));
+  return icAcilarHam(c);
 }
 
-/** @param {Cokgen} c @param {number} i @returns {number} */
+/** @param {Cokgen} c @param {number} i @returns {number} ham derece */
 export function disAci(c, i) {
   cokgenDogrula(c);
   koseDogrula(c, i);
-  return Math.round(180 - icAcilarHam(c)[i]);
+  return 180 - icAcilarHam(c)[i];
 }
 
 /** @param {Cokgen} c @param {number} i @param {number} j @returns {boolean} */

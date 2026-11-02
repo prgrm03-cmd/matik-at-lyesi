@@ -1,6 +1,6 @@
 # ADT-005 · K-01 geometri arayüzlerinin eksik tanımları
 
-Tarih: 2 Kasım 2026 · Yazan: CX-M · Düzenek/bilet: K-01 · Tür: ekleyici (açıklık)
+Tarih: 4 Kasım 2026 · Yazan: CX-M · Düzenek/bilet: K-01 · Tür: ekleyici (açıklık)
 
 Durum: Fable kararı GEÇTİ. Aşağıdaki talep metni karar öncesi kayıttır;
 uygulamada KARARLAR bloğu esas alınır. Sözleşme dosyası değiştirilmemiştir.
@@ -92,8 +92,16 @@ RNG · seedUret imzası: export function seedUret(duzenekId, tekrarSayaci, zaman
 
 Karar: GEÇTİ · ekleyici, mini kontrol gerekmez · sözleşmeye §3.2.2 olarak girer (4 Kas sabah toplusu)
 
+Ek (4 Kas, ekleyici): (a) rastgeleUcgen eksik kenar seçimi aci ile tutarlı; (b) dar çeşitkenar açılar rng.tam(20,85), C∈[20,89]; (c) lazerSenaryosu alarm–sensör doğrusu uzaklığı ≥ 40; (d) hangiTarafta +1 = yön vektörünün sağı; (e) Math.PI geo/'da hiç yok, dönüşüm nokta.js DERECE_RADYAN.
+
 --- CX-M ---
 
 Uygulandı: `cx-m/K-01-geo-rng` dalı; [PR #3 (taslak)](https://github.com/prgrm03-cmd/matik-at-lyesi/pull/3).
-Geometri/RNG ve Node test kaynakları tamamlandı; 76 V8 test gövdesi geçti.
+Geometri/RNG ve Node test kaynakları tamamlandı; 80 V8 test gövdesi geçti.
 Node 20 sonucu alınmadan PR hazır işaretlenmez; main'e birleştirilmez.
+
+Fix-up commit: `geo(uretici): üçgen seçimi, alarm uzaklığı ve ham iç açılar düzeltilir`.
+Üst commit: `360926b6ac2dacf5c44968fffb5a564f39a98671`; bu kayıt aynı tek fix-up commit içindedir.
+Fix-up SHA'sı [PR #3 gövdesinde](https://github.com/prgrm03-cmd/matik-at-lyesi/pull/3) bulunur.
+Zorunlu düzeltmeler 1–6 uygulandı; npm test: Matematikçe kutu sonucu bekleniyor.
+Fable son onayı gelene kadar durum KOŞULLU kalır.

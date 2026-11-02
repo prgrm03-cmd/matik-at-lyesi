@@ -96,6 +96,7 @@ describe('rastgeleUcgen', () => {
         dogrula.ok(Math.abs((A.x + B.x + C.x) / 3) < 1e-6);
         dogrula.ok(Math.abs((A.y + B.y + C.y) / 3) < 1e-6);
         dogrula.deepEqual(geo.ucgenTuru(kenarlar(c)), { kenar, aci });
+        dogrula.ok(Math.min(...geo.icAcilar(c)) >= 15 - 1e-6);
         for (const yon of yonler(c)) {
           dogrula.ok([0, 90, 180, 270].every((eksen) => geo.aciFark(yon, eksen) > 3));
         }
@@ -148,7 +149,7 @@ describe('lazerSenaryosu', () => {
       noktalar.forEach(izgaraDisi);
       const d = { A: sensor[0], yon: geo.yonAci(sensor[0], sensor[1]) };
       dogrula.ok(sensor.every((P) => geo.dogruUzerindeMi(P, d, 1e-6)));
-      dogrula.ok(alarm.every((P) => geo.noktaDogruUzakligi(P, d) > 1e-6));
+      dogrula.ok(alarm.every((P) => geo.noktaDogruUzakligi(P, d) >= 40 - 1e-6));
       for (let i = 0; i < noktalar.length; i += 1) {
         for (let j = i + 1; j < noktalar.length; j += 1) {
           dogrula.ok(geo.uzaklik(noktalar[i], noktalar[j]) >= 40 - 1e-6);
@@ -194,6 +195,28 @@ describe('rastgeleEgim', () => {
       const egim = geo.rastgeleEgim(rngOlustur(seed));
       dogrula.ok(Number.isInteger(egim));
       dogrula.ok((egim >= 10 && egim <= 80) || (egim >= 100 && egim <= 170));
+    }
+  });
+});
+
+describe('rastgeleUcgen', () => {
+  it('Yalnız dik veya geniş açı istendiğinde bin başlangıçta uygun kenar türünü seçer.', () => {
+    for (const aci of ['dik', 'genis']) {
+      for (let seed = 1; seed <= 1000; seed += 1) {
+        const c = geo.rastgeleUcgen(rngOlustur(seed), { aci });
+        dogrula.equal(geo.ucgenTuru(kenarlar(c)).aci, aci);
+      }
+    }
+  });
+
+  it('Boş tür isteğiyle bin başlangıçta geçerli üçgen üretir.', () => {
+    for (let seed = 1; seed <= 1000; seed += 1) {
+      const c = geo.rastgeleUcgen(rngOlustur(seed), {});
+      dogrula.equal(c.koseler.length, 3);
+      dogrula.equal(geo.disBukeyMi(c), true);
+      const tur = geo.ucgenTuru(kenarlar(c));
+      dogrula.ok(['cesitkenar', 'ikizkenar', 'eskenar'].includes(tur.kenar));
+      dogrula.ok(['dar', 'dik', 'genis'].includes(tur.aci));
     }
   });
 });
