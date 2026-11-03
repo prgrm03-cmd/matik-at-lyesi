@@ -9,6 +9,7 @@
     "lazer": "docs/adt/ADT-006-K03-kuru-arayuz.md §2"
   },
   "notlar": [
+    "ADT-010: Lazer.gecerMi(noktalar, tolBirim) tezgâh birimi alır; TOLERANS.hatBirim px dönüşümü olmadan kullanılır. İmza değişmez.",
     "Sayılar sözleşmedeki parametre sayısıdır; mevcut dışa aktarımlar Function.length ile ölçülür.",
     "Widget ortak ciz/girdi/durum/yukle yöntemleri §3.3 girişinden gelir.",
     "Eksik modüller bekleniyor. Sözleşmede modül export adı tanımlanmayan dosya geldiğinde ADT eşlemesi gerekir.",

@@ -35,8 +35,16 @@ function icinde(P, noktalar) {
   return ic;
 }
 
+function yonluAci(bas, bit, yon) {
+  // Yay ve aciYayi açıları sayıdır; geo.aciOlc ise kol noktaları bekler (#11).
+  if (!Number.isFinite(bas) || !Number.isFinite(bit) || !['saat', 'ters'].includes(yon)) {
+    throw new Error('PARAMETRE_ARALIK_DISI');
+  }
+  return geo.aciNormalize(yon === 'ters' ? bas - bit : bit - bas);
+}
+
 function yayNoktalari(y) {
-  const aci = geo.aciOlc(y.merkez, y.bas, y.bit, y.yon);
+  const aci = yonluAci(y.bas, y.bit, y.yon);
   const adet = Math.max(1, Math.ceil(aci / 5));
   const yon = y.yon === 'ters' ? -1 : 1;
   return Array.from({ length: adet + 1 }, (_, i) =>
@@ -109,7 +117,7 @@ function aciHazirla(arg, birim) {
   const secenek = arg[3] || {};
   const r = secenek.r || birim(18);
   const aci = geo.aciFark(kol1, kol2);
-  const yon = geo.aciOlc(merkez, kol1, kol2, 'saat') <= 180 ? 'saat' : 'ters';
+  const yon = yonluAci(kol1, kol2, 'saat') <= 180 ? 'saat' : 'ters';
   if (aci === 90) {
     const A = geo.ilerle(merkez, kol1, r);
     const B = geo.ilerle(A, kol2, r);

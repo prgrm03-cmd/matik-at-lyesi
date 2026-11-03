@@ -8,6 +8,8 @@ import { TOLERANS } from './tolerans.js';
 const EPS = 1e-6;
 const DENEME_SINIRI = 100;
 const EN_AZ_ARALIK = 40;
+// ADT-010 / I-010: sensör ve alarm aralığı iki hat toleransından büyük kalmalıdır.
+if (!(2 * TOLERANS.hatBirim < EN_AZ_ARALIK)) throw new Error('ADT_010_HAT_ARALIGI');
 const IZGARA_ADIM = 50;
 const KENAR_TURLERI = ['cesitkenar', 'ikizkenar', 'eskenar'];
 const ACI_TURLERI = ['dar', 'dik', 'genis'];
