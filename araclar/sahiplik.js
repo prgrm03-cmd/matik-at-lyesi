@@ -73,6 +73,7 @@ export function yolYetkisi(ajan, yol) {
     return yol === 'test.html' || yol.startsWith('docs/cihaz/');
   }
   if (yol === 'widget/aciolcer.js') return ajan === 'CX-A';
+  if (yol === 'test/aciolcer.test.js') return ajan === 'CX-A';
   const duzenek = /^duzenekler\/([^/]+)\//.exec(yol)?.[1];
   if (duzenek) return DUZENEK_SAHIPLERI[ajan]?.includes(duzenek) || false;
   if (ajan !== 'CX-M') return false;
