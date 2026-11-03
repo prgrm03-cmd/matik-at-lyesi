@@ -77,11 +77,13 @@ describe('veriOku', () => {
 });
 
 describe('yukle', () => {
-  it('gerçek kapsamdan D02 JSON ve modülünü yükleyip aynı seed ile kurar', async () => {
+  it('gerçek kapsamdan D02 JSON ve modülünü yükleyip aynı seed ile kurar', async t => {
+    const oncekiFetch = globalThis.fetch;
+    t.after(() => { globalThis.fetch = oncekiFetch; });
     globalThis.fetch = async adres => ({
       ok: true, json: async () => JSON.parse(await readFile(adres, 'utf8'))
     });
-    assert.deepEqual(await kapsamOku(), ['D01', 'D02']);
+    assert.deepEqual(await kapsamOku(), ['D01', 'D02', 'D09a']);
     const { duzenek, veri } = await yukle('D02');
     assert.equal(duzenek.id, 'D02');
     assert.equal(veri.id, 'D02');
@@ -98,6 +100,32 @@ describe('yukle', () => {
       assert.ok(ilk.durum.alarmlar.length > 0);
       assert.deepEqual(ilk.durum.sensorler, tekrar.durum.sensorler);
       assert.deepEqual(ilk.durum.alarmlar, tekrar.durum.alarmlar);
+    }
+  });
+
+  it('gerçek kapsamdan D09a varyantını D09 modülüyle yükler', async t => {
+    const oncekiFetch = globalThis.fetch;
+    t.after(() => { globalThis.fetch = oncekiFetch; });
+    globalThis.fetch = async adres => ({
+      ok: true, json: async () => JSON.parse(await readFile(adres, 'utf8'))
+    });
+    const { duzenek, veri } = await yukle('D09a');
+    assert.equal(duzenek.id, 'D09');
+    assert.equal(veri.id, 'D09a');
+    assert.equal(duzenek.surum, veri.surum);
+    assert.ok(Object.isFrozen(veri.parametreler.aci));
+    const { ctxSahteOlustur } = await import('../motor/ctxSahte.js');
+    for (const seed of [17, 42, 101]) {
+      const ilk = ctxSahteOlustur('D09a', veri, seed);
+      const tekrar = ctxSahteOlustur('D09a', veri, seed);
+      duzenek.kur(ilk, seed);
+      duzenek.kur(tekrar, seed);
+      assert.equal(ilk.durum.seed, seed);
+      assert.equal(ilk.durum.hedef, tekrar.durum.hedef);
+      assert.equal(ilk.durum.kol1Yon, tekrar.durum.kol1Yon);
+      assert.equal(ilk.durum.kolUzunlugu, tekrar.durum.kolUzunlugu);
+      assert.deepEqual(ilk.durum.aciolcer.okuma(ilk.durum.kol2Yon),
+        tekrar.durum.aciolcer.okuma(tekrar.durum.kol2Yon));
     }
   });
 

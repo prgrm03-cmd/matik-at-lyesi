@@ -160,12 +160,12 @@ describe('sahneyiDogrula', () => {
 });
 
 describe('seedTesti', () => {
-  it('kapsamdaki D01 ve D02 için biner gerçek seed koşar ve atlama yapmaz', async () => {
+  it('kapsamdaki D01, D02 ve D09a için biner gerçek seed koşar ve atlama yapmaz', async () => {
     const ozet = await seedTesti(fileURLToPath(new URL('../', import.meta.url)));
     assert.equal(ozet.hata, 0, JSON.stringify(ozet.ilkHatalar));
     assert.equal(ozet.atlandi, 0);
-    assert.equal(ozet.gecti, 2000);
-    assert.equal(ozet.sayi, 0);
+    assert.equal(ozet.gecti, 3000);
+    assert.equal(ozet.sayi, 12000);
     assert.deepEqual(ozet.parametreDenetimsiz, []);
     assert.ok(ozet.sureMs < 10000);
   });
