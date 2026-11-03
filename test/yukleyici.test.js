@@ -77,6 +77,30 @@ describe('veriOku', () => {
 });
 
 describe('yukle', () => {
+  it('gerçek kapsamdan D02 JSON ve modülünü yükleyip aynı seed ile kurar', async () => {
+    globalThis.fetch = async adres => ({
+      ok: true, json: async () => JSON.parse(await readFile(adres, 'utf8'))
+    });
+    assert.deepEqual(await kapsamOku(), ['D01', 'D02']);
+    const { duzenek, veri } = await yukle('D02');
+    assert.equal(duzenek.id, 'D02');
+    assert.equal(veri.id, 'D02');
+    assert.equal(duzenek.surum, veri.surum);
+    assert.ok(Object.isFrozen(veri.parametreler.konum));
+    const { ctxSahteOlustur } = await import('../motor/ctxSahte.js');
+    for (const seed of [17, 42, 101]) {
+      const ilk = ctxSahteOlustur('D02', veri, seed);
+      const tekrar = ctxSahteOlustur('D02', veri, seed);
+      duzenek.kur(ilk, seed);
+      duzenek.kur(tekrar, seed);
+      assert.equal(ilk.durum.seed, seed);
+      assert.ok(ilk.durum.sensorler.length > 0);
+      assert.ok(ilk.durum.alarmlar.length > 0);
+      assert.deepEqual(ilk.durum.sensorler, tekrar.durum.sensorler);
+      assert.deepEqual(ilk.durum.alarmlar, tekrar.durum.alarmlar);
+    }
+  });
+
   it('D01 modülünü dokuz imza ve aynı sürümle yükler', async () => {
     sunucuKur(await ornekOku());
     const { duzenek, veri } = await yukle('D01');

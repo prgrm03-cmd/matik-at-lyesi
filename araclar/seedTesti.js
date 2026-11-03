@@ -30,14 +30,19 @@ function tohumuDene(birim, seed, ozet) {
   }
 }
 
-/** @param {string} kok @returns {Promise<Object>} */
-export async function seedTesti(kok) {
+/** @param {string} kok @param {string} [secilenId] @returns {Promise<Object>} */
+export async function seedTesti(kok, secilenId) {
   const bas = performance.now();
   const ozet = {
     gecti: 0, atlandi: 0, hata: 0, sayi: 0, ilkHatalar: [], sureMs: 0,
     parametreDenetimsiz: []
   };
-  const kapsam = await kapsamOku(join(kok, 'docs', 'kapsam.json'));
+  if (secilenId !== undefined) {
+    dogrula(typeof secilenId === 'string' && /^D(0[1-9]|1[0-8])[a-f]?$/.test(secilenId),
+      'duzenekSecimi', 'DUZENEK_YOK');
+  }
+  const kapsam = secilenId === undefined ?
+    await kapsamOku(join(kok, 'docs', 'kapsam.json')) : [secilenId];
   for (const id of kapsam) {
     const kod = kodBul(id);
     let birim;
@@ -55,15 +60,19 @@ export async function seedTesti(kok) {
   return ozet;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+async function ana() {
+  dogrula(process.argv.length <= 3, 'duzenekSecimi', 'PARAMETRE_ARALIK_DISI');
   const kok = fileURLToPath(new URL('../', import.meta.url));
-  seedTesti(kok).then(ozet => {
-    for (const id of ozet.parametreDenetimsiz) {
-      console.warn(JSON.stringify({ uyari: 'denetimsiz', id, denetim: 'parametreler' }));
-    }
-    console.log(JSON.stringify(ozet));
-    if (ozet.hata > 0) process.exitCode = 1;
-  }).catch(hata => {
+  const ozet = await seedTesti(kok, process.argv[2]);
+  for (const id of ozet.parametreDenetimsiz) {
+    console.warn(JSON.stringify({ uyari: 'denetimsiz', id, denetim: 'parametreler' }));
+  }
+  console.log(JSON.stringify(ozet));
+  if (ozet.hata > 0) process.exitCode = 1;
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  ana().catch(hata => {
     console.error(JSON.stringify({ hata: hata.message, denetim: hata.denetim }));
     process.exitCode = 1;
   });

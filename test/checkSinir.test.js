@@ -117,6 +117,17 @@ test('dal önekleri ve sahiplik tablosu başka ajanın alanını açmaz', () => 
   assert.equal(yolYetkisi('Matematikce', 'sozlesme.md'), false);
 });
 
+test('motorun kapsam listesi yalnız CX-M sahipliğindedir', () => {
+  assert.equal(yolYetkisi('CX-M', 'docs/kapsam.json'), true);
+  const digerleri = ['CX-A', 'CX-Z', 'GM-D', 'GM-T', 'GM-E', 'Matematikce', 'Fable', 'main', null];
+  for (const ajan of digerleri) {
+    assert.equal(yolYetkisi(ajan, 'docs/kapsam.json'), false, String(ajan));
+  }
+  for (const yol of ['docs/kapsam.json.bak', 'docs/adt/ADT-010.md', 'docs/sozlesme_v1.md']) {
+    assert.equal(yolYetkisi('CX-M', yol), false, yol);
+  }
+});
+
 test('R1 metni değişebilir ama bayrak, parametre ve vurgu hedefi değişemez', () => {
   const once = veri();
   const sonra = structuredClone(once);

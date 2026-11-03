@@ -32,10 +32,10 @@ describe('parametreleriDogrula', () => {
   });
 
   it('eksik adaptörü denetimsiz sayar ve mevcut adaptörün ihlalini reddeder', () => {
-    const ctx = { id: 'D02', veri: { parametreler: { aci: { min: 1, max: 90 } } } };
-    assert.deepEqual(duzenekParametreleriniDogrula(ctx), ['D02']);
+    const ctx = { id: 'D03', veri: { parametreler: { aci: { min: 1, max: 90 } } } };
+    assert.deepEqual(duzenekParametreleriniDogrula(ctx), ['D03']);
     assert.deepEqual(duzenekParametreleriniDogrula({
-      id: 'D02', veri: { parametreler: {} }
+      id: 'D03', veri: { parametreler: {} }
     }), []);
     const d01 = { id: 'D01', veri: VERI,
       durum: { pimler: [{ x: 249, y: 250 }, { x: 500, y: 750 }] } };
@@ -160,11 +160,11 @@ describe('sahneyiDogrula', () => {
 });
 
 describe('seedTesti', () => {
-  it('kapsamdaki D01 için bin gerçek seed koşar ve atlama yapmaz', async () => {
+  it('kapsamdaki D01 ve D02 için biner gerçek seed koşar ve atlama yapmaz', async () => {
     const ozet = await seedTesti(fileURLToPath(new URL('../', import.meta.url)));
     assert.equal(ozet.hata, 0, JSON.stringify(ozet.ilkHatalar));
     assert.equal(ozet.atlandi, 0);
-    assert.equal(ozet.gecti, 1000);
+    assert.equal(ozet.gecti, 2000);
     assert.equal(ozet.sayi, 0);
     assert.deepEqual(ozet.parametreDenetimsiz, []);
     assert.ok(ozet.sureMs < 10000);

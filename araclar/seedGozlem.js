@@ -1,11 +1,12 @@
-import { parametreleriDogrula } from './seedKurallari.js';
+import { parametreleriDogrula, d02Parametreleri } from './seedKurallari.js';
 
 const URETICILER = new Set([
   'rastgeleDisBukeyCokgen', 'rastgeleUcgen', 'kesisimGarantiliParametre', 'kesisimCemberCember'
 ]);
 // Yollar düzeneğin mevcut kodundan gelir; yeni bir ctx.durum sözleşmesi değildir (ADT-006).
 const PARAMETRE_UYARLAYICILARI = {
-  D01: ctx => ({ konum: ctx.durum.pimler.flatMap(pim => [pim.x, pim.y]) })
+  D01: ctx => ({ konum: ctx.durum.pimler.flatMap(pim => [pim.x, pim.y]) }),
+  D02: d02Parametreleri
 };
 
 /** @param {unknown} deger @returns {unknown} Kayıt anındaki değerleri korur. */
