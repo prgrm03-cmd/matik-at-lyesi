@@ -195,7 +195,9 @@ export default [
           message: 'geo DOM/zaman erişimi kullanamaz (§2.2, §5.2).'
         }))
       ],
-      'no-restricted-imports': ['error', { patterns: [{ regex: '^(?!\\./)|(?:^|/)\\.\\.(?:/|$)|%' }] }],
+      'no-restricted-imports': ['error', {
+        patterns: [{ regex: '^(?!\\./)|(?:^|/)\\.\\.(?:/|$)|%' }]
+      }],
       'sozlesme/yasak-anahtar': ['error', [...DOM, 'localStorage', 'sessionStorage', 'indexedDB']]
     }
   },
