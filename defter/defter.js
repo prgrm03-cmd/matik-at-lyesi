@@ -10,8 +10,11 @@ import { kisayolYuvasiOlustur } from './kisayolYuvasi.js';
  * @property {Sahne} sahne
  * @property {Matik} matik
  * @property {{defterAc:()=>void, defterKapat:()=>void}} arayuz
- * @property {(nesne:Object)=>void} kayit
+ * @property {(nesne:Object, tanim:DefterTanim)=>void} kayit
  */
+/** @typedef {{tur:'tahminRafi', hucreler:Hucre[], etiketAnahtari:string}|
+ * {tur:'kuralKarti', disliler:Disli[], kalip:string, anahtar:string}|
+ * {tur:'kisayolYuvasi', kabulEdilen:string[], sensorler:string[]}} DefterTanim */
 /** @typedef {Object} Defter
  * @property {(ayar:TahminRafiAyar)=>TahminRafi} tahminRafi
  * @property {(ayar:KuralKartiAyar)=>KuralKarti} kuralKarti
@@ -29,9 +32,23 @@ function izinDogrula(ortam, ad) {
   if (ortam.bayraklar?.[ad] === false) gecersiz();
 }
 
-function kaydet(ortam, nesne) {
-  ortam.kayit(nesne);
+function kaydet(ortam, nesne, tanim) {
+  ortam.kayit(nesne, tanim);
   return nesne;
+}
+
+function hucreKopyala(hucre) {
+  const { ad, tur } = hucre;
+  if (tur === 'sayac') return { ad, tur, min: hucre.min, max: hucre.max };
+  return { ad, tur, secenekler: [...hucre.secenekler] };
+}
+
+function rafiKur(ortam, ayar) {
+  const raf = tahminRafiOlustur(ayar, ortam);
+  return kaydet(ortam, raf, {
+    tur: 'tahminRafi', hucreler: ayar.hucreler.map(hucreKopyala),
+    etiketAnahtari: ayar.etiketAnahtari
+  });
 }
 
 function kartFabrikasi(ortam) {
@@ -44,7 +61,10 @@ function kartFabrikasi(ortam) {
     const kalip = ortam.kartlar[anahtar]?.kalip;
     if (typeof kalip !== 'string') gecersiz();
     const kart = kuralKartiOlustur(ayar, { ...ortam, kalip });
-    kaydet(ortam, kart);
+    kaydet(ortam, kart, {
+      tur: 'kuralKarti', kalip, anahtar,
+      disliler: ayar.disliler.map(disli => ({ ad: disli.ad, secenekler: [...disli.secenekler] }))
+    });
     sayi += 1;
     return kart;
   };
@@ -57,7 +77,9 @@ function yuvayiKur(ortam, ayar) {
     izinDogrula(ortam, 'sensorSokme');
     sok(sensor);
   };
-  return kaydet(ortam, yuva);
+  return kaydet(ortam, yuva, {
+    tur: 'kisayolYuvasi', kabulEdilen: [...ayar.kabulEdilen], sensorler: [...ayar.sensorler]
+  });
 }
 
 /** @param {DefterOrtam} ortam @returns {Defter} */
@@ -67,7 +89,7 @@ export function defterOlustur(ortam) {
   return {
     tahminRafi(ayar) {
       izinDogrula(ortam, 'tahminRafi');
-      return kaydet(ortam, tahminRafiOlustur(ayar, ortam));
+      return rafiKur(ortam, ayar);
     },
     kuralKarti: kartFabrikasi(ortam),
     sina(kart, uretici, n) {

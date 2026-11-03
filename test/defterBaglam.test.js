@@ -25,13 +25,14 @@ function veriOlustur() {
       kartUymaz: 'card' } };
 }
 
-function baglamKur() {
+function baglamKur(kancalar = {}) {
   const veri = veriOlustur();
   const { sahne } = sahteSahneOlustur(veri);
   const ctx = { veri, sahne, rng: rngOlustur(1), mod: { tahta: false } };
   const arayuz = Object.fromEntries([
     'soyle', 'ifade', 'kivilcim', 'sembol', 'defterAc', 'defterKapat'
   ].map(ad => [ad, () => {}]));
+  Object.assign(arayuz, kancalar);
   const hizmetler = hizmetleriOlustur(ctx, arayuz, { ses: false });
   return { ctx, hizmetler };
 }
@@ -79,6 +80,33 @@ describe('ctxSahteOlustur', () => {
 });
 
 describe('hizmetleriOlustur', () => {
+  it('kaydı listeye ve panel kancasına iletir ve önce eski paneli temizler', () => {
+    const cagrilar = [];
+    const { ctx, hizmetler } = baglamKur({
+      defterTemizle: () => cagrilar.push('temizle'),
+      defterKayit: (nesne, tanim) => cagrilar.push({ nesne, tanim })
+    });
+    assert.deepEqual(cagrilar, ['temizle']);
+    const raf = ctx.defter.tahminRafi(RAF);
+    const kart = ctx.defter.kuralKarti(KART);
+    assert.deepEqual(hizmetler.defterler, [raf, kart]);
+    assert.deepEqual(cagrilar.slice(1).map(kayit => kayit.nesne), [raf, kart]);
+    assert.deepEqual(cagrilar[1].tanim, { tur: 'tahminRafi', ...RAF });
+    assert.deepEqual(cagrilar[2].tanim, {
+      tur: 'kuralKarti', anahtar: 'k1', kalip: '[n]', disliler: KART.disliler
+    });
+    assert.notEqual(cagrilar[1].tanim.hucreler[0], RAF.hucreler[0]);
+    assert.notEqual(cagrilar[2].tanim.disliler[0], KART.disliler[0]);
+  });
+
+  it('panel kancaları olmayan sahte arayüzle kayıt yapar', () => {
+    const { ctx, hizmetler } = baglamKur();
+    const raf = ctx.defter.tahminRafi(RAF);
+    assert.deepEqual(hizmetler.defterler, [raf]);
+    assert.doesNotThrow(() => ctx.defter.ac());
+    assert.doesNotThrow(() => ctx.defter.kapat());
+  });
+
   it('Defter nesnelerini bir kez kaydeder ve girdiyi düzeneğe geçirir', async () => {
     const { ctx, hizmetler } = baglamKur();
     const raf = ctx.defter.tahminRafi(RAF);
@@ -101,6 +129,9 @@ describe('hizmetleriOlustur', () => {
 describe('calistir', () => {
   it('Çalıştır ile kayıtlı tahmin rafını kilitler ve diğer nesneleri korur', async t => {
     const ortam = motorOrtami(t);
+    const icerik = ortam.kok.ownerDocument.createElement('div');
+    icerik.dataset.defterIcerik = '';
+    ortam.ogeler.defter.append(icerik);
     ortam.veri.bayraklar.tahminRafi = true;
     await baslat({ kok: ortam.kok, url: new URLSearchParams('seed=42') });
     const ctx = await duzenekAc('D01', 42);
@@ -112,6 +143,9 @@ describe('calistir', () => {
     assert.throws(() => raf.hucreKoy('n', 3), { message: 'WIDGET_AYAR_GECERSIZ' });
     assert.deepEqual(raf.deger(), { n: 2 });
     assert.equal(yuva.kart, null);
+    const dugmeler = icerik.querySelectorAll('button');
+    assert.equal(dugmeler.length, 2);
+    assert.ok(dugmeler.every(dugme => dugme.disabled));
   });
 });
 

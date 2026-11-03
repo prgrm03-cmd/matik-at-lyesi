@@ -29,6 +29,16 @@ function yuvaAyari() {
     cozucu() { return { tamam: true, doldurulan: ['a'], eksik: [] }; } };
 }
 
+function tanimliOrtam() {
+  const bag = ortamOlustur();
+  const tanimlar = [];
+  bag.ortam.kayit = (nesne, tanim) => {
+    bag.kayitlar.push(nesne);
+    tanimlar.push(tanim);
+  };
+  return { ...bag, tanimlar, defter: defterOlustur(bag.ortam) };
+}
+
 describe('defterOlustur', () => {
   it('yalnız sözleşmedeki altı üyeyi sunar', () => {
     const { ortam } = ortamOlustur();
@@ -130,6 +140,123 @@ describe('defterOlustur', () => {
     defter.kapat();
     defter.ac();
     assert.deepEqual(panel, ['ac', 'kapat', 'ac']);
+    assert.deepEqual(kayitlar, []);
+  });
+
+  it('kayıt ikinci parametrede yalnız tanımı verir ve gizli alanları taşımaz', () => {
+    const { defter, tanimlar, kayitlar } = tanimliOrtam();
+    const rafAyar = rafAyari();
+    const kartAyar = kartAyari();
+    const yuvaAyar = yuvaAyari();
+    for (const oge of [rafAyar, ...rafAyar.hucreler, ...kartAyar.disliler, yuvaAyar]) {
+      oge.dogru = { gizli: 'cevap' };
+    }
+    for (const oge of [rafAyar, ...rafAyar.hucreler, kartAyar, ...kartAyar.disliler]) {
+      oge.cozucu = yuvaAyar.cozucu;
+    }
+    const raf = defter.tahminRafi(rafAyar);
+    const kart = defter.kuralKarti(kartAyar);
+    const yuva = defter.kisayolYuvasi(yuvaAyar);
+    assert.deepEqual(kayitlar, [raf, kart, yuva]);
+    assert.deepEqual(tanimlar, [
+      { tur: 'tahminRafi', etiketAnahtari: 'raf',
+        hucreler: [{ ad: 'a', tur: 'sayac', min: 1, max: 3 }] },
+      { tur: 'kuralKarti', kalip: 'x', anahtar: 'k1',
+        disliler: [{ ad: 'a', secenekler: [1, 2] }] },
+      { tur: 'kisayolYuvasi', kabulEdilen: ['k1'], sensorler: ['a'] }
+    ]);
+  });
+
+  it('hücre dizisini öğeleri ve seçenekleriyle iki yönde bağımsız kopyalar', () => {
+    const { defter, tanimlar } = tanimliOrtam();
+    const ayar = rafAyari();
+    ayar.hucreler.push({ ad: 'b', tur: 'secim', secenekler: ['x', 'y'] });
+    const raf = defter.tahminRafi(ayar);
+    const tanim = tanimlar[0];
+    assert.notEqual(tanim.hucreler, ayar.hucreler);
+    for (let i = 0; i < ayar.hucreler.length; i++) {
+      assert.notEqual(tanim.hucreler[i], ayar.hucreler[i]);
+    }
+    assert.notEqual(tanim.hucreler[1].secenekler, ayar.hucreler[1].secenekler);
+    ayar.hucreler[0].min = -5;
+    ayar.hucreler[1].ad = 'c';
+    ayar.hucreler[1].secenekler[0] = 'z';
+    ayar.hucreler.push({ ad: 'd', tur: 'sayac', min: 0, max: 1 });
+    assert.deepEqual(tanim.hucreler, [
+      { ad: 'a', tur: 'sayac', min: 1, max: 3 },
+      { ad: 'b', tur: 'secim', secenekler: ['x', 'y'] }
+    ]);
+    tanim.hucreler[0].max = 8;
+    tanim.hucreler[1].ad = 'e';
+    tanim.hucreler[1].secenekler.push('w');
+    tanim.hucreler.pop();
+    assert.equal(ayar.hucreler[0].max, 3);
+    assert.equal(ayar.hucreler[1].ad, 'c');
+    assert.deepEqual(ayar.hucreler[1].secenekler, ['z', 'y']);
+    assert.equal(ayar.hucreler.length, 3);
+    raf.hucreKoy('a', 3);
+    raf.hucreKoy('b', 'y');
+    assert.deepEqual(raf.deger(), { a: 3, b: 'y' });
+    assert.throws(() => raf.hucreKoy('a', 8), HATA);
+    assert.throws(() => raf.hucreKoy('b', 'w'), HATA);
+  });
+
+  it('dişli dizisini öğeleri ve seçenekleriyle iki yönde bağımsız kopyalar', () => {
+    const { defter, tanimlar } = tanimliOrtam();
+    const ayar = kartAyari();
+    const kart = defter.kuralKarti(ayar);
+    const tanim = tanimlar[0];
+    assert.notEqual(tanim.disliler, ayar.disliler);
+    assert.notEqual(tanim.disliler[0], ayar.disliler[0]);
+    assert.notEqual(tanim.disliler[0].secenekler, ayar.disliler[0].secenekler);
+    ayar.disliler[0].ad = 'b';
+    ayar.disliler[0].secenekler[0] = 9;
+    ayar.disliler.push({ ad: 'c', secenekler: ['x'] });
+    assert.deepEqual(tanim.disliler, [{ ad: 'a', secenekler: [1, 2] }]);
+    tanim.disliler[0].ad = 'd';
+    tanim.disliler[0].secenekler.push(8);
+    tanim.disliler.push({ ad: 'e', secenekler: ['y'] });
+    assert.deepEqual(ayar.disliler, [
+      { ad: 'b', secenekler: [9, 2] }, { ad: 'c', secenekler: ['x'] }
+    ]);
+    kart.disliCevir('a', 2);
+    assert.deepEqual(kart.ayar(), { a: 2 });
+    assert.equal(kart.dogruMu(), true);
+    assert.throws(() => kart.disliCevir('a', 8), HATA);
+  });
+
+  it('kısayol kabul ve sensör dizilerini iki yönde bağımsız kopyalar', () => {
+    const { defter, tanimlar } = tanimliOrtam();
+    const ayar = yuvaAyari();
+    const yuva = defter.kisayolYuvasi(ayar);
+    const tanim = tanimlar[0];
+    assert.notEqual(tanim.kabulEdilen, ayar.kabulEdilen);
+    assert.notEqual(tanim.sensorler, ayar.sensorler);
+    ayar.kabulEdilen[0] = 'k2';
+    ayar.sensorler[0] = 'b';
+    assert.deepEqual(tanim.kabulEdilen, ['k1']);
+    assert.deepEqual(tanim.sensorler, ['a']);
+    tanim.kabulEdilen.push('k3');
+    tanim.sensorler.push('c');
+    assert.deepEqual(ayar.kabulEdilen, ['k2']);
+    assert.deepEqual(ayar.sensorler, ['b']);
+    assert.equal(yuva.tak(defter.kuralKarti(kartAyari())), true);
+    yuva.sok('a');
+    assert.throws(() => yuva.sok('c'), HATA);
+  });
+
+  it('geçersiz alt fabrika ayarını nesne ve tanım kaydetmeden reddeder', () => {
+    const { defter, tanimlar, kayitlar } = tanimliOrtam();
+    const raf = rafAyari();
+    raf.hucreler[0].max = 0;
+    const kart = kartAyari();
+    kart.disliler[0].secenekler = [];
+    const yuva = yuvaAyari();
+    yuva.sensorler = [1];
+    assert.throws(() => defter.tahminRafi(raf), HATA);
+    assert.throws(() => defter.kuralKarti(kart), HATA);
+    assert.throws(() => defter.kisayolYuvasi(yuva), HATA);
+    assert.deepEqual(tanimlar, []);
     assert.deepEqual(kayitlar, []);
   });
 });

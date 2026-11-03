@@ -96,6 +96,7 @@ function matikOlustur(veri, arayuz) {
 
 /** @param {Ctx} ctx @param {Object} arayuz @param {Object} ayarlar @returns {Object} */
 export function hizmetleriOlustur(ctx, arayuz, ayarlar) {
+  arayuz.defterTemizle?.();
   const hizmetler = { widgetler: [], defterler: [] };
   ctx.widget = widgetOlustur(ctx, hizmetler);
   ctx.matik = matikOlustur(ctx.veri, arayuz);
@@ -103,7 +104,10 @@ export function hizmetleriOlustur(ctx, arayuz, ayarlar) {
     bayraklar: ctx.veri.bayraklar, kartlar: ctx.veri.kartlar ?? {},
     rng: ctx.rng, sahne: ctx.sahne, matik: ctx.matik,
     arayuz: { defterAc: () => arayuz.defterAc(), defterKapat: () => arayuz.defterKapat() },
-    kayit: nesne => hizmetler.defterler.push(nesne)
+    kayit: (nesne, tanim) => {
+      hizmetler.defterler.push(nesne);
+      arayuz.defterKayit?.(nesne, tanim);
+    }
   });
   ctx.sembol = sembolOlustur((metin) => arayuz.sembol(metin));
   ctx.ses = sesOlustur(ctx.mod, ayarlar);

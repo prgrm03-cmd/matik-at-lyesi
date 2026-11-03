@@ -9,9 +9,16 @@
 }
 [data-tahta='true'] {
   --kenar: #71859a;
-  color: #f4f7fa;
-  background: #152536;
+  --metin: #f4f7fa;
+  --zemin: #152536;
+  --yuzey: #233b51;
+  --sahne: #101c29;
+  --odak: #ffbd73;
+  color: var(--metin);
+  background: var(--zemin);
+  color-scheme: dark;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 [data-tahta='true'] [data-uygulama] {
   max-width: 1920px;
@@ -19,15 +26,21 @@
   grid-template-columns: minmax(0, 9fr) minmax(0, 7fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
 }
-[data-tahta='true'] button { min-width: 64px; min-height: 64px; }
 [data-tahta='true'] button,
-[data-tahta='true'] .defter { color: #f4f7fa; background: #233b51; }
-[data-tahta='true'] .defter { height: auto; max-height: 100%; }
-[data-tahta='true'] canvas { background: #101c29; }
+[data-tahta='true'] [data-defter-icerik] select { min-width: 64px; min-height: 64px; }
+[data-tahta='true'] .defter {
+  height: auto;
+  max-height: 100%;
+  border-inline-start: 2px solid var(--kenar);
+}
 [data-tahta='true'] [data-durum] { display: none; }
 [data-tahta='true'] .matik-seridi { padding: 16px; }
 [data-tahta='true'] [data-komut='defterKapat'] { display: none; }
-[data-tahta='true'][data-kontrast='false'] { color: #183047; background: #f5f2e9; }
-[data-tahta='true'][data-kontrast='false'] canvas { background: #fffdf8; }
-[data-tahta='true'][data-kontrast='false'] button,
-[data-tahta='true'][data-kontrast='false'] .defter { color: #183047; background: #ffffff; }
+[data-tahta='true'][data-kontrast='false'] {
+  --metin: #183047;
+  --zemin: #f5f2e9;
+  --yuzey: #ffffff;
+  --sahne: #fffdf8;
+  --odak: #bf5800;
+  color-scheme: light;
+}
