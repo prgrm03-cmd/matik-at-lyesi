@@ -179,7 +179,17 @@
     {
       "yol": "widget/aciolcer.js",
       "arayuz": "Aciolcer",
-      "disarim": null
+      "disarim": {
+        "aciolcerOlustur": 2
+      },
+      "fabrika": "aciolcerOlustur",
+      "argumanlar": [
+        {
+          "hizasiz": false,
+          "olcekYonu": "ic"
+        }
+      ],
+      "kaynak": "ADT-K05 adayi; K-05 ikinci rng parametresi"
     },
     {
       "yol": "widget/aciTablosu.js",

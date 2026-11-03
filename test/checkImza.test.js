@@ -37,10 +37,13 @@ test('K-04: imza listesi sözleşme §3.2/3.3/3.4/4.1 kaynaklarıyla eşleşir',
   assert.ok(hatalar.some(hata => hata.includes('Pergel')));
 });
 
-test('K-04: mevcut D01, geo ve lazer geçer; eksik dosyalar bekleniyor', async () => {
+test('K-04: D01, geo, lazer and protractor pass; missing modules remain pending', async () => {
   const sonuc = await imzaDogrula(KOK);
   assert.deepEqual(sonuc.hatalar, []);
-  assert.ok(sonuc.uyarilar.includes('widget/aciolcer.js: bekleniyor'));
+  assert.ok(sonuc.uyarilar.every(uyari => !uyari.includes('widget/aciolcer.js')));
+  const tanim = IMZA_LISTESI.moduller.find(modul => modul.yol === 'widget/aciolcer.js');
+  assert.deepEqual(tanim.disarim, { aciolcerOlustur: 2 });
+  assert.equal(tanim.fabrika, 'aciolcerOlustur');
   assert.ok(sonuc.uyarilar.includes('defter/defter.js: bekleniyor'));
 });
 
@@ -99,7 +102,7 @@ test('K-04: listede olmayan widget dosyası kırmızı', async t => {
 
 test('K-04: yeni planlı dosyada tanımsız modül export adı sessiz kabul edilmez', async t => {
   const kok = geciciDepo(t);
-  writeFileSync(join(kok, 'widget/aciolcer.js'), 'export function aciolcer(ayar) {}\n');
+  writeFileSync(join(kok, 'widget/gonye.js'), 'export function gonye(ayar) {}\n');
   const sonuc = await imzaDogrula(kok);
   assert.ok(sonuc.hatalar.some(hata => hata.includes('export eşlemesi için ADT gerekli')));
 });

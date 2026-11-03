@@ -1,6 +1,7 @@
 import { sembolOlustur } from './sembolPaneli.js';
 import { sesOlustur } from './ses.js';
 import { lazerOlustur } from '../widget/lazer.js';
+import { aciolcerOlustur } from '../widget/aciolcer.js';
 import { bekleyenFabrika as bekleyen } from './sahteKayit.js';
 
 function widgetOlustur(ctx, hizmetler) {
@@ -10,7 +11,9 @@ function widgetOlustur(ctx, hizmetler) {
       if (veri.bayraklar.olcuKilidi && ayar?.kilitli !== true) {
         throw new Error('OLCU_KILIDI_IHLALI');
       }
-      return bekleyen();
+      const nesne = aciolcerOlustur(ayar, ctx.rng);
+      hizmetler.widgetler.push(nesne);
+      return nesne;
     },
     aciTablosu: bekleyen,
     pergel: bekleyen,
