@@ -1,0 +1,58 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D03",
+  "kod": "D03",
+  "surum": "1.0.0",
+  "arac": "A",
+  "baslik": "Dönen Işın",
+  "zorluk": 1,
+  "sureDk": 2,
+  "kapsam": ["5.3.1"],
+  "turSayisi": 3,
+  "bayraklar": {
+    "olcuKilidi": false,
+    "kartSayisi": 0,
+    "tahminRafi": false,
+    "sinama": false,
+    "sensorSokme": false,
+    "aciolcerGorunur": false
+  },
+  "matik": {
+    "giris": "Lazer kafası bu kez kapağa vidalı. Çarkı çevir, ışın iki sensöre de uğrasın.",
+    "basari": "Işın kafadan çıktı, tek yöne aktı; arkadaki alarm uykuda kaldı.",
+    "tekrar": "Aynı makine, başka sipariş. Parçalar yeni."
+  },
+  "nedenler": {
+    "tamam": "İki sensör de ışığı gördü, makine siparişi çıkardı.",
+    "alarmYandi": "Işın yandaki alarma değdi, tezgâh durdu.",
+    "sensorKacti": "Işın sensörlerin yanından geçti, değmedi.",
+    "tersYon": "Işık arkaya akmadı; sensörler ışının sırtında kaldı. Işın tek yöne gider.",
+    "yarimKaldi": "Bir şey eksik. Makine çalıştı, yarı yolda sustu."
+  },
+  "ipucu": [
+    {
+      "vurgu": ["sensor0", "sensor1", "alarm0", "alarm1"],
+      "ne": "Takılan alarm veya ışığın henüz uğramadığı sensör vurgulanır."
+    },
+    {
+      "metin": "Çarkı çevirdikçe ışının ucu döner; kafanın arkasına ışık gitmez."
+    },
+    {
+      "ne": "Çark, ışın yan alarmın dış tarafına gelene kadar sensörlere doğru çevrilir."
+    }
+  ],
+  "etiketler": {
+    "calistir": "Çalıştır"
+  },
+  "parametreler": {
+    "yon": { "min": 0, "max": 359, "adim": 1, "haric": [0, 90, 180, 270] },
+    "sapma": { "min": 15, "max": 40 },
+    "uzaklik": { "min": 180, "max": 380 },
+    "ara": { "min": 120, "max": 220 },
+    "baslangic": { "min": 60, "max": 130 },
+    "konum": { "min": 200, "max": 800 },
+    "cark": { "min": 1, "max": 1, "adim": 1 },
+    "sure": { "min": 900, "max": 900 }
+  },
+  "notlar": "sınır: açı sayısı gösterilmez; koordinat yok; ışın-doğru farkı arka alarmla görülür."
+}
