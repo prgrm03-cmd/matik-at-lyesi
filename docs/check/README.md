@@ -38,3 +38,14 @@ arayüzlerini, ADT-006 mevcut lazer fabrikası ve kuru koşu davranışını aç
 Testler geçici klasörlerde çalışır; depodaki D01'e veya diğer testlerin dosyalarına
 yazmaz. Dev bağımlılıkları yalnız eslint ve ajv'dir; node_modules commit edilmez.
 Hakan testi bu altyapı biletinin kapsamına girmez.
+
+## K-04 kayıtlı kanıt
+
+3 Kasım 2026: kaynak commit `c810f1a8e2447f802d1d966c7a8f481cf2f4acc4`,
+[Node 20 CI](https://github.com/prgrm03-cmd/matik-at-lyesi/actions/runs/41582600663).
+Rapor aynı koşunun konsol çıktısından aynen alınmıştır:
+[cx-m-K-04-check-2026-11-03.txt](./cx-m-K-04-check-2026-11-03.txt).
+Dokuz komut yeşil; 318/318 test (mevcut 218 + yeni 100); 1000/1000 seed,
+0 hata, 0 sayi çağrısı. Check 9,75 saniye; Node testleri 4,84 saniye.
+Bu kayıt commit'i yalnız rapor ve bu açıklamayı ekler.
+Push koşusunda PR gövdesi yokluğu uyarıdır; PR koşusunda gövde ADT- ile denetlenir.

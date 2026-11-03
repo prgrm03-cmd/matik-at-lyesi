@@ -1,0 +1,9 @@
+✓ npm run lint
+✓ npm run yasak
+✓ npm run sahiplik | ⚠ PR gövdesi yok; imzaListesi ADT- denetimi CI/PR üzerinde bekleniyor.
+✓ npm run satir
+✓ npm run sema | { | "dosyaSayisi": 1, | "hatalar": [] | } | metin: uygun
+✓ npm run imza | İmza: tüm mevcut dışa aktarımlar geçerli. | ⚠ widget/aciolcer.js: bekleniyor | ⚠ widget/aciTablosu.js: bekleniyor | ⚠ widget/pergel.js: bekleniyor | ⚠ widget/gonye.js: bekleniyor | ⚠ defter/defter.js: bekleniyor | ⚠ defter/tahminRafi.js: bekleniyor | ⚠ defter/kuralKarti.js: bekleniyor | ⚠ defter/sinama.js: bekleniyor | ⚠ defter/kisayolYuvasi.js: bekleniyor
+✓ npm run test | # tests 318 | # pass 318 | # fail 0 | # duration_ms 4838.023824
+✓ npm run seed | {"gecti":1000,"atlandi":0,"hata":0,"sayi":0,"ilkHatalar":[],"sureMs":318,"parametreDenetimsiz":[]}
+✓ npm run boyut | ilkYukleme=112308; varlik=0 bayt
