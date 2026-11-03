@@ -1,7 +1,7 @@
 // D03 · Dönen Işın · sahip GM-D · sözleşme v1.0
 
 export const id = 'D03';
-export const surum = '1.0.0';
+export const surum = '1.0.2';
 
 /**
  * Düzenek durumunu sıfırdan kurar, widget nesnesini oluşturur; sahneye çizmez.
@@ -39,7 +39,7 @@ export function kur(ctx, seed) {
 
   const yerlesim = noktalariYerlestir(ctx, hamA, hedefYon, isaret, sapma, uz1, uz2);
   const carkAdim = typeof p.cark.adim === 'number' ? p.cark.adim : p.cark.min;
-  const lazer = ctx.widget.lazer({ mod: 'isin', donenIsin: true, carkAdim });
+  const lazer = ctx.widget.lazer({ mod: 'isin', donenIsin: true, carkAdim, sabitA: true });
   lazerDurumAta(lazer, yerlesim.A, baslangicYon);
 
   Object.assign(ctx.durum, {
@@ -66,19 +66,16 @@ function aciKomsuluguOku(tol) {
 }
 
 function lazerDurumAta(lazer, A, yon) {
+  let atandi = false;
   try {
     lazer.A = A;
     lazer.yon = yon;
+    atandi = Boolean(lazer.A) && lazer.yon === yon;
   } catch (err) {
     void err;
-    if (typeof lazer.yukle === 'function' && typeof lazer.durum === 'function') {
-      lazer.yukle({ ...lazer.durum(), A, yon });
-    }
   }
-  if (!lazer.A || lazer.yon !== yon) {
-    if (typeof lazer.yukle === 'function' && typeof lazer.durum === 'function') {
-      lazer.yukle({ ...lazer.durum(), A, yon });
-    }
+  if (!atandi && typeof lazer.yukle === 'function' && typeof lazer.durum === 'function') {
+    lazer.yukle({ ...lazer.durum(), A, yon });
   }
 }
 
@@ -189,10 +186,7 @@ export function girdi(ctx, olay) {
   const d = ctx.durum;
   if (!olay || !d || !d.lazer) return;
 
-  if (d.lazer.girdi(olay)) {
-    lazerDurumAta(d.lazer, d.A, d.lazer.yon);
-    return;
-  }
+  if (d.lazer.girdi(olay)) return;
 
   switch (olay.tur) {
     case 'dugme':
@@ -236,21 +230,21 @@ export function basari(ctx) {
   }
 
   const tol = ctx.geo.TOLERANS.hatBirim;
-  const alarmSonuc = d.lazer.gecerMi(d.alarmlar, tol);
-  if (Array.isArray(alarmSonuc) && alarmSonuc.some(Boolean)) {
-    return { tamam: false, yanParca: false, neden: 'alarmYandi' };
-  }
-
   const sensorSonuc = d.lazer.gecerMi(d.sensorler, tol);
-  if (Array.isArray(sensorSonuc) && sensorSonuc.length > 0 && sensorSonuc.every(Boolean)) {
-    return { tamam: true, yanParca: false, neden: 'tamam' };
-  }
-
   const hicbiriGecmedi = Array.isArray(sensorSonuc) && sensorSonuc.every((v) => !v);
   const hat = { A: d.lazer.A, yon: d.lazer.yon };
   const dogruUzerinde = d.sensorler.every((s) => ctx.geo.dogruUzerindeMi(s, hat, tol));
   if (hicbiriGecmedi && dogruUzerinde) {
     return { tamam: false, yanParca: false, neden: 'tersYon' };
+  }
+
+  const alarmSonuc = d.lazer.gecerMi(d.alarmlar, tol);
+  if (Array.isArray(alarmSonuc) && alarmSonuc.some(Boolean)) {
+    return { tamam: false, yanParca: false, neden: 'alarmYandi' };
+  }
+
+  if (Array.isArray(sensorSonuc) && sensorSonuc.length > 0 && sensorSonuc.every(Boolean)) {
+    return { tamam: true, yanParca: false, neden: 'tamam' };
   }
 
   return { tamam: false, yanParca: false, neden: 'sensorKacti' };
@@ -269,11 +263,11 @@ export function ipucu(ctx, seviye) {
   if (seviye === 1) {
     const sonuc = basari(ctx);
     let hedefId = 'sensor0';
-    if (sonuc.neden === 'alarmYandi') {
+    if (sonuc.neden === 'alarmYandi' || sonuc.neden === 'tersYon') {
       const aSonuc = d.lazer.gecerMi(d.alarmlar, tol);
       const idx = Array.isArray(aSonuc) ? aSonuc.findIndex(Boolean) : 0;
       hedefId = 'alarm' + (idx >= 0 ? idx : 0);
-    } else if (sonuc.neden !== 'tersYon') {
+    } else {
       const sSonuc = d.lazer.gecerMi(d.sensorler, tol);
       const idx = Array.isArray(sSonuc) ? sSonuc.findIndex((v) => !v) : 0;
       hedefId = 'sensor' + (idx >= 0 ? idx : 0);

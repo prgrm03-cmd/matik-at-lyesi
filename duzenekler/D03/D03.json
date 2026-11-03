@@ -2,7 +2,7 @@
   "semaSurumu": "1.0",
   "id": "D03",
   "kod": "D03",
-  "surum": "1.0.0",
+  "surum": "1.0.2",
   "arac": "A",
   "baslik": "Dönen Işın",
   "zorluk": 1,
@@ -35,10 +35,10 @@
       "ne": "Takılan alarm veya ışığın henüz uğramadığı sensör vurgulanır."
     },
     {
-      "metin": "Çarkı çevirdikçe ışının ucu döner; kafanın arkasına ışık gitmez."
+      "metin": "Çarkı çevirdikçe ışın döner; kafanın arkasına ışık gitmez."
     },
     {
-      "ne": "Çark, ışın yan alarmın dış tarafına gelene kadar sensörlere doğru çevrilir."
+      "ne": "Çark, ışın yan alarma varmadan sensör doğrultusuna gelene kadar hedefe doğru çevrilir; yan alarm aşma sınırıdır, doğal yolda geçilmez."
     }
   ],
   "etiketler": {
