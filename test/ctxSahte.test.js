@@ -98,7 +98,7 @@ describe('ctxSahteOlustur', () => {
     assert.deepEqual(lazer.gecerMi([{ x: 20, y: 20 }, { x: 40, y: 20 }], 1), [true, false]);
     lazer.ciz(ctx.sahne);
     assert.equal(sahneKaydi(ctx).sayac.parca, 1);
-    for (const ad of ['aciolcer', 'aciTablosu', 'pergel', 'gonye']) {
+    for (const ad of ['aciTablosu', 'pergel', 'gonye']) {
       assert.throws(() => ctx.widget[ad]({}), hata => {
         assert.equal(hata.message, 'IMZA_EKSIK');
         return bekleyenMi(hata);
@@ -119,6 +119,20 @@ describe('ctxSahteOlustur', () => {
       assert.equal(hata.message, 'OLCU_KILIDI_IHLALI');
       return !bekleyenMi(hata);
     });
-    assert.throws(() => ctx.widget.aciolcer({ kilitli: true }), bekleyenMi);
+    const aciolcer = ctx.widget.aciolcer({ kilitli: true });
+    aciolcer.ciz(ctx.sahne);
+    assert.deepEqual(sahneKaydi(ctx).cagrilar, []);
+    assert.equal(aciolcer.girdi({ tur: 'bas', ...aciolcer.merkez }), false);
+  });
+});
+
+describe('ctxSahteOlustur', () => {
+  it('gerçek açıölçeri sahte sahnede çizer ve aynı seed ile yeniden kurar', () => {
+    const ctx = kur();
+    const aciolcer = ctx.widget.aciolcer({});
+    assert.deepEqual(aciolcer.durum(), kur().widget.aciolcer({}).durum());
+    aciolcer.ciz(ctx.sahne);
+    assert.ok(sahneKaydi(ctx).sayac.parca > 0);
+    assert.equal(sahneKaydi(ctx).sayac.pim, 1);
   });
 });

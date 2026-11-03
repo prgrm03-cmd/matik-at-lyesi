@@ -1,6 +1,7 @@
 import { sembolOlustur } from './sembolPaneli.js';
 import { sesOlustur } from './ses.js';
 import { lazerOlustur } from '../widget/lazer.js';
+import { aciolcerOlustur } from '../widget/aciolcer.js';
 import { bekleyenFabrika as bekleyen } from './sahteKayit.js';
 
 function widgetOlustur(ctx, hizmetler) {
@@ -10,7 +11,13 @@ function widgetOlustur(ctx, hizmetler) {
       if (veri.bayraklar.olcuKilidi && ayar?.kilitli !== true) {
         throw new Error('OLCU_KILIDI_IHLALI');
       }
-      return bekleyen();
+      const rastgele = (ayar?.hizasiz ?? true) ||
+        (ayar?.olcekYonu ?? 'rastgele') === 'rastgele';
+      // ADT-011 + Ek A: güncel turun alt akışı ana parametre akışını tüketmez.
+      const rng = rastgele ? ctx.rng?.alt('widget:aciolcer') : undefined;
+      const nesne = aciolcerOlustur(ayar, rng);
+      hizmetler.widgetler.push(nesne);
+      return nesne;
     },
     aciTablosu: bekleyen,
     pergel: bekleyen,

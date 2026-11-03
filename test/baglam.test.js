@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { hizmetleriOlustur, girdiDagit } from '../motor/baglam.js';
 import { sembolOlustur } from '../motor/sembolPaneli.js';
+import { rngOlustur } from '../motor/rng.js';
 
 function kur(kilitli = false) {
   const cagrilar = [];
@@ -15,20 +16,22 @@ function kur(kilitli = false) {
       nedenler: { tamam: 'TODO-R1' },
       etiketler: { calistir: 'TODO-R1' }
     },
-    mod: { tahta: true }
+    mod: { tahta: true }, rng: rngOlustur(42)
   };
   const hizmetler = hizmetleriOlustur(ctx, arayuz, { ses: true });
   return { ctx, arayuz, cagrilar, hizmetler };
 }
 
 describe('hizmetleriOlustur', () => {
-  it('kilit ihlalini eksik fabrika hatasından önce bildirir', () => {
+  it('kilit ihlalini ayar doğrulamasından önce bildirir ve kilitli açıölçer kurar', () => {
     const { ctx } = kur(true);
     for (const ayar of [undefined, {}, { kilitli: false }]) {
       assert.throws(() => ctx.widget.aciolcer(ayar), { message: 'OLCU_KILIDI_IHLALI' });
     }
-    assert.throws(() => ctx.widget.aciolcer({ kilitli: true }), { message: 'IMZA_EKSIK' });
-    assert.throws(() => kur().ctx.widget.aciolcer({}), { message: 'IMZA_EKSIK' });
+    assert.equal(ctx.widget.aciolcer({ kilitli: true }).girdi({ tur: 'bas' }), false);
+    assert.throws(() => kur().ctx.widget.aciolcer({ kilitli: 'evet' }), {
+      message: 'WIDGET_AYAR_GECERSIZ'
+    });
   });
 });
 
