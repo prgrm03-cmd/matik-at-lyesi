@@ -1,0 +1,9 @@
+✓ npm run lint
+✓ npm run yasak
+✓ npm run sahiplik
+✓ npm run satir
+✓ npm run sema | { | "dosyaSayisi": 4, | "hatalar": [] | } | metin: uygun
+✓ npm run imza | İmza: tüm mevcut dışa aktarımlar geçerli. | ⚠ widget/aciTablosu.js: bekleniyor | ⚠ defter/defter.js: bekleniyor | ⚠ defter/tahminRafi.js: bekleniyor | ⚠ defter/kuralKarti.js: bekleniyor | ⚠ defter/sinama.js: bekleniyor | ⚠ defter/kisayolYuvasi.js: bekleniyor
+✓ npm run test | ▶ D01.imzalar | ✔ dokuz dışa aktarımı ve sözleşmedeki parametre sayılarını korur (1.686156ms) | ✔ D01.imzalar (2.889667ms) | ▶ D01.kur | ✔ bin seed boyunca aynı sahneyi üretir ve parametre aralığında kalır (41.290011ms) | ✔ D01.kur (41.584227ms) | ▶ D01.ciz | ✔ bin seed boyunca durumu değiştirmeden iki pim ve bağlantıyı çizer (65.604859ms) | ✔ D01.ciz (65.802782ms) | ▶ D01.girdi
+✓ npm run seed | {"gecti":4000,"atlandi":0,"hata":0,"sayi":12000,"ilkHatalar":[],"sureMs":4559,"parametreDenetimsiz":[]}
+✓ npm run boyut | ilkYukleme=139067; varlik=0 bayt

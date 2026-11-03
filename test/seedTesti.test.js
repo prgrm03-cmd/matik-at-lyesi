@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -32,10 +33,10 @@ describe('parametreleriDogrula', () => {
   });
 
   it('eksik adaptörü denetimsiz sayar ve mevcut adaptörün ihlalini reddeder', () => {
-    const ctx = { id: 'D03', veri: { parametreler: { aci: { min: 1, max: 90 } } } };
-    assert.deepEqual(duzenekParametreleriniDogrula(ctx), ['D03']);
+    const ctx = { id: 'D04', veri: { parametreler: { aci: { min: 1, max: 90 } } } };
+    assert.deepEqual(duzenekParametreleriniDogrula(ctx), ['D04']);
     assert.deepEqual(duzenekParametreleriniDogrula({
-      id: 'D03', veri: { parametreler: {} }
+      id: 'D04', veri: { parametreler: {} }
     }), []);
     const d01 = { id: 'D01', veri: VERI,
       durum: { pimler: [{ x: 249, y: 250 }, { x: 500, y: 750 }] } };
@@ -160,14 +161,29 @@ describe('sahneyiDogrula', () => {
 });
 
 describe('seedTesti', () => {
-  it('kapsamdaki D01, D02 ve D09a için biner gerçek seed koşar ve atlama yapmaz', async () => {
+  it('kapsamdaki D01, D02, D09a ve D03 için biner gerçek seed koşar ve atlama yapmaz', async () => {
     const ozet = await seedTesti(fileURLToPath(new URL('../', import.meta.url)));
     assert.equal(ozet.hata, 0, JSON.stringify(ozet.ilkHatalar));
     assert.equal(ozet.atlandi, 0);
-    assert.equal(ozet.gecti, 3000);
+    assert.equal(ozet.gecti, 4000);
     assert.equal(ozet.sayi, 12000);
     assert.deepEqual(ozet.parametreDenetimsiz, []);
     assert.ok(ozet.sureMs < 10000);
+  });
+
+  it('npm run seed -- D03 yalnız D03 için bin tohumu denetimsiz uyarısı olmadan koşar', () => {
+    const kosu = spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm',
+      ['run', '--silent', 'seed', '--', 'D03'], {
+        cwd: fileURLToPath(new URL('../', import.meta.url)), encoding: 'utf8'
+      });
+    assert.equal(kosu.error, undefined);
+    assert.equal(kosu.status, 0, kosu.stderr);
+    assert.equal(kosu.stderr, '');
+    const ozet = JSON.parse(kosu.stdout.trim());
+    assert.equal(ozet.gecti, 1000);
+    assert.equal(ozet.hata, 0, JSON.stringify(ozet.ilkHatalar));
+    assert.equal(ozet.atlandi, 0);
+    assert.deepEqual(ozet.parametreDenetimsiz, []);
   });
 });
 

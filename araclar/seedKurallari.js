@@ -46,6 +46,41 @@ export function d02Parametreleri(ctx) {
   return { konum };
 }
 
+function d03NoktalariDogrula(durum) {
+  dogrula(durum?.A, 'D03AEksik', 'IMZA_EKSIK');
+  const noktalar = [durum.A];
+  for (const ad of ['sensorler', 'alarmlar']) {
+    dogrula(Array.isArray(durum[ad]) && durum[ad].length === 2,
+      'D03NoktalarEksik:' + ad, 'IMZA_EKSIK');
+    noktalar.push(...durum[ad]);
+  }
+  for (const nokta of noktalar) {
+    dogrula([nokta?.x, nokta?.y].every(deger =>
+      Number.isFinite(deger) && deger >= 0 && deger <= 1000), 'D03TezgahSiniri');
+  }
+  dogrula(durum.isaret === 1 || durum.isaret === -1, 'D03Isaret');
+  dogrula(Object.prototype.hasOwnProperty.call(durum, 'hedefYon'),
+    'D03HedefEksik', 'IMZA_EKSIK');
+}
+
+/** @param {Ctx} ctx @param {Object} gozlem @returns {Object} D03 kurulum parametreleri. */
+export function d03Parametreleri(ctx, gozlem) {
+  d03NoktalariDogrula(ctx.durum);
+  // D03.kur sırası; ham mesafeler yerleşimde kısalabildiği için RNG çıktısını kullan.
+  const adlar = ['konum', 'konum', 'sapma', 'uzaklik', 'ara', 'baslangic'];
+  dogrula(gozlem?.tam?.length === adlar.length && gozlem?.lazerler?.length === 1,
+    'D03GozlemEksik', 'IMZA_EKSIK');
+  const degerler = { yon: [ctx.durum.hedefYon], cark: [gozlem.lazerler[0]?.carkAdim] };
+  for (const [i, ad] of adlar.entries()) {
+    const cagri = gozlem.tam[i];
+    const aralik = ctx.veri.parametreler[ad];
+    dogrula(cagri.min === aralik.min && cagri.max === aralik.max,
+      'D03RngAraligi:' + ad);
+    (degerler[ad] ||= []).push(cagri.deger);
+  }
+  return degerler;
+}
+
 /** @param {Ctx} ctx @returns {Object} D09a.json aci aralığı sipariş hedefini tanımlar. */
 export function d09aParametreleri(ctx) {
   dogrula(ctx.durum && Object.prototype.hasOwnProperty.call(ctx.durum, 'hedef'),
