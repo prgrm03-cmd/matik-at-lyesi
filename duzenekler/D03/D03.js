@@ -1,7 +1,7 @@
 // D03 · Dönen Işın · sahip GM-D · sözleşme v1.0
 
 export const id = 'D03';
-export const surum = '1.0.1';
+export const surum = '1.0.2';
 
 /**
  * Düzenek durumunu sıfırdan kurar, widget nesnesini oluşturur; sahneye çizmez.
@@ -39,7 +39,7 @@ export function kur(ctx, seed) {
 
   const yerlesim = noktalariYerlestir(ctx, hamA, hedefYon, isaret, sapma, uz1, uz2);
   const carkAdim = typeof p.cark.adim === 'number' ? p.cark.adim : p.cark.min;
-  const lazer = ctx.widget.lazer({ mod: 'isin', donenIsin: true, carkAdim });
+  const lazer = ctx.widget.lazer({ mod: 'isin', donenIsin: true, carkAdim, sabitA: true });
   lazerDurumAta(lazer, yerlesim.A, baslangicYon);
 
   Object.assign(ctx.durum, {
@@ -186,10 +186,7 @@ export function girdi(ctx, olay) {
   const d = ctx.durum;
   if (!olay || !d || !d.lazer) return;
 
-  if (d.lazer.girdi(olay)) {
-    lazerDurumAta(d.lazer, d.A, d.lazer.yon);
-    return;
-  }
+  if (d.lazer.girdi(olay)) return;
 
   switch (olay.tur) {
     case 'dugme':
