@@ -51,7 +51,7 @@ function canlandir(duzenek, ctx, gozlem) {
   dogrula(animasyon && Number.isFinite(animasyon.sure) && animasyon.sure >= 0 &&
     typeof animasyon.kare === 'function' && typeof animasyon.bitti === 'function',
   'animasyonImzasi', 'IMZA_EKSIK');
-  if (ctx.id === 'D03') {
+  if (['D03', 'D04'].includes(ctx.id)) {
     parametreleriDogrula({ sure: ctx.veri.parametreler.sure }, { sure: [animasyon.sure] });
   }
   for (const t of [0, 0.5, 1]) animasyon.kare(t);

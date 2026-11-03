@@ -81,6 +81,41 @@ export function d03Parametreleri(ctx, gozlem) {
   return degerler;
 }
 
+function d04NoktalariDogrula(durum) {
+  const noktalar = [durum?.M, durum?.cubuk?.A, durum?.cubuk?.B];
+  for (const ad of ['ledler', 'ekPimler']) {
+    dogrula(Array.isArray(durum?.[ad]) && durum[ad].length === 3,
+      'D04NoktalarEksik:' + ad, 'IMZA_EKSIK');
+    noktalar.push(...durum[ad].map(nokta => nokta?.P));
+  }
+  for (const nokta of noktalar) {
+    dogrula([nokta?.x, nokta?.y].every(deger =>
+      Number.isFinite(deger) && deger >= 0 && deger <= 1000), 'D04TezgahSiniri');
+  }
+  dogrula(['uzeri', 'ic', 'dis'].every(hedef =>
+    durum.ekPimler.some(pim => pim.hedef === hedef)), 'D04Hedefler');
+}
+
+/** @param {Ctx} ctx @param {Object} gozlem @returns {Object} D04 kurulum parametreleri. */
+export function d04Parametreleri(ctx, gozlem) {
+  d04NoktalariDogrula(ctx.durum);
+  // D04.kur ana akışı; tamHaric ve karistir iç çekilişleri gözleme katılmaz.
+  const adlar = ['konum', 'konum', 'aci', 'ayrim', 'ayrim', 'aci', 'kayma',
+    ...Array(10).fill('konum')];
+  dogrula(Array.isArray(gozlem?.tam) && gozlem.tam.length === adlar.length,
+    'D04GozlemEksik', 'IMZA_EKSIK');
+  const degerler = { yaricap: [ctx.durum.r] };
+  for (const [i, ad] of adlar.entries()) {
+    const cagri = gozlem.tam[i];
+    dogrula(cagri && typeof cagri === 'object', 'D04GozlemEksik', 'IMZA_EKSIK');
+    const aralik = ctx.veri.parametreler[ad];
+    dogrula(cagri.min === aralik.min && cagri.max === aralik.max,
+      'D04RngAraligi:' + ad);
+    (degerler[ad] ||= []).push(cagri.deger);
+  }
+  return degerler;
+}
+
 /** @param {Ctx} ctx @returns {Object} D09a.json aci aralığı sipariş hedefini tanımlar. */
 export function d09aParametreleri(ctx) {
   dogrula(ctx.durum && Object.prototype.hasOwnProperty.call(ctx.durum, 'hedef'),
