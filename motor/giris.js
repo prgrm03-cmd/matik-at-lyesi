@@ -86,13 +86,43 @@ function surukle(bag, olay) {
 function birak(bag, olay, iptal) {
   const tutulan = bag.tutulan;
   if (!tutulan || tutulan.pointerId !== olay.pointerId) return;
-  const nokta = iptal ? tutulan.nokta : bag.gorunum.nokta(olay.clientX, olay.clientY);
+  const ham = iptal ? tutulan.nokta : bag.gorunum.nokta(olay.clientX, olay.clientY);
+  const nokta = iptal ? ham : pimiOturt(bag, tutulan, ham);
   bag.tutulan = null;
   yakalamayiBirak(bag.gorunum.eleman, olay.pointerId);
   bag.ilet({ tur: 'birak', ...nokta, hedef: tutulan.hedef });
   if (!iptal && !tutulan.hareket) {
     bag.ilet({ tur: 'tik', ...nokta, hedef: tutulan.hedef });
   }
+}
+
+function oturmaHedefi(bag, tutulan, nokta) {
+  if (bag.gorunum.hedefler.get(tutulan.hedef)?.tur !== 'pim') return null;
+  const tol = bag.gorunum.sahne.pxToBirim(TOLERANS.pimYakalamaPx);
+  let enYakin = null;
+  let mesafe = Infinity;
+  // Eşit uzaklıkta son çizilen pim seçilir; tutulan pim kendini yakalayamaz.
+  for (const hedef of [...bag.gorunum.hedefler.values()].reverse()) {
+    if (hedef.id === tutulan.hedef || hedef.tur !== 'pim') continue;
+    const uzaklik = Math.hypot(hedef.nokta.x - nokta.x, hedef.nokta.y - nokta.y);
+    if (uzaklik <= tol + Number.EPSILON * 1000 && uzaklik < mesafe) {
+      enYakin = hedef.nokta;
+      mesafe = uzaklik;
+    }
+  }
+  return enYakin;
+}
+
+function pimiOturt(bag, tutulan, nokta) {
+  const hedef = oturmaHedefi(bag, tutulan, nokta);
+  if (!hedef) return nokta;
+  const son = { x: hedef.x, y: hedef.y };
+  const dx = son.x - tutulan.nokta.x;
+  const dy = son.y - tutulan.nokta.y;
+  tutulan.hareket = tutulan.hareket || dx !== 0 || dy !== 0;
+  // ADT-010: birak yalnız seçimi bitirir; son surukle pimi tam hedefe taşır.
+  bag.ilet({ tur: 'surukle', ...son, dx, dy, hedef: tutulan.hedef });
+  return son;
 }
 
 function yakalamayiBirak(eleman, kimlik) {
