@@ -1,0 +1,9 @@
+✓ npm run lint
+✓ npm run yasak
+✓ npm run sahiplik
+✓ npm run satir
+✓ npm run sema | { | "dosyaSayisi": 6, | "hatalar": [] | } | metin: uygun
+✓ npm run imza | İmza: tüm mevcut dışa aktarımlar geçerli.
+✓ npm run test | # tests 583 | # pass 583 | # fail 0 | # duration_ms 12064.594069
+✓ npm run seed | {"gecti":5000,"atlandi":0,"hata":0,"sayi":12000,"ilkHatalar":[],"sureMs":4906,"parametreDenetimsiz":[]}
+✓ npm run boyut | ilkYukleme=164015; varlik=0 bayt
