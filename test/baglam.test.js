@@ -2,8 +2,6 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import { hizmetleriOlustur, girdiDagit } from '../motor/baglam.js';
 import { sembolOlustur } from '../motor/sembolPaneli.js';
-import { rngOlustur } from '../motor/rng.js';
-import { aciolcerOlustur } from '../widget/aciolcer.js';
 
 function kur(kilitli = false) {
   const cagrilar = [];
@@ -17,31 +15,20 @@ function kur(kilitli = false) {
       nedenler: { tamam: 'TODO-R1' },
       etiketler: { calistir: 'TODO-R1' }
     },
-    mod: { tahta: true }, rng: rngOlustur(42)
+    mod: { tahta: true }
   };
   const hizmetler = hizmetleriOlustur(ctx, arayuz, { ses: true });
   return { ctx, arayuz, cagrilar, hizmetler };
 }
 
 describe('hizmetleriOlustur', () => {
-  it('rejects lock violations and registers the seeded protractor', () => {
-    const { ctx, hizmetler } = kur(true);
+  it('kilit ihlalini eksik fabrika hatasından önce bildirir', () => {
+    const { ctx } = kur(true);
     for (const ayar of [undefined, {}, { kilitli: false }]) {
       assert.throws(() => ctx.widget.aciolcer(ayar), { message: 'OLCU_KILIDI_IHLALI' });
     }
-    const kilitli = ctx.widget.aciolcer({ kilitli: true });
-    assert.deepEqual(hizmetler.widgetler, [kilitli]);
-    assert.equal(kilitli.girdi({ tur: 'bas', x: 500, y: 500 }), false);
-    const acik = kur();
-    const aciolcer = acik.ctx.widget.aciolcer({});
-    const beklenen = aciolcerOlustur({}, rngOlustur(42));
-    assert.deepEqual(aciolcer.durum(), beklenen.durum());
-    assert.deepEqual(acik.hizmetler.widgetler, [aciolcer]);
-    assert.equal(acik.ctx.rng.sayi(), (() => {
-      const rng = rngOlustur(42);
-      aciolcerOlustur({}, rng);
-      return rng.sayi();
-    })());
+    assert.throws(() => ctx.widget.aciolcer({ kilitli: true }), { message: 'IMZA_EKSIK' });
+    assert.throws(() => kur().ctx.widget.aciolcer({}), { message: 'IMZA_EKSIK' });
   });
 });
 

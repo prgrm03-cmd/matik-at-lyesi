@@ -139,25 +139,6 @@ test('R1 metni değişebilir ama bayrak, parametre ve vurgu hedefi değişemez',
   assert.equal(yalnizMetinMi(kart, metin), false);
 });
 
-async function k05IstisnasiniDene(kok) {
-  const yollar = ['motor/baglam.js', 'araclar/imzaListesi.json', 'araclar/sahiplik.js',
-    'test/aciolcer.test.js', 'test/baglam.test.js', 'test/ctxSahte.test.js',
-    'test/checkImza.test.js', 'test/checkSinir.test.js'];
-  git(kok, 'switch', '-c', 'cx-a/K-05-aciolcer');
-  for (const yol of yollar) await yaz(kok, yol, '{}');
-  git(kok, 'add', '.');
-  git(kok, 'commit', '-m', 'K05');
-  const ortam = { PR_BODY: 'ADT-K05 adayi' };
-  const sonuc = sahiplikDogrula(kok, ortam);
-  assert.deepEqual(sonuc.hatalar, ['duzenekler/D02/D02.js: CX-A yetkili değil.']);
-  assert.equal(sahiplikDogrula(kok, { PR_BODY: 'K-05' }).hatalar.length, 2);
-  for (const dal of ['cx-a/K-05-aciolcer-extra', 'cx-a/K-06-baska', 'cx-z/K-05-aciolcer']) {
-    const hatalar = sahiplikDogrula(kok, { ...ortam, GITHUB_HEAD_REF: dal }).hatalar;
-    for (const yol of yollar) assert.ok(hatalar.some(hata => hata.startsWith(yol + ':')));
-  }
-  for (const yol of yollar) assert.equal(yolYetkisi('CX-A', yol), false);
-}
-
 test('sahiplik gerçek main...HEAD farkını ve PR ADT metnini okur', async () => {
   await gecici(async kok => {
     await depo(kok);
@@ -177,7 +158,6 @@ test('sahiplik gerçek main...HEAD farkını ve PR ADT metnini okur', async () =
     git(kok, 'commit', '-m', 'yetkisiz');
     const sonuc = sahiplikDogrula(kok, { PR_BODY: 'ADT-006' });
     assert.match(sonuc.hatalar.join('\n'), /D02/);
-    await k05IstisnasiniDene(kok);
   });
 });
 

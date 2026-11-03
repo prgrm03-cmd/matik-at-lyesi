@@ -9,16 +9,6 @@ const DUZENEK_SAHIPLERI = {
   'GM-D': ['D02', 'D03', 'D04', 'D05', 'D06', 'D07', 'D10', 'D10b', 'D14', 'D15']
 };
 
-const K05_DOSYALARI = Object.freeze([
-  'motor/baglam.js', 'araclar/imzaListesi.json', 'araclar/sahiplik.js',
-  'test/aciolcer.test.js', 'test/baglam.test.js', 'test/ctxSahte.test.js',
-  'test/checkImza.test.js', 'test/checkSinir.test.js'
-]);
-
-function k05Yetkisi(dal, yol) {
-  return dal === 'cx-a/K-05-aciolcer' && K05_DOSYALARI.includes(yol);
-}
-
 function git(kok, ...arg) {
   const ayar = { cwd: kok, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] };
   return execFileSync('git', arg, ayar);
@@ -132,7 +122,7 @@ export function sahiplikDogrula(kok = process.cwd(), ortam = process.env) {
     if (!sonuc.ajan) sonuc.hatalar.push('Bilinmeyen dal öneki: ' + sonuc.dal);
     for (const yol of sonuc.dosyalar) {
       const metin = sonuc.ajan === 'Matematikce' && jsonMetinYetkisi(kok, taban, yol);
-      if (!metin && !yolYetkisi(sonuc.ajan, yol) && !k05Yetkisi(sonuc.dal, yol)) {
+      if (!metin && !yolYetkisi(sonuc.ajan, yol)) {
         sonuc.hatalar.push(yol + ': ' + (sonuc.ajan || '?') + ' yetkili değil.');
       }
     }

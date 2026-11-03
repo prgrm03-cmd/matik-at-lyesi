@@ -5,7 +5,6 @@ import * as geo from '../geo/index.js';
 import { ctxSahteOlustur, sahneKaydi } from '../motor/ctxSahte.js';
 import { rngOlustur } from '../motor/rng.js';
 import { bekleyenMi } from '../motor/sahteKayit.js';
-import { aciolcerOlustur } from '../widget/aciolcer.js';
 
 function veriOlustur() {
   return JSON.parse(readFileSync(new URL('../duzenekler/D01/D01.json', import.meta.url)));
@@ -91,7 +90,7 @@ describe('ctxSahteOlustur', () => {
 });
 
 describe('ctxSahteOlustur', () => {
-  it('provides real lazer and protractor factories and marks only pending factories', () => {
+  it('lazeri gerçek nesne olarak üretir ve henüz gelmeyen fabrikaları ayırır', () => {
     const ctx = kur();
     const lazer = ctx.widget.lazer({ mod: 'parca' });
     lazer.A = { x: 10, y: 20 };
@@ -99,13 +98,7 @@ describe('ctxSahteOlustur', () => {
     assert.deepEqual(lazer.gecerMi([{ x: 20, y: 20 }, { x: 40, y: 20 }], 1), [true, false]);
     lazer.ciz(ctx.sahne);
     assert.equal(sahneKaydi(ctx).sayac.parca, 1);
-    const ayar = { soket: { x: 500, y: 500 } };
-    const aciolcer = ctx.widget.aciolcer(ayar);
-    assert.deepEqual(aciolcer.durum(), aciolcerOlustur(ayar, rngOlustur(42)).durum());
-    aciolcer.ciz(ctx.sahne);
-    assert.equal(sahneKaydi(ctx).sayac.sayi, 0);
-    assert.ok(sahneKaydi(ctx).cagrilar.some(c => c.ad === 'katman' && c.arg[0] === 'ust'));
-    for (const ad of ['aciTablosu', 'pergel', 'gonye']) {
+    for (const ad of ['aciolcer', 'aciTablosu', 'pergel', 'gonye']) {
       assert.throws(() => ctx.widget[ad]({}), hata => {
         assert.equal(hata.message, 'IMZA_EKSIK');
         return bekleyenMi(hata);
@@ -126,9 +119,6 @@ describe('ctxSahteOlustur', () => {
       assert.equal(hata.message, 'OLCU_KILIDI_IHLALI');
       return !bekleyenMi(hata);
     });
-    const kilitli = ctx.widget.aciolcer({ kilitli: true });
-    kilitli.ciz(ctx.sahne);
-    assert.deepEqual(sahneKaydi(ctx).cagrilar, []);
-    assert.equal(kilitli.girdi({ tur: 'bas', x: 500, y: 500 }), false);
+    assert.throws(() => ctx.widget.aciolcer({ kilitli: true }), bekleyenMi);
   });
 });

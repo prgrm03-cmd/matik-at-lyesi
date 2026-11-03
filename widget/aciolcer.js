@@ -21,6 +21,12 @@ import { aciFark, aciNormalize, aciOku, dikme, ilerle, TOLERANS, uzaklik, yonAci
 const YARICAP = 240;
 const KAYMA = 240;
 const TELEFON_OLCEGI = 1000 / 360;
+const VARSAYILAN_SOKET = Object.freeze({ x: 500, y: 500 });
+const IC_CENTIK_BAS_ORANI = 0.60;
+const IC_YARICAP_ORANI = 0.68;
+const DIS_CENTIK_BAS_ORANI = 0.94;
+const DIS_ETIKET_ORANI = 0.84;
+const IC_ETIKET_ORANI = 0.5;
 const KENAR_ORANI = 0.7;
 const CENTIK_ADIMI = 10;
 const DENEME_SINIRI = 32;
@@ -70,7 +76,7 @@ function ayarDogrula(ayar, rng) {
   if (!['ic', 'dis', 'rastgele'].includes(olcekYonu)) gecersiz();
   if ((hizasiz || olcekYonu === 'rastgele') &&
       (!rng || typeof rng.tam !== 'function' || typeof rng.bool !== 'function')) gecersiz();
-  return { soket: noktaKopyala(a.soket === undefined ? { x: 500, y: 500 } : a.soket),
+  return { soket: noktaKopyala(a.soket === undefined ? VARSAYILAN_SOKET : a.soket),
     hizasiz, olcekYonu, kilitli, toleransGoster };
 }
 
@@ -87,16 +93,16 @@ function durumuOlustur(ayar, rng) {
   const tol = TOLERANS.pimYakalamaPx * TELEFON_OLCEGI;
   const merkez = ayar.hizasiz ? merkezUret(ayar.soket, rng, tol) : noktaKopyala(ayar.soket);
   const olcekYonu = ayar.olcekYonu === 'rastgele' ? (rng.bool() ? 'ic' : 'dis') : ayar.olcekYonu;
-  return { merkez, donus, olcekYonu, tol, ilk: ayar.hizasiz,
+  return { merkez, donus, olcekYonu,
     hedef: { soket: noktaKopyala(ayar.soket), yon: 0 }, secim: null };
 }
 
-function hizayiDene(durum, soket, baslangicYon) {
+function hizayiDene(durum, soket, baslangicYon, tol) {
   const hedef = noktaKopyala(soket);
   if (!Number.isFinite(baslangicYon)) gecersiz();
   durum.hedef = { soket: hedef, yon: baslangicYon };
   return {
-    merkezTamam: mesafeIcinde(durum.merkez, hedef, durum.tol),
+    merkezTamam: mesafeIcinde(durum.merkez, hedef, tol),
     sifirTamam: aciFark(durum.donus, baslangicYon) <= TOLERANS.aciOkuma
   };
 }
@@ -105,7 +111,6 @@ function hedefeHizala(durum) {
   durum.merkez = noktaKopyala(durum.hedef.soket);
   durum.donus = yonDogrula(durum.hedef.yon);
   durum.secim = null;
-  durum.ilk = false;
 }
 
 function yerelNokta(P, donus, x, y) {
@@ -135,12 +140,13 @@ function olcekCiz(sahne, durum, aci, tur, deger) {
   const ic = tur === 'ic';
   const renk = ic ? 'mavi' : 'turuncu';
   const yon = durum.donus + aci;
-  const A = ilerle(durum.merkez, yon, YARICAP * (ic ? 0.60 : 0.94));
-  const B = ilerle(durum.merkez, yon, YARICAP * (ic ? 0.68 : 1));
+  const basOrani = ic ? IC_CENTIK_BAS_ORANI : DIS_CENTIK_BAS_ORANI;
+  const A = ilerle(durum.merkez, yon, YARICAP * basOrani);
+  const B = ilerle(durum.merkez, yon, YARICAP * (ic ? IC_YARICAP_ORANI : 1));
   const kalinlik = aci % 90 === 0 ? 'kalin' : 'normal';
   sahne.parca(A, B, { renk, kalinlik, kesik: ic, id: 'aciolcer' + (ic ? 'Ic' : 'Dis') + aci });
   if (aci % RAKAM_ADIMI === 0) {
-    let P = ilerle(durum.merkez, yon, YARICAP * (ic ? 0.5 : 0.84));
+    let P = ilerle(durum.merkez, yon, YARICAP * (ic ? IC_ETIKET_ORANI : DIS_ETIKET_ORANI));
     if (aci === 0 || aci === 180) P = ilerle(P, durum.donus + 90, UC_ETIKET_KAYMASI);
     rakamlariCiz(sahne, P, durum.donus, deger, renk);
   }
@@ -165,25 +171,14 @@ function govdeCiz(sahne, durum) {
   const disYay = yayNoktalari(durum, YARICAP);
   sahne.cokgen([noktaKopyala(durum.merkez), ...disYay], { renk: 'gri', dolgu: true });
   yayCiz(sahne, disYay, { renk: 'turuncu' });
-  yayCiz(sahne, yayNoktalari(durum, YARICAP * 0.68), { renk: 'mavi', kesik: true });
+  yayCiz(sahne, yayNoktalari(durum, YARICAP * IC_YARICAP_ORANI), { renk: 'mavi', kesik: true });
   const A = ilerle(durum.merkez, durum.donus, YARICAP);
   const B = ilerle(durum.merkez, durum.donus + 180, YARICAP);
   sahne.parca(A, B, { renk: 'gri', kalinlik: 'kalin' });
 }
 
-function ilkKonumuDogrula(durum, ayar) {
-  if (!durum.ilk) return;
-  durum.ilk = false;
-  if (!mesafeIcinde(durum.merkez, ayar.soket, durum.tol)) return;
-  const dx = durum.merkez.x < ayar.soket.x ? -KAYMA : KAYMA;
-  const dy = durum.merkez.y < ayar.soket.y ? -KAYMA : KAYMA;
-  durum.merkez = { x: ayar.soket.x + dx, y: ayar.soket.y + dy };
-}
-
 function aciolcerCiz(sahne, durum, ayar) {
   if (ayar.kilitli) return;
-  durum.tol = sahne.pxToBirim(TOLERANS.pimYakalamaPx);
-  ilkKonumuDogrula(durum, ayar);
   sahne.katman('ust');
   govdeCiz(sahne, durum);
   for (let aci = 0; aci <= 180; aci += CENTIK_ADIMI) {
@@ -194,50 +189,49 @@ function aciolcerCiz(sahne, durum, ayar) {
   sahne.pim(durum.merkez, { id: 'aciolcerMerkez', renk: 'gri', boyut: 'buyuk' });
 }
 
-function yarimDairede(durum, P, yon) {
+function yarimDairede(durum, P, yon, tol) {
   const aci = aciNormalize(yon - durum.donus);
   if (aci <= 180) return true;
   const { ayak } = dikme({ A: durum.merkez, yon: durum.donus }, P);
-  return mesafeIcinde(ayak, P, durum.tol);
+  return mesafeIcinde(ayak, P, tol);
 }
 
-function secimiBaslat(durum, olay) {
+function secimiBaslat(durum, olay, tol) {
   if (!Number.isFinite(olay.x) || !Number.isFinite(olay.y)) return false;
   durum.secim = null;
-  if (mesafeIcinde(durum.merkez, olay, durum.tol)) durum.secim = { tur: 'merkez' };
+  if (mesafeIcinde(durum.merkez, olay, tol)) durum.secim = { tur: 'merkez' };
   else if (!mesafeIcinde(durum.merkez, olay, YARICAP * KENAR_ORANI) &&
-      mesafeIcinde(durum.merkez, olay, YARICAP + durum.tol)) {
+      mesafeIcinde(durum.merkez, olay, YARICAP + tol)) {
     const yon = yonAci(durum.merkez, olay);
-    if (!yarimDairede(durum, olay, yon)) return false;
+    if (!yarimDairede(durum, olay, yon, tol)) return false;
     durum.secim = { tur: 'kenar', yon, hamDonus: durum.donus };
   }
   if (!durum.secim) return false;
-  durum.ilk = false;
   return true;
 }
 
 function surukle(durum, olay) {
   if (durum.secim.tur === 'merkez') {
-    if (!Number.isFinite(olay.dx) || !Number.isFinite(olay.dy)) gecersiz();
+    if (!Number.isFinite(olay.dx) || !Number.isFinite(olay.dy)) return false;
     durum.merkez = noktaKopyala({ x: durum.merkez.x + olay.dx, y: durum.merkez.y + olay.dy });
   } else {
     const P = noktaKopyala(olay);
-    if (uzaklik(durum.merkez, P) === 0) return;
+    if (uzaklik(durum.merkez, P) === 0) return true;
     const yon = yonAci(durum.merkez, P);
     const fark = aciNormalize(yon - durum.secim.yon + 180) - 180;
     durum.secim.hamDonus += fark;
     durum.donus = yonDogrula(durum.secim.hamDonus);
     durum.secim.yon = yon;
   }
+  return true;
 }
 
-function girdiyiIsle(durum, ayar, olay) {
-  if (ayar.kilitli || !olay) return false;
-  if (olay.tur === 'bas') return secimiBaslat(durum, olay);
+function girdiyiIsle(durum, olay, tol) {
+  if (!olay) return false;
+  if (olay.tur === 'bas') return secimiBaslat(durum, olay, tol);
   if (!durum.secim) return false;
   if (olay.tur === 'surukle') {
-    surukle(durum, olay);
-    return true;
+    return surukle(durum, olay);
   }
   if (olay.tur !== 'birak') return false;
   durum.secim = null;
@@ -254,22 +248,35 @@ function durumuYukle(durum, kayit) {
     olcekYonu: olcekDogrula(kayit.olcekYonu) };
   Object.assign(durum, yeni);
   durum.secim = null;
-  durum.ilk = false;
+}
+
+function yakalamaBirim(gorunum) {
+  return gorunum.sahne ? gorunum.sahne.pxToBirim(TOLERANS.pimYakalamaPx) :
+    TOLERANS.pimYakalamaPx * TELEFON_OLCEGI;
 }
 
 function nesneOlustur(durum, ayar) {
+  const gorunum = { sahne: null };
   return {
     get merkez() { return noktaKopyala(durum.merkez); },
-    set merkez(P) { durum.merkez = noktaKopyala(P); durum.ilk = false; },
+    set merkez(P) { durum.merkez = noktaKopyala(P); },
     get donus() { return durum.donus; },
     set donus(yon) { durum.donus = yonDogrula(yon); },
     get olcekYonu() { return durum.olcekYonu; },
     set olcekYonu(yon) { durum.olcekYonu = olcekDogrula(yon); },
-    hizaliMi(soket, baslangicYon) { return hizayiDene(durum, soket, baslangicYon); },
+    hizaliMi(soket, baslangicYon) {
+      return hizayiDene(durum, soket, baslangicYon, yakalamaBirim(gorunum));
+    },
     okuma(kolYon) { return aciOku(durum.merkez, durum.donus, kolYon, durum.olcekYonu); },
     hizala() { hedefeHizala(durum); },
-    ciz(sahne) { aciolcerCiz(sahne, durum, ayar); },
-    girdi(olay) { return girdiyiIsle(durum, ayar, olay); },
+    ciz(sahne) {
+      if (!ayar.kilitli) gorunum.sahne = sahne;
+      aciolcerCiz(sahne, durum, ayar);
+    },
+    girdi(olay) {
+      if (ayar.kilitli) return false;
+      return girdiyiIsle(durum, olay, yakalamaBirim(gorunum));
+    },
     durum() { return durumuKopyala(durum); },
     yukle(kayit) { durumuYukle(durum, kayit); }
   };

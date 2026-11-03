@@ -15,7 +15,8 @@ function kur(ayar = {}, olcek = 1) {
   const veri = { id: 'D09a', bayraklar: {}, matik: {}, nedenler: {}, etiketler: {} };
   const ctx = ctxSahteOlustur('D09a', veri, 17);
   ctx.sahne.olcek = olcek;
-  const w = aciolcerOlustur({ soket: SOKET, hizasiz: false, olcekYonu: 'ic', ...ayar });
+  const w = aciolcerOlustur(
+    { soket: SOKET, hizasiz: false, olcekYonu: 'ic', ...ayar }, rngOlustur(17));
   return { w, ctx, sahne: ctx.sahne, kayit: sahneKaydi(ctx) };
 }
 
@@ -36,7 +37,7 @@ function yakin(a, b) {
 }
 
 describe('aciolcerOlustur', () => {
-  it('Provides the contract members and common methods and copies the socket.', () => {
+  it('Sözleşmedeki üyeleri ve ortak kalıbı sağlar, ayar noktasını kopyalar.', () => {
     const soket = { ...SOKET };
     const { w } = kur({ soket });
     dogrula.deepEqual(Object.keys(w).sort(), ['merkez', 'donus', 'olcekYonu', 'hizaliMi',
@@ -50,7 +51,7 @@ describe('aciolcerOlustur', () => {
     dogrula.equal(w.olcekYonu, 'ic');
   });
 
-  it('Preserves rotation, offset, center exclusion and reproducibility for 1000 seeds.', () => {
+  it('Bin seed aynı sonucu üretir; dönüş, kayma ve merkez dışlaması korunur.', () => {
     const kovalar = Array(12).fill(0);
     const yonler = new Set();
     let xToplam = 0;
@@ -73,7 +74,7 @@ describe('aciolcerOlustur', () => {
     dogrula.ok(Math.abs(xToplam / 1000) < 20 && Math.abs(yToplam / 1000) < 20);
   });
 
-  it('Selects each random scale approximately half the time across 1000 seeds.', () => {
+  it('Rastgele ölçek bin seed içinde yaklaşık yarı yarıya seçilir.', () => {
     let ic = 0;
     for (let seed = 1; seed <= 1000; seed++) {
       const w = aciolcerOlustur({ olcekYonu: 'rastgele' }, rngOlustur(seed));
@@ -86,7 +87,7 @@ describe('aciolcerOlustur', () => {
     }
   });
 
-  it('Validates settings and RNG without silently replacing randomness.', () => {
+  it('RNG ve ayar doğrulaması rastgeleliği sessiz bir varsayılanla değiştirmez.', () => {
     dogrula.throws(() => aciolcerOlustur(), AYAR_HATASI);
     dogrula.throws(() => aciolcerOlustur({ hizasiz: false }), AYAR_HATASI);
     for (const ayar of [null, [], { hizasiz: 'yes' }, { kilitli: 1 }, { r: 240 },
@@ -104,8 +105,8 @@ describe('aciolcerOlustur', () => {
   });
 });
 
-describe('hizaliMi and hizala', () => {
-  it('Reports center and zero alignment separately without rounding thresholds.', () => {
+describe('hizaliMi ve hizala', () => {
+  it('Merkez ile sıfır çizgisini ayrı raporlar; eşik sınırını yuvarlamaz.', () => {
     const { w, sahne } = kur({}, 2);
     w.ciz(sahne);
     const esik = geo.TOLERANS.pimYakalamaPx * sahne.olcek;
@@ -123,7 +124,7 @@ describe('hizaliMi and hizala', () => {
     dogrula.equal(w.hizaliMi(SOKET, 1).sifirTamam, true);
   });
 
-  it('Aligns to the latest target or defaults to the socket and zero direction.', () => {
+  it('Son hedefe hizalanır, hedef verilmemişse soket ve sıfır yönünü kullanır.', () => {
     const { w } = kur();
     w.merkez = { x: 0, y: 0 };
     w.donus = 220;
@@ -143,7 +144,7 @@ describe('hizaliMi and hizala', () => {
 });
 
 describe('okuma', () => {
-  it('Matches geo integer readings for both scales across 1000 seeds.', () => {
+  it('Bin seed ve her iki ölçekte geo ile aynı tam dereceyi verir.', () => {
     for (let seed = 1; seed <= 1000; seed++) {
       for (const olcekYonu of ['ic', 'dis']) {
         const rng = rngOlustur(seed);
@@ -158,7 +159,7 @@ describe('okuma', () => {
     }
   });
 
-  it('Preserves readings at zero, right, straight and full angles and reverse directions.', () => {
+  it('Sıfır, dik, doğru ve tam dönüş ile ters yöndeki okumaları korur.', () => {
     for (const olcekYonu of ['ic', 'dis']) {
       const { w } = kur({ olcekYonu });
       w.donus = 337;
@@ -171,8 +172,8 @@ describe('okuma', () => {
   });
 });
 
-describe('durum and yukle', () => {
-  it('Transfers JSON state between instances and copies saved objects.', () => {
+describe('durum ve yukle', () => {
+  it('JSON kaydı örnekler arasında taşınır ve kayda verilen nesneler kopyalanır.', () => {
     const { w } = kur();
     w.merkez = { x: 71, y: 93 };
     w.donus = 123;
@@ -188,7 +189,7 @@ describe('durum and yukle', () => {
     dogrula.deepEqual(kur().w.merkez, SOKET);
   });
 
-  it('Rejects invalid state atomically and clears an active drag when loading.', () => {
+  it('Geçersiz kayıt atomik reddedilir ve yükleme etkin sürüklemeyi bırakır.', () => {
     const { w, sahne } = kur();
     w.ciz(sahne);
     const once = w.durum();
@@ -205,20 +206,27 @@ describe('durum and yukle', () => {
 });
 
 describe('ciz', () => {
-  it('Excludes the initial capture area at actual scale and preserves later placement.', () => {
-    const { sahne } = kur({}, 10);
+  it('Çizim farklı ölçeklerde başlangıcı, hizalamayı, sürüklemeyi ve yüklenen kaydı korur.', () => {
+    const { sahne } = kur();
     const w = aciolcerOlustur({ soket: SOKET }, rngOlustur(2));
-    dogrula.ok(geo.uzaklik(w.merkez, SOKET) < 10 * geo.TOLERANS.pimYakalamaPx);
-    w.ciz(sahne);
-    dogrula.ok(geo.uzaklik(w.merkez, SOKET) > sahne.pxToBirim(geo.TOLERANS.pimYakalamaPx));
-    dogrula.ok(Math.abs(w.merkez.x - SOKET.x) <= 240);
-    dogrula.ok(Math.abs(w.merkez.y - SOKET.y) <= 240);
-    w.merkez = SOKET;
-    w.ciz(sahne);
-    dogrula.deepEqual(w.merkez, SOKET);
+    const islemler = [() => {}, () => { w.hizaliMi(SOKET, 85); w.hizala(); }, () => {
+      w.girdi(olay('bas', w.merkez));
+      w.girdi(olay('surukle', w.merkez, { dx: 12, dy: -7 }));
+      w.girdi(olay('birak', w.merkez));
+    }, () => w.yukle({ merkez: { x: 71, y: 93 }, donus: 123, olcekYonu: 'dis' })];
+    for (const islem of islemler) {
+      islem();
+      const once = w.durum();
+      for (const olcek of [10, 0.5, 1000 / 360]) {
+        sahne.olcek = olcek;
+        w.ciz(sahne);
+        w.ciz(sahne);
+        dogrula.deepEqual(w.durum(), once);
+      }
+    }
   });
 
-  it('Makes no scene calls or input consumption while locked, including pixel conversion.', () => {
+  it('Kilitliyken piksel dönüşümü dahil hiçbir sahne çağrısı ve girdi tüketimi yapmaz.', () => {
     const { w, sahne, kayit } = kur({ kilitli: true });
     w.ciz(sahne);
     dogrula.deepEqual(kayit.cagrilar, []);
@@ -228,7 +236,7 @@ describe('ciz', () => {
     dogrula.equal(kayit.sayac.sayi, 0);
   });
 
-  it('Draws an upper layer semicircle and center pin without measure counter calls.', () => {
+  it('Üst katmanda yarım daire ve merkez pimi çizer; ölçek ölçü sayacını artırmaz.', () => {
     const { w, r, kayit } = cizilmis();
     const katmanlar = kayit.cagrilar.filter(c => c.ad === 'katman');
     dogrula.deepEqual(katmanlar.map(c => c.arg[0]), ['ust']);
@@ -247,7 +255,7 @@ describe('ciz', () => {
     dogrula.ok(kayit.cagrilar.some(c => c.ad === 'cokgen' && c.arg[0].length === 2));
   });
 
-  it('Renders two real scene frames without numeric or label dependencies.', t => {
+  it('Gerçek motor sahnesinde iki kareyi sayı veya etiket bağımlılığı olmadan çizer.', t => {
     const ortam = motorOrtami(t);
     const mod = { tahta: false, metinOlcek: 1 };
     const veri = { bayraklar: { olcuKilidi: false }, etiketler: {} };
@@ -269,7 +277,7 @@ describe('ciz', () => {
     dogrula.equal(merkez.vur(w.merkez, gorunum.sahne.pxToBirim(16)), true);
   });
 
-  it('Uses two patterns every ten degrees and bold ticks at zero, ninety and 180.', () => {
+  it('Her on derecede iki desen kullanır; sıfır, doksan ve yüz seksen kalındır.', () => {
     const { w, r, kayit } = cizilmis();
     const centikler = kayit.cagrilar.filter(c => c.ad === 'parca' &&
       /^aciolcer(Ic|Dis)\d+$/.test(c.arg[2]?.id || ''));
@@ -290,7 +298,7 @@ describe('ciz', () => {
 });
 
 describe('girdi', () => {
-  it('Includes exactly sixteen pixels in center capture at different scales.', () => {
+  it('Merkez yakalaması farklı ölçeklerde tam on altı pikseli kapsar.', () => {
     for (const olcek of [0.5, 1, 2.5, 1000 / 360]) {
       const { w, sahne } = kur({}, olcek);
       w.ciz(sahne);
@@ -301,7 +309,7 @@ describe('girdi', () => {
     }
   });
 
-  it('Tracks phone scale and the updated pixel conversion on redraw.', () => {
+  it('Telefon ölçeğini ve yeniden çizmeden güncellenen piksel dönüşümünü izler.', () => {
     const { w, sahne } = kur({}, 1000 / 360);
     w.ciz(sahne);
     const esik = geo.TOLERANS.pimYakalamaPx * sahne.olcek;
@@ -309,15 +317,20 @@ describe('girdi', () => {
     w.girdi(olay('birak', w.merkez));
     dogrula.equal(w.girdi(olay('bas', { x: SOKET.x + esik + 0.001, y: SOKET.y })), false);
     sahne.olcek = 0.5;
-    w.ciz(sahne);
+    dogrula.equal(w.hizaliMi({ x: SOKET.x + 9, y: SOKET.y }, 0).merkezTamam, false);
     dogrula.equal(w.girdi(olay('bas', { x: SOKET.x + 9, y: SOKET.y })), false);
     dogrula.equal(w.girdi(olay('bas', { x: SOKET.x + 8, y: SOKET.y })), true);
   });
 
-  it('Uses dx and dy for center dragging independently of absolute pointer position.', () => {
+  it('Merkez sürüklemesi dx ve dy kullanır; geçersiz farklarda durumunu korur.', () => {
     const { w, sahne } = kur();
     w.ciz(sahne);
     dogrula.equal(w.girdi(olay('bas', { x: SOKET.x + 8, y: SOKET.y })), true);
+    const once = w.durum();
+    for (const fark of [{}, { dx: NaN, dy: 1 }, { dx: 1, dy: Infinity }, { dx: 1 }]) {
+      dogrula.equal(w.girdi(olay('surukle', w.merkez, fark)), false);
+      dogrula.deepEqual(w.durum(), once);
+    }
     dogrula.equal(w.girdi(olay('surukle', { x: 999, y: 999 }, { dx: 12, dy: -7 })), true);
     dogrula.deepEqual(w.merkez, { x: SOKET.x + 12, y: SOKET.y - 7 });
     dogrula.equal(w.donus, 0);
@@ -326,7 +339,7 @@ describe('girdi', () => {
     dogrula.equal(w.girdi(olay('birak', w.merkez)), false);
   });
 
-  it('Uses direction differences for rim dragging and rounds across the zero boundary.', () => {
+  it('Kenar tutma yön farkını kullanır; sıfır geçişinde dönüş tam derecedir.', () => {
     const { w, r } = cizilmis();
     w.donus = 300;
     const merkez = w.merkez;
@@ -341,7 +354,7 @@ describe('girdi', () => {
     dogrula.equal(w.girdi(olay('birak', bas)), true);
   });
 
-  it('Accepts rim capture at both semicircle boundaries for every rotation.', () => {
+  it('Yarım dairenin iki sınırındaki kenar tutuşunu bütün dönüşlerde kabul eder.', () => {
     const { w, r, sahne } = cizilmis();
     const tol = sahne.pxToBirim(geo.TOLERANS.pimYakalamaPx);
     for (let donus = 0; donus < 360; donus++) {
@@ -359,7 +372,7 @@ describe('girdi', () => {
     }
   });
 
-  it('Ignores the empty body, points outside the semicircle and uncaptured events.', () => {
+  it('Boş gövdeyi, yarım daire dışını ve tutulmamış olayları tüketmez.', () => {
     const { w, r } = cizilmis();
     const once = w.durum();
     for (const [yon, carpan] of [[90, 0.5], [90, 1.2], [270, 0.9]]) {
