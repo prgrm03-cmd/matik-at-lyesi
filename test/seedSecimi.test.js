@@ -24,8 +24,7 @@ describe('seed düzenek seçimi', () => {
       assert.equal(ozet.atlandi, 0);
       assert.equal(ozet.sayi, 0);
       assert.deepEqual(ozet.parametreDenetimsiz, []);
-      // K-03 kabulü: 10 saniye sınırı tüm kapsam için değil, D01 × 1000 içindir.
-      if (id === 'D01') assert.ok(ozet.sureMs <= 10000, 'D01 süre: ' + ozet.sureMs + ' ms');
+      // K-03 kabulü (D01 × 1000 ≤ 10 s) npm run seed sureMs ile docs/check'te izlenir
     });
   }
 
