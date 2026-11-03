@@ -219,6 +219,7 @@ function sonucuDogrula(ctx, sonuc) {
 async function calistirmayiYurut(oturum) {
   const { ctx, duzenek, ana } = oturum;
   oturum.hizmetler.defterler.forEach(d => typeof d.kilitle === 'function' && d.kilitle());
+  ana.arayuz.defterKilitle?.();
   const animasyon = duzenek.calistir(ctx);
   await canlandir(oturum, animasyon);
   if (!oturum.canli) throw new Error('DUZENEK_YOK');

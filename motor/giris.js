@@ -1,4 +1,5 @@
 import { TOLERANS } from '../geo/index.js';
+import { defterPaneliOlustur } from './defterPanel.js';
 
 /**
  * @typedef {Object} Olay
@@ -201,7 +202,8 @@ function dugme(bag, olay, kok) {
  */
 export function arayuzBagla(kok, komut) {
   const bul = ad => kok.querySelector('[data-' + ad + ']');
-  const bag = { kok, bul, mod: null };
+  const bag = { kok, bul, mod: null, etiketler: {} };
+  bag.panel = defterPaneliOlustur(kok, anahtar => bag.etiketler[anahtar]);
   const tik = olay => arayuzTik(bag, olay, komut);
   kok.addEventListener('click', tik);
   return {
@@ -222,6 +224,9 @@ export function arayuzBagla(kok, komut) {
     sonuc: (sonuc, tahta) => sonucGoster(bag, sonuc, tahta),
     defterAc: () => defterGoster(bag, true),
     defterKapat: () => defterGoster(bag, false),
+    defterKayit: (nesne, tanim) => bag.panel.kayit(nesne, tanim),
+    defterTemizle: () => bag.panel.temizle(),
+    defterKilitle: () => bag.panel.kilitle(),
     boyut: () => Math.ceil(Math.max(kok.scrollHeight, kok.getBoundingClientRect().height)),
     tohum: (id, seed) => adresGuncelle(bag, id, seed),
     kaldir: () => kok.removeEventListener('click', tik)
@@ -254,6 +259,7 @@ function dolapListele(bag, liste, sec) {
 }
 
 function duzenekGoster(bag, veri) {
+  bag.etiketler = veri.etiketler ?? {};
   for (const eleman of bag.kok.querySelectorAll('[data-etiket]')) {
     const metin = veri.etiketler?.[eleman.dataset.etiket];
     eleman.hidden = typeof metin !== 'string';
@@ -270,6 +276,7 @@ function duzenekGoster(bag, veri) {
 }
 
 function dolapGoster(bag) {
+  bag.panel.temizle();
   bag.bul('dolap').hidden = false;
   bag.bul('uygulama').hidden = true;
 }
