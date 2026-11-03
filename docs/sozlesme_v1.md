@@ -350,7 +350,7 @@ Ortak kalıp: fabrika `ctx.widget.X(ayar) → Nesne`; nesne `ciz(sahne)`, `girdi
  * @property {(gercek:{ad:string, olcu:number, iliski?:string}[], tolAci:number)=>{dogru:number, yanlis:number[]}} karsilastir
  * @property {(bolumA:number, bolumB:number)=>false} ayniKartaKoy   D12b: her zaman false döner, matik 'bolumAyri' söyler
  * @property {(i:number, veri:Object)=>void} otomatikDoldur   İ3
- * @property {(sahne:Sahne)=>void} ciz   (HTML katmanı; sahne yalnız konum)
+ * @property {(sahne:Sahne)=>void} ciz   (~~HTML katmanı; sahne yalnız konum~~ sahne: yalnız `sahne.cokgen/etiket/sayi/aciYayi`; HTML katmanı v1.1) [v1.0.x, ADT-014]
  * @property {(olay:Olay)=>boolean} girdi   Sürükle-bırak (açı bölgesi → satır)
  */
 
@@ -369,6 +369,9 @@ Ortak kalıp: fabrika `ctx.widget.X(ayar) → Nesne`; nesne `ciz(sahne)`, `girdi
  * @property {(olay:Olay)=>boolean} girdi   Merkez sürükle; açıklık sürgüsü; kilit düğmesi
  */
 // Not: olcuKilidi=true iken açıklık sayısı hiçbir yerde görünmez; pergel yalnız görsel açıklık gösterir.
+// Fabrika: `widget/pergel.js` → `pergelOlustur(ayar, ortam)`, `widget/gonye.js` → `gonyeOlustur(ayar, ortam)`; Function.length 2, başka export yok. [v1.0.x, ADT-013]
+// `ortam = { pxToBirim:(px)=>number, sembol?:Sembol }` (lazer ailesi, ADT-006 §2); `pxToBirim` yoksa WIDGET_AYAR_GECERSIZ; ölçü kilidi denetimi sarmalayıcıda (OLCU_KILIDI_IHLALI). [v1.0.x, ADT-013]
+// Sabit sahne id'leri: `pergelMerkez`, `pergelUc`, `pergelKilit`, `gonye`, `gonyeKose`; değiştirilmesi bozucudur. [v1.0.x, ADT-013]
 
 // gonye.js
 /** @typedef {{ dogru:Dogru, kilitli?:boolean }} GonyeAyar */
