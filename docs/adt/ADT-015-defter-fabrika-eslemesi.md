@@ -43,6 +43,3 @@ K-09 `defter/` altındaki beş dosyayı ve `motor/baglam.js` / `motor/ctxSahte.j
 - `araclar/imzaListesi.json` — beş defter satırı (kaynak ADT-015)
 - `docs/sozlesme_v1.md` §3.4 — ek satırlar `[v1.0.x, ADT-015]` (Matematikçe, ayrı docs PR'ı)
 - Bağlantılı: ADT-013 (ortam kalıbı), ADT-011 Ek A (`rng.alt` tüketmez), §3.1.1, §5.1, §6.4, §8.3; Defter HTML paneli ayrı CX-M bileti
-
-## Ek soru
-Hayır — PR gövdesinin `env` üzerinden `PR_BODY`'ye taşınması zaten doğru (enjeksiyonu önleyen) kalıptır ve K-09'a workflow dokunuşu eklenmez; sahiplik denetimine ilişkin bir düzeltme gerekirse CX-M'nin ayrı bakım PR'ı olur.
