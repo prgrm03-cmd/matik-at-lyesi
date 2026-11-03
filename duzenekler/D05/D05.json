@@ -1,0 +1,85 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D05",
+  "kod": "D05",
+  "surum": "1.0.1",
+  "arac": "B",
+  "baslik": "Halka Bandı",
+  "zorluk": 2,
+  "sureDk": 3,
+  "kapsam": ["5.3.1", "5.3.2"],
+  "turSayisi": 1,
+  "bayraklar": {
+    "olcuKilidi": true,
+    "kartSayisi": 1,
+    "tahminRafi": false,
+    "sinama": true,
+    "sensorSokme": false,
+    "aciolcerGorunur": false,
+    "yanParca": false
+  },
+  "kartlar": {
+    "esParca": {
+      "kalip": "Merkezden çember üzerindeki noktalara çizilen parçalar [parcalar]",
+      "disliler": [
+        {
+          "ad": "parcalar",
+          "secenekler": ["es", "farkli"]
+        }
+      ],
+      "dogru": {
+        "parcalar": "es"
+      }
+    }
+  },
+  "matik": {
+    "giris": "Aynı boy halka lazım, pergeli bir daha ayarlamak yasak!",
+    "basari": "Üç halka da aynı boy. Kilit açıklığı tuttu; merkezden kenara her parça eş.",
+    "tekrar": "Bir daha dene; kilidi kapat, pergeli işaretli noktaya taşı.",
+    "rafGiris": "Üç halka tamam! Çubuğu merkezden çemberin üstüne koy, kartı doldur, sına.",
+    "sinamaBasladi": "Kartı üç farklı çemberde sınıyorum.",
+    "sinamaTamam": "Üç çemberde de parçalar eş çıktı; kural tuttu!",
+    "karsiOrnek": "Bu çemberde merkezden kenara parçalar eş çıktı; karta bir daha bak."
+  },
+  "nedenler": {
+    "tamam": "Bant hazır; her halka eş, her parça eş.",
+    "yarimKaldi": "Halkaları çizip Çalıştır'a bas.",
+    "halkaEksik": "Bantta üç halka olmalı; Halka çiz ile devam et.",
+    "ilkHalkaKacti": "İlk halka merkez pimine ve işarete oturmadı.",
+    "aciklikDegisti": "Bant ilk halkadan geniş çıktı. Pergel yolda açılmış olmalı.",
+    "kilitAcik": "Halkalar eş ama kilit açıktı; şans işi olmasın, kilidi kapat.",
+    "merkezKacti": "Yeni merkez önceki halkanın üstünde değil; işarete taşı.",
+    "rafBos": "Çubuk rafa oturmadı; bir ucu merkezde olmalı.",
+    "kartYok": "Kartı doldurup tak.",
+    "kartTers": "Kart tersini söylüyor; çubuk her yöne aynı uzunlukta oturdu.",
+    "sinaYok": "Kartı Sına ile üç çemberde dene."
+  },
+  "ipucu": [
+    {
+      "vurgu": ["isaret0", "isaret1", "pergelKilit", "cubukA", "halka0"],
+      "ne": "Sıradaki işaret ya da kilit pimi yanar; hedef halkalar kesik gri hayalet olarak görünür."
+    },
+    {
+      "metin": "Kilidi kapat, pergel yolda açılmasın. Çubuğu merkezden çemberin üstüne koy, sonra başka bir yerine dene."
+    },
+    {
+      "ne": "Sıradaki halka pergel taşınıp kilitlenerek çizilir; raf evresinde çubuk merkeze oturur. Kart, Sına ve Çalıştır öğrencinin."
+    }
+  ],
+  "etiketler": {
+    "calistir": "Çalıştır",
+    "halka": "Halka çiz",
+    "sina": "Sına",
+    "raf": "Yarıçap çubuğu",
+    "es": "eş",
+    "farkli": "farklı"
+  },
+  "parametreler": {
+    "yaricap": { "min": 80, "max": 130 },
+    "konum": { "min": 430, "max": 530 },
+    "aci": { "min": 0, "max": 359 },
+    "ayrim": { "min": 60, "max": 150 },
+    "sure": { "min": 900, "max": 900 }
+  },
+  "notlar": "Sınır: çevre, alan, π, sayısal yarıçap yok; eşlik kilitle ve rafla gösterilir. Üç halka eş yarıçaplı (%2 r), merkezler önceki halkanın üstünde (%2 r); çubuk uzunluk kilitli, bir ucu merkezde. Kart eş/farklı; Sına 3 çember, her biri 'eş'."
+}
