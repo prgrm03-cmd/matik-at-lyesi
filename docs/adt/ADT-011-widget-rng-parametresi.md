@@ -32,3 +32,12 @@ Hangi akışın verileceği (ana `ctx.rng` mi, `rng.alt('widget:aciolcer')` alt 
 ## Ek A (2026-11-03, Hakem)
 
 rng, rastgelelik gerektiren her ayarda (`hizasiz:true` veya `olcekYonu:'rastgele'`) zorunlu ve tüketilir; `hizasiz:false && olcekYonu∈{ic,dis}` ise tüketilmez, `undefined` geçerlidir. Eksik rng hatası widget adını ve "rng gerekli" ifadesini içerir (örn. `aciolcer: rng gerekli (hizasiz veya olcekYonu:rastgele)`). ADT gövdesi değişmez; bu ek, K-05 (PR #8) incelemesinde görülen dar ifadeyi genişletir.
+
+## Ek B (2026-11-03, CX-M, K-05b · PR #14, Hakem onayı)
+
+CX-M bağlantı katmanı (`motor/baglam.js`), rastgelelik gereken her açıölçer kurulumunda güncel `ctx.rng.alt('widget:aciolcer')` kaynağını fabrikaya ikinci parametre olarak verir. Ana `ctx.rng` doğrudan tüketilmez: alt akış seed ve sabit etiketten türetildiğinden sonraki düzenek parametreleri kaymaz. Kaynak hizmet oluşturulurken saklanmaz; her fabrika çağrısı o turun `ctx.rng` değerini kullanır. Sabit ayarda (`hizasiz:false`, `olcekYonu∈{ic,dis}`) `undefined` verilir ve `ctx.rng` okunmaz.
+
+- (a) Aynı tur içinde aynı ayarla kurulan açıölçerler özdeş başlangıç durumunu alır. v1 her düzenekte tek açıölçer varsayar; bir düzenek iki açıölçer gerektirirse ayrı etiket/indeks için yeni ADT açılır.
+- (b) Motor katmanının "rastgelelik gerekir" kararı widget varsayılanlarıyla (`hizasiz:true`, `olcekYonu:'rastgele'`) eşlenik tutulur; widget varsayılanı değişirse `motor/baglam.js` aynı PR'da güncellenir. `ctx.rng` tur başında motor tarafından yenilenir.
+
+ADT gövdesi ve Ek A değişmez.
