@@ -26,6 +26,9 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Dokuz komut (D01 en fazla 60 saniye)
         run: /usr/bin/time -f 'CHECK_SURE_SN=%e' timeout 60s npm run check
+      - name: Tam lint bulgulari
+        if: failure()
+        run: npm run lint
       - name: Kuru kosu (seed 42)
         run: node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum
       - name: Check raporu

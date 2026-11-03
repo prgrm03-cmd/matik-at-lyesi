@@ -81,6 +81,27 @@ describe('K-04 yasak kanıtları', () => {
     assert.ok(sonuc.hatalar.length > 0);
   });
 
+  it('Hesaplanan DOM özellikleri lint ve yasak ile ayrı ayrı kırmızıdır.', async t => {
+    const tirnak = String.fromCharCode(96);
+    const ornekler = [
+      ['duzenekler/D99/D99.js', "void window['document'];"],
+      ['geo/x.js', "void globalThis['document'];"],
+      ['geo/x.js', 'void globalThis[' + tirnak + 'document' + tirnak + '];']
+    ];
+    for (const [yol, kaynak] of ornekler) {
+      const sonuc = await ornek(t, yol, kaynak);
+      assert.ok(sonuc.hatalar.length > 0, yol);
+      assert.ok(sonuc.yasaklar.length > 0, yol);
+    }
+  });
+
+  it('geo kendi göreli modülünü alabilir, dış modül alamaz.', async t => {
+    const iyi = "import { x } from './nokta.js'; void x;";
+    const kotu = "import { x } from '../motor/x.js'; void x;";
+    assert.deepEqual(await ornek(t, 'geo/x.js', iyi), { hatalar: [], yasaklar: [] });
+    assert.ok((await ornek(t, 'geo/x.js', kotu)).hatalar.length > 0);
+  });
+
   it('motor/x.js depolama erişimi kırmızıdır.', async t => {
     const sonuc = await ornek(t, 'motor/x.js', 'void globalThis.localStorage;');
     assert.ok(sonuc.hatalar.length > 0);

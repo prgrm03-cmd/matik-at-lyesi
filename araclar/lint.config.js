@@ -72,6 +72,22 @@ function modulDurumu(context) {
   };
 }
 
+function yasakAnahtar(context) {
+  const adlar = new Set(context.options[0]);
+  return {
+    MemberExpression(node) {
+      const p = node.property;
+      let ad = node.computed ? p.value : p.name;
+      if (node.computed && p.type === 'TemplateLiteral' && p.expressions.length === 0) {
+        ad = p.quasis[0].value.cooked;
+      }
+      if (adlar.has(ad)) {
+        context.report({ node, message: 'Bu özellik erişimi yasaktır (§5.2): ' + ad });
+      }
+    }
+  };
+}
+
 function testFonksiyonlari(context) {
   function denetle(node) {
     const cagri = node.parent;
@@ -88,6 +104,9 @@ function testFonksiyonlari(context) {
 
 const yerel = {
   rules: {
+    'yasak-anahtar': {
+      meta: { schema: [{ type: 'array', items: { type: 'string' } }] }, create: yasakAnahtar
+    },
     'salt-okunur': { meta: { schema: [] }, create: saltOkunur },
     'modul-durumu': { meta: { schema: [] }, create: modulDurumu },
     'test-fonksiyonu': { meta: { schema: [] }, create: testFonksiyonlari }
@@ -173,7 +192,8 @@ export default [
           message: 'geo DOM/zaman erişimi kullanamaz (§2.2, §5.2).'
         }))
       ],
-      'no-restricted-imports': ['error', { patterns: ['*', '!./*'] }]
+      'no-restricted-imports': ['error', { patterns: [{ regex: '^(?!\\./)' }] }],
+      'sozlesme/yasak-anahtar': ['error', [...DOM, 'localStorage', 'sessionStorage', 'indexedDB']]
     }
   },
   {
@@ -191,6 +211,7 @@ export default [
           message: 'Düzenek yalnız ctx üzerinden çalışır (§5.2).'
         }))
       ],
+      'sozlesme/yasak-anahtar': ['error', YASAK],
       'sozlesme/salt-okunur': 'error',
       'sozlesme/modul-durumu': 'error'
     }
