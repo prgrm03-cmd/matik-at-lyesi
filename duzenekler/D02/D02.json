@@ -1,0 +1,65 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D02",
+  "kod": "D02",
+  "surum": "1.0.0",
+  "arac": "A",
+  "baslik": "Lazer Hattı",
+  "zorluk": 1,
+  "sureDk": 2,
+  "kapsam": [
+    "5.3.1"
+  ],
+  "turSayisi": 3,
+  "bayraklar": {
+    "olcuKilidi": false,
+    "kartSayisi": 0,
+    "tahminRafi": false,
+    "sinama": false,
+    "sensorSokme": false,
+    "aciolcerGorunur": false,
+    "yanParca": false
+  },
+  "matik": {
+    "giris": "Lazer kafası kapağa takıldı. Hattı kur, sensörler ışığı görsün.",
+    "basari": "Bütün sensörler ışığı gördü, alarmlar sessiz kaldı.",
+    "tekrar": "Yeni sipariş geldi. Sensörler ve lazer başlığı yer değiştirdi.",
+    "yanlisArac": "Bu tezgâhta lazer başlığı hazır bekliyor, başka araca gerek yok.",
+    "kilit": "Bu düzenek henüz kilitli. Önceki işi tamamlayınca açılır."
+  },
+  "ipucu": [
+    {
+      "vurgu": [
+        "sensor0",
+        "alarm0"
+      ],
+      "ne": "Işığın değmediği ilk sensör veya değdiği ilk alarm vurgulanır."
+    },
+    {
+      "metin": "Lazer başlığının uç kapaklarına bak; hat sensörlerden geçip alarmdan uzak durmalı."
+    },
+    {
+      "ne": "A pimi ilk sensörün üzerine oturtulur; B pimi öğrenciye bırakılır."
+    }
+  ],
+  "nedenler": {
+    "tamam": "Hat bütün sensörlerden geçti ve alarmlara değmedi.",
+    "sensorKacti": "Işık sensörlerden birinin yanından geçti, değmedi. Sensör küstü.",
+    "alarmYandi": "Işık kırmızı alarma değdi ve sireni çalıştırdı.",
+    "yarimKaldi": "Lazer hattının uç pimleri henüz tezgâha yerleşmedi."
+  },
+  "parametreler": {
+    "konum": {
+      "min": -300,
+      "max": 300,
+      "adim": 1
+    }
+  },
+  "etiketler": {
+    "calistir": "Çalıştır",
+    "parca": "Doğru parçası",
+    "isin": "Işın",
+    "dogru": "Doğru"
+  },
+  "notlar": "sınır: hat uzunluğu ve koordinat gösterilmez"
+}
