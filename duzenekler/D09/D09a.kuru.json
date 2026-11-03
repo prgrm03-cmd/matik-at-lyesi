@@ -1,0 +1,20 @@
+[
+  {"tur":"bas","x":596,"y":541,"hedef":"aciolcerMerkez",
+    "yorum":"Seed 42: A=(500,500), merkez=(596,541), dönüş=82°, iç sıra; kol1=224°, hedef=60°, kol=214. İki dizi ardışık; Çalıştır sınırlarında beklenen sonuç denetlenir."},
+  {"tur":"surukle","x":500,"y":500,"dx":-96,"dy":-41,"hedef":"aciolcerMerkez"},
+  {"tur":"birak","x":500,"y":500,"hedef":"aciolcerMerkez"},
+  {"tur":"bas","x":262.335664,"y":533.401544,
+    "yorum":"Kenar: A'dan 240 birim, 82+90=172°. 314°'ye sürüklemek dönüşü 224° yapar."},
+  {"tur":"surukle","x":666.718009,"y":327.358448},
+  {"tur":"birak","x":666.718009,"y":327.358448},
+  {"tur":"bas","x":248.231070,"y":256.869570,"hedef":"kol2"},
+  {"tur":"surukle","x":584.672663,"y":160.396496,"hedef":"kol2",
+    "yorum":"Tamam dizisi: 350 birimlik tutamak 224+60=284° yönüne gelir."},
+  {"tur":"birak","x":584.672663,"y":160.396496,"hedef":"kol2"},
+  {"tur":"dugme","x":500,"y":950,"dugmeId":"calistir","beklenen":"tamam"},
+  {"tur":"bas","x":584.672663,"y":160.396496,"hedef":"kol2",
+    "yorum":"İkinci dizi aynı hizayı kullanır: 224+(180-60)=344°; gerçek 120°, karşı sıra 60°."},
+  {"tur":"surukle","x":836.441594,"y":403.526925,"hedef":"kol2"},
+  {"tur":"birak","x":836.441594,"y":403.526925,"hedef":"kol2"},
+  {"tur":"dugme","x":500,"y":950,"dugmeId":"calistir","beklenen":"olcekTers"}
+]
