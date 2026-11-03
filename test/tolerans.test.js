@@ -3,10 +3,10 @@ import { strict as dogrula } from 'node:assert';
 import { TOLERANS, tAci, toleransIcinde } from '../geo/tolerans.js';
 
 describe('TOLERANS', () => {
-  it('Sözleşmedeki dokuz anahtarı değiştirilemez olarak sunar.', () => {
+  it('Sözleşme ve ADT-010 anahtarlarını değiştirilemez olarak sunar.', () => {
     dogrula.deepEqual(Object.keys(TOLERANS).sort(), [
       'aciRaf', 'aciOkuma', 'dikme', 'uzunlukOran', 'teraziToplam',
-      'pimYakalamaPx', 'capCubuguPx', 'tekrarKomsulugu', 'kesisimEps'
+      'pimYakalamaPx', 'capCubuguPx', 'tekrarKomsulugu', 'kesisimEps', 'hatBirim'
     ].sort());
     dogrula.ok(Object.isFrozen(TOLERANS));
     dogrula.equal(TOLERANS.aciRaf, tAci);
@@ -22,6 +22,7 @@ describe('TOLERANS', () => {
     dogrula.equal(TOLERANS.capCubuguPx, 4);
     dogrula.equal(TOLERANS.tekrarKomsulugu, 5);
     dogrula.equal(TOLERANS.kesisimEps * 100, 8);
+    dogrula.equal(TOLERANS.hatBirim, 12);
   });
 });
 
