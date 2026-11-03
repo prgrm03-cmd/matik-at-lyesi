@@ -1,0 +1,19 @@
+[
+  {"tur": "bas", "hedef": "pergelUc", "x": 635, "y": 516},
+  {"tur": "surukle", "hedef": "pergelUc", "x": 421.67094177290295, "y": 419.79183221466644},
+  {"tur": "birak", "hedef": "pergelUc", "x": 421.67094177290295, "y": 419.79183221466644},
+  {"tur": "dugme", "x": 0, "y": 0, "dugmeId": "halka"},
+  {"tur": "tik", "hedef": "pergelKilit", "x": 475, "y": 420},
+  {"tur": "bas", "hedef": "pergelMerkez", "x": 475, "y": 516},
+  {"tur": "surukle", "hedef": "pergelMerkez", "x": 421.67094177290295, "y": 419.79183221466644, "dx": -53.32905822709705, "dy": -96.20816778533356},
+  {"tur": "birak", "hedef": "pergelMerkez", "x": 421.67094177290295, "y": 419.79183221466644},
+  {"tur": "dugme", "x": 0, "y": 0, "dugmeId": "halka"},
+  {"tur": "bas", "hedef": "pergelMerkez", "x": 421.67094177290295, "y": 419.79183221466644},
+  {"tur": "surukle", "hedef": "pergelMerkez", "x": 473.31281367935094, "y": 516.9160674291484, "dx": 51.64187190644799, "dy": 97.12423521448193},
+  {"tur": "birak", "hedef": "pergelMerkez", "x": 473.31281367935094, "y": 516.9160674291484},
+  {"tur": "dugme", "x": 0, "y": 0, "dugmeId": "halka"},
+  {"tur": "bas", "hedef": "cubukA", "x": 475, "y": 516},
+  {"tur": "surukle", "hedef": "cubukA", "x": 475, "y": 516},
+  {"tur": "birak", "hedef": "cubukA", "x": 475, "y": 516},
+  {"tur": "dugme", "x": 0, "y": 0, "dugmeId": "calistir"}
+]
