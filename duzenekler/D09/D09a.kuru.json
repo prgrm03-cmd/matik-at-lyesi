@@ -12,9 +12,8 @@
     "yorum":"Tamam dizisi: 350 birimlik tutamak 224+60=284° yönüne gelir."},
   {"tur":"birak","x":584.672663,"y":160.396496,"hedef":"kol2"},
   {"tur":"dugme","x":500,"y":950,"dugmeId":"calistir","beklenen":"tamam"},
-  {"tur":"dugme","x":900,"y":900,"dugmeId":"olcekDis",
-    "yorum":"İkinci dizi aynı hizayı kullanır: dış sırayı seç, 224+(180-60)=344°'ye git."},
-  {"tur":"bas","x":584.672663,"y":160.396496,"hedef":"kol2"},
+  {"tur":"bas","x":584.672663,"y":160.396496,"hedef":"kol2",
+    "yorum":"İkinci dizi aynı hizayı kullanır: 224+(180-60)=344°; gerçek 120°, karşı sıra 60°."},
   {"tur":"surukle","x":836.441594,"y":403.526925,"hedef":"kol2"},
   {"tur":"birak","x":836.441594,"y":403.526925,"hedef":"kol2"},
   {"tur":"dugme","x":500,"y":950,"dugmeId":"calistir","beklenen":"olcekTers"}

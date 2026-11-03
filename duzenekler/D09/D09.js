@@ -20,7 +20,7 @@ export function kur(ctx, seed) {
     seed, gecmis, A, hedef, kol1Yon, kol2Yon, kolMevcutYon: kol2Yon,
     kolUzunlugu: ctx.geo.rastgeleKolUzunlugu(ctx.rng, hedef),
     aciolcer: ctx.widget.aciolcer({ soket: A, hizasiz: true, olcekYonu: 'rastgele' }),
-    olcekYonu: 'ic', tur: ctx.tur, asama: 0
+    tur: ctx.tur, asama: 0
   };
   // ADT-012: İ3 yalnız hizala() çağırabilsin diye hedef bir kez kaydedilir.
   ctx.durum.aciolcer.hizaliMi(A, kol1Yon);
@@ -74,14 +74,12 @@ function kollarCiz(ctx) {
 }
 
 function okumayiCiz(ctx) {
-  const { aciolcer, kol2Yon, olcekYonu } = ctx.durum;
+  const { aciolcer, kol2Yon } = ctx.durum;
   const okuma = aciolcer.okuma(kol2Yon);
-  ctx.sahne.etiket({ x: 70, y: 875 }, olcekYonu === 'ic' ? 'okumaIc' : 'okumaDis');
-  ctx.sahne.sayi({ x: 70, y: 930 }, okuma[olcekYonu]);
-  ctx.sahne.dugme({ id: 'olcekIc', anahtar: 'olcekIc', konum: 'sag',
-    etkin: olcekYonu !== 'ic' });
-  ctx.sahne.dugme({ id: 'olcekDis', anahtar: 'olcekDis', konum: 'sag',
-    etkin: olcekYonu !== 'dis' });
+  ctx.sahne.etiket({ x: 70, y: 875 }, 'okumaIc');
+  ctx.sahne.sayi({ x: 70, y: 930 }, okuma.ic);
+  ctx.sahne.etiket({ x: 530, y: 875 }, 'okumaDis');
+  ctx.sahne.sayi({ x: 530, y: 930 }, okuma.dis);
 }
 
 function koluYonlendir(ctx, olay) {
@@ -115,8 +113,6 @@ export function girdi(ctx, olay) {
       koluYonlendir(ctx, olay);
       break;
     case 'dugme':
-      if (olay.dugmeId === 'olcekIc') ctx.durum.olcekYonu = 'ic';
-      if (olay.dugmeId === 'olcekDis') ctx.durum.olcekYonu = 'dis';
       break;
     default:
       break;
@@ -146,7 +142,7 @@ export function calistir(ctx) {
 
 /** @param {Ctx} ctx @returns {{tamam:boolean, yanParca:boolean, neden:string}} */
 export function basari(ctx) {
-  const { A, kol1Yon, kol2Yon, hedef, aciolcer, olcekYonu } = ctx.durum;
+  const { A, kol1Yon, kol2Yon, hedef, aciolcer } = ctx.durum;
   if (!A || !Number.isFinite(kol2Yon)) return sonuc('yarimKaldi');
   const { merkezTamam, sifirTamam } = aciolcer.hizaliMi(A, kol1Yon);
   if (!merkezTamam && !sifirTamam) return sonuc('aciolcerYerindeDegil');
@@ -154,9 +150,8 @@ export function basari(ctx) {
   const gercek = ctx.geo.aciNormalize(kol2Yon - kol1Yon);
   if (ctx.geo.aciFark(gercek, hedef) <= tol) return sonuc('tamam');
   const okuma = aciolcer.okuma(kol2Yon);
-  // Fiziksel sıra ile öğrencinin seçtiği sıra ayrıdır; 180−okunan karşı sıradır.
-  const okunan = okuma[okuma.dogru];
-  if (okuma.dogru !== olcekYonu && ctx.geo.aciFark(180 - okunan, hedef) <= tol) {
+  // Karşı sıra geometrik olarak 180−okunan'dır; ayrıca bir sıra seçimi aranmaz.
+  if (ctx.geo.aciFark(180 - okuma[okuma.dogru], hedef) <= tol) {
     return sonuc('olcekTers');
   }
   return sonuc('rafDisi');
