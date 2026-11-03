@@ -116,6 +116,42 @@ export function d04Parametreleri(ctx, gozlem) {
   return degerler;
 }
 
+function d05NoktalariDogrula(durum) {
+  dogrula(Array.isArray(durum?.isaretler) && durum.isaretler.length === 2,
+    'D05NoktalarEksik:isaretler', 'IMZA_EKSIK');
+  dogrula(Array.isArray(durum.hedefler) && durum.hedefler.length === 3, 'D05Hedefler');
+  const noktalar = [durum.M0, ...durum.isaretler,
+    ...durum.hedefler.map(hedef => hedef?.merkez), durum.cubuk?.A, durum.cubuk?.B];
+  for (const nokta of noktalar) {
+    dogrula([nokta?.x, nokta?.y].every(deger =>
+      Number.isFinite(deger) && deger >= 0 && deger <= 1000), 'D05TezgahSiniri');
+  }
+  dogrula(durum.hedefler.every(hedef => hedef.r === durum.r) &&
+    durum.hedefler[0].merkez.x === durum.M0.x &&
+    durum.hedefler[0].merkez.y === durum.M0.y, 'D05Hedefler');
+  dogrula(geo.toleransIcinde(geo.uzaklik(durum.cubuk.A, durum.cubuk.B),
+    durum.r, geo.TOLERANS.uzunlukOran * durum.r), 'D05Cubuk');
+}
+
+/** @param {Ctx} ctx @param {Object} gozlem @returns {Object} D05 kurulum parametreleri. */
+export function d05Parametreleri(ctx, gozlem) {
+  d05NoktalariDogrula(ctx.durum);
+  // D05.kur ana akışı; yarıçapı seçen tamHaric iç çekilişleri gözleme katılmaz.
+  const adlar = ['konum', 'konum', 'aci', 'aci', 'konum', 'konum', 'aci'];
+  dogrula(Array.isArray(gozlem?.tam) && gozlem.tam.length === adlar.length,
+    'D05GozlemEksik', 'IMZA_EKSIK');
+  const degerler = { yaricap: [ctx.durum.r] };
+  for (const [i, ad] of adlar.entries()) {
+    const cagri = gozlem.tam[i];
+    dogrula(cagri && typeof cagri === 'object', 'D05GozlemEksik', 'IMZA_EKSIK');
+    const aralik = ctx.veri.parametreler[ad];
+    dogrula(cagri.min === aralik.min && cagri.max === aralik.max,
+      'D05RngAraligi:' + ad);
+    (degerler[ad] ||= []).push(cagri.deger);
+  }
+  return degerler;
+}
+
 /** @param {Ctx} ctx @returns {Object} D09a.json aci aralığı sipariş hedefini tanımlar. */
 export function d09aParametreleri(ctx) {
   dogrula(ctx.durum && Object.prototype.hasOwnProperty.call(ctx.durum, 'hedef'),

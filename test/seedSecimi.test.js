@@ -24,6 +24,7 @@ describe('seed düzenek seçimi', () => {
       assert.equal(ozet.atlandi, 0);
       assert.equal(ozet.sayi, 0);
       assert.deepEqual(ozet.parametreDenetimsiz, []);
+      // K-03 kabulü (D01 × 1000 ≤ 10 s) npm run seed sureMs ile docs/check'te izlenir
     });
   }
 

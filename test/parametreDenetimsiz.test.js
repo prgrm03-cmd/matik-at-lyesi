@@ -12,23 +12,23 @@ import { seedTesti } from '../araclar/seedTesti.js';
 
 const VERI = {
   ...JSON.parse(readFileSync(new URL('../duzenekler/D01/D01.json', import.meta.url), 'utf8')),
-  id: 'D05', kod: 'D05'
+  id: 'D06', kod: 'D06'
 };
-const DUZENEK = { ...D01, id: 'D05' };
+const DUZENEK = { ...D01, id: 'D06' };
 const KURU = fileURLToPath(new URL('../araclar/kuru.js', import.meta.url));
 
-// Gerçek D01 zincirini adaptörsüz kimlikle çalıştırır; üretim D05 dosyası oluşturulmaz.
+// Gerçek D01 zincirini adaptörsüz kimlikle çalıştırır; üretim D06 dosyası oluşturulmaz.
 async function ornekHazirla() {
   const kok = await mkdtemp(join(tmpdir(), 'matikDenetimsiz'));
-  const dizin = join(kok, 'duzenekler', 'D05');
-  const js = join(dizin, 'D05.js');
-  const json = join(dizin, 'D05.json');
+  const dizin = join(kok, 'duzenekler', 'D06');
+  const js = join(dizin, 'D06.js');
+  const json = join(dizin, 'D06.json');
   await mkdir(dizin, { recursive: true });
   await mkdir(join(kok, 'docs'));
   await writeFile(join(kok, 'package.json'), '{"type":"module"}');
-  await writeFile(join(kok, 'docs', 'kapsam.json'), '["D05"]');
+  await writeFile(join(kok, 'docs', 'kapsam.json'), '["D06"]');
   const kaynak = readFileSync(new URL('../duzenekler/D01/D01.js', import.meta.url), 'utf8');
-  await writeFile(js, kaynak.replace('export const id = \'D01\'', 'export const id = \'D05\''));
+  await writeFile(js, kaynak.replace('export const id = \'D01\'', 'export const id = \'D06\''));
   await writeFile(json, JSON.stringify(VERI));
   return { kok, js, json };
 }
@@ -37,7 +37,7 @@ describe('kuruKos', () => {
   it('parametre denetimsiz olsa da animasyon ve başarı zincirini tamamlar', () => {
     const kosu = kuruKos(DUZENEK, VERI, 42);
     assert.equal(kosu.atlandi, false);
-    assert.deepEqual(kosu.gozlem.parametreDenetimsiz, ['D05']);
+    assert.deepEqual(kosu.gozlem.parametreDenetimsiz, ['D06']);
     assert.equal(kosu.ctx.durum.asama, 1);
     assert.deepEqual(kosu.sonuc, { tamam: false, yanParca: false, neden: 'yarimKaldi' });
   });
@@ -58,10 +58,10 @@ describe('kuruCalistir', () => {
     assert.equal(kosu.error, undefined);
     assert.equal(kosu.status, 0, kosu.stderr);
     assert.deepEqual(JSON.parse(kosu.stderr.trim()),
-      { uyari: 'denetimsiz', id: 'D05', denetim: 'parametreler' });
+      { uyari: 'denetimsiz', id: 'D06', denetim: 'parametreler' });
     const ozet = JSON.parse(kosu.stdout.trim());
     assert.equal(ozet.atlandi, false);
-    assert.deepEqual(ozet.parametreDenetimsiz, ['D05']);
+    assert.deepEqual(ozet.parametreDenetimsiz, ['D06']);
   });
 });
 
@@ -73,6 +73,6 @@ describe('seedTesti', () => {
     assert.equal(ozet.hata, 0, JSON.stringify(ozet.ilkHatalar));
     assert.equal(ozet.atlandi, 0);
     assert.equal(ozet.gecti, 1000);
-    assert.deepEqual(ozet.parametreDenetimsiz, ['D05']);
+    assert.deepEqual(ozet.parametreDenetimsiz, ['D06']);
   });
 });
