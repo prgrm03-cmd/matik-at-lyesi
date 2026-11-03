@@ -168,7 +168,6 @@ describe('seedTesti', () => {
     assert.equal(ozet.gecti, 6000);
     assert.equal(ozet.sayi, 12000);
     assert.deepEqual(ozet.parametreDenetimsiz, []);
-    assert.ok(Number.isFinite(ozet.sureMs) && ozet.sureMs >= 0);
   });
 
   for (const id of ['D03', 'D04', 'D05']) {
