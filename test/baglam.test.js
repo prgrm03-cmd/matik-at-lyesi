@@ -35,7 +35,7 @@ describe('hizmetleriOlustur', () => {
 describe('hizmetleriOlustur', () => {
   it('sonraki biletlere ait bütün fabrikalar tanımlı hata koduyla bekler', () => {
     const { ctx } = kur();
-    for (const ad of ['aciTablosu', 'pergel', 'gonye', 'lazer']) {
+    for (const ad of ['aciTablosu', 'pergel', 'gonye']) {
       assert.throws(() => ctx.widget[ad]({}), { message: 'IMZA_EKSIK' });
     }
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
@@ -151,5 +151,22 @@ describe('sembolOlustur', () => {
     assert.throws(() => sembol.goster('parca', '17', 'B'), {
       message: 'WIDGET_AYAR_GECERSIZ'
     });
+  });
+});
+
+describe('hizmetleriOlustur', () => {
+  it('gerçek lazeri giriş sırasına bağlar ve sembolü arayüze iletir', () => {
+    const { ctx, hizmetler, cagrilar } = kur();
+    const lazer = ctx.widget.lazer({ mod: 'parca' });
+    lazer.A = { x: 10, y: 20 };
+    lazer.B = { x: 30, y: 20 };
+    assert.equal(hizmetler.widgetler[0], lazer);
+    const duzenek = { girdi() { assert.fail('olay tuketilmeliydi'); } };
+    const bas = { tur: 'bas', hedef: 'lazerA', x: 10, y: 20 };
+    assert.equal(girdiDagit(ctx, duzenek, bas, hizmetler), true);
+    assert.equal(girdiDagit(ctx, duzenek, { ...bas, tur: 'surukle', x: 15 }, hizmetler), true);
+    assert.equal(lazer.A.x, 15);
+    lazer.mod = 'isin';
+    assert.ok(cagrilar.some(c => c.ad === 'sembol' && c.degerler[0] === '[AB'));
   });
 });

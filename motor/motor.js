@@ -94,17 +94,18 @@ function komutIsle(ana, komut) {
 export async function baslat(ayar) {
   const eski = uygulama.deger;
   if (eski) { oturumuKapat(eski.oturum); eski.arayuz.kaldir(); }
-  const secim = tahtaAyarlari(ayar.url);
-  const ana = { ...secim, kok: ayar.kok, url: ayar.url, acilis: 0, oturum: null };
+  const ana = { kok: ayar.kok, url: ayar.url, acilis: 0, oturum: null };
   ana.arayuz = arayuzBagla(ayar.kok, (komut) => komutIsle(ana, komut));
-  ana.kayit = kayitOku(ana.mod);
-  if (!ana.mod.tahta) {
-    ana.mod.pilot = ana.kayit.pilotMode;
-    ana.mod.metinOlcek = ana.kayit.ayarlar.metinOlcek;
-  }
   uygulama.deger = ana;
-  ana.arayuz.ayarla(ana.mod, ana.kontrast);
   try {
+    const secim = tahtaAyarlari(ayar.url);
+    Object.assign(ana, secim);
+    ana.kayit = kayitOku(ana.mod);
+    if (!ana.mod.tahta) {
+      ana.mod.pilot = ana.kayit.pilotMode;
+      ana.mod.metinOlcek = ana.kayit.ayarlar.metinOlcek;
+    }
+    ana.arayuz.ayarla(ana.mod, ana.kontrast);
     await dolabiGoster(ana);
     if (ana !== uygulama.deger) return;
     kopruGonder('hazir');

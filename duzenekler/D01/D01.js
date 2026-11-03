@@ -4,7 +4,7 @@
 /** @type {string} */
 export const id = 'D01';
 /** @type {string} */
-export const surum = '1.0.0';
+export const surum = '1.0.1';
 
 /** @param {Ctx} ctx @param {number} seed @returns {void} */
 export function kur(ctx, seed) {
@@ -66,9 +66,9 @@ export function calistir(ctx) {
 
 /** @param {Ctx} ctx @returns {{tamam:boolean, yanParca:boolean, neden:string}} */
 export function basari(ctx) {
-  // İskelette tamamlanma koşulu yoktur; ctx imzanın zorunlu parçasıdır.
+  // Tam tasarım ve R1 gelene kadar iskelet yıldız veya tamamlanma kaydı üretmez.
   void ctx;
-  return { tamam: true, yanParca: false, neden: 'tamam' };
+  return { tamam: false, yanParca: false, neden: 'yarimKaldi' };
 }
 
 /** @param {Ctx} ctx @param {1|2|3} seviye @returns {{anahtar?:string}} */

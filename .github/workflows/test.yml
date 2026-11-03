@@ -1,0 +1,25 @@
+name: Node 20
+on:
+  push:
+    branches:
+      - cx-m/K-03-sahte-seed
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  dogrula:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: npm run sema
+      - run: npm run seed
+      - run: node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum

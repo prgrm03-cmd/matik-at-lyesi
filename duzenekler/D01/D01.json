@@ -2,7 +2,7 @@
   "semaSurumu": "1.0",
   "id": "D01",
   "kod": "D01",
-  "surum": "1.0.0",
+  "surum": "1.0.1",
   "arac": "A",
   "baslik": "TODO-R1",
   "zorluk": 1,
@@ -42,7 +42,8 @@
     }
   ],
   "nedenler": {
-    "tamam": "TODO-R1"
+    "tamam": "TODO-R1",
+    "yarimKaldi": "TODO-R1"
   },
   "parametreler": {
     "konum": {

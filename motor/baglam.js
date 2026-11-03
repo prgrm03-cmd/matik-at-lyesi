@@ -1,13 +1,10 @@
 import { sembolOlustur } from './sembolPaneli.js';
 import { sesOlustur } from './ses.js';
+import { lazerOlustur } from '../widget/lazer.js';
+import { bekleyenFabrika as bekleyen } from './sahteKayit.js';
 
-// Fabrikalar sonraki biletlerde bu noktada bağlanır; düzeneğe yeni alan eklenmez.
-function bekleyen(ayar) {
-  void ayar;
-  throw new Error('IMZA_EKSIK');
-}
-
-function widgetOlustur(veri) {
+function widgetOlustur(ctx, hizmetler) {
+  const veri = ctx.veri;
   return {
     aciolcer(ayar) {
       if (veri.bayraklar.olcuKilidi && ayar?.kilitli !== true) {
@@ -18,7 +15,11 @@ function widgetOlustur(veri) {
     aciTablosu: bekleyen,
     pergel: bekleyen,
     gonye: bekleyen,
-    lazer: bekleyen
+    lazer(ayar) {
+      const nesne = lazerOlustur(ayar, ctx.sembol);
+      hizmetler.widgetler.push(nesne);
+      return nesne;
+    }
   };
 }
 
@@ -46,7 +47,8 @@ function matikOlustur(veri, arayuz) {
 
 /** @param {Ctx} ctx @param {Object} arayuz @param {Object} ayarlar @returns {Object} */
 export function hizmetleriOlustur(ctx, arayuz, ayarlar) {
-  ctx.widget = widgetOlustur(ctx.veri);
+  const hizmetler = { widgetler: [], defterler: [] };
+  ctx.widget = widgetOlustur(ctx, hizmetler);
   ctx.defter = {
     tahminRafi: bekleyen,
     kuralKarti: bekleyen,
@@ -62,7 +64,7 @@ export function hizmetleriOlustur(ctx, arayuz, ayarlar) {
   ctx.matik = matikOlustur(ctx.veri, arayuz);
   ctx.sembol = sembolOlustur((metin) => arayuz.sembol(metin));
   ctx.ses = sesOlustur(ctx.mod, ayarlar);
-  return { widgetler: [], defterler: [] };
+  return hizmetler;
 }
 
 /** @param {Ctx} ctx @param {Object} duzenek @param {Olay} olay

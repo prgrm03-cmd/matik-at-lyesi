@@ -1,0 +1,93 @@
+K-03 · CX-M · Sözleşme v1.0-taslak · 3 Kasım 2026 (Europe/Istanbul)
+Dal: cx-m/K-03-sahte-seed
+Doğrulanan uygulama commit'i: d6621d3b36d0bb36335165e258c96a1b72bd98a9
+Kaynak: https://github.com/prgrm03-cmd/matik-at-lyesi/actions/runs/41541148450
+İş: https://github.com/prgrm03-cmd/matik-at-lyesi/actions/runs/41541148450/job/125605319393
+Ortam: Ubuntu 24.04, Node v20.20.2, npm 10.8.2.
+Sonuçlar gerçek Node CI çıktısıdır; V8 ön kontrolleri bu sonuç yerine kullanılmaz.
+Üretim kodu aynıdır; ardından rapor/ADT ifadesi, test başlıkları ve dizge yazımı güncellenir.
+Kurulum: npm ci --ignore-scripts --no-audit --no-fund; 5 paket, 572 ms, exit 0.
+
+§6.2 sırası; K-04 henüz birleşmediği için npm run check komutu mevcut değildir:
+1. lint: K-04 bekleniyor; komut henüz yok.
+2. yasak: K-04 bekleniyor; komut henüz yok.
+3. sahiplik: K-04 bekleniyor; kod CX-M alanında, yeni iç araç/CI bağlantısı ADT-006'da.
+4. satir: K-04 komutu yok; değişen JS dosyaları <=400 satır, satırlar <=100 karakter.
+5. sema: YEŞİL; mevcut D01 JSON: 1 dosya, 0 hata. Üretici 25/25 geçerliliği Node testinde.
+6. imza: K-04 komutu yok; düzenek imzası ve sürümü kuru/seed aracı ve Node testinde doğrulanır.
+7. test: YEŞİL; 218 test, 160 suite, 218 pass, 0 fail, 0 skipped; 2616.850091 ms.
+8. seed: YEŞİL; D01 1..1000, 1000 geçti, 0 atlandı, 0 hata, sayi=0; 273 ms.
+9. boyut: K-04 bekleniyor; komut henüz yok.
+Bu rapor npm run check için 9/9 sonucu iddia etmez. Bilet ortak kabulündeki K-04 öncesi kural uygulanır.
+
+npm test:
+# tests 218
+# suites 160
+# pass 218
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2616.850091
+
+npm run sema:
+{"dosyaSayisi":1,"hatalar":[]}
+
+npm run seed:
+{"gecti":1000,"atlandi":0,"hata":0,"sayi":0,"ilkHatalar":[],"sureMs":273,"parametreDenetimsiz":[]}
+
+İskelet testleri geçici klasörde 25 JSON üretir ve Ajv ile doğrular.
+İkinci çalıştırma mevcut dosyaları değiştirmez; üretilmiş düzenekler depoya eklenmez.
+Sözleşmedeki “20” ile 25 kimlik listesi çelişkisi ADT-006'da kayıtlıdır.
+
+Fable PR #4 düzeltmesi:
+- Adaptörsüz parametreli D02 örneği: kuru zincir tamamlanır, CLI denetimsiz uyarır, exit 0.
+- Seed özeti parametreDenetimsiz listesini içerir; D02 1000 koşuda yalnız bir kez listelenir.
+- D01 adaptörü aralık ihlalini, adaptörsüz akış da diğer sözleşme ihlallerini reddeder.
+- yon/yukari/yatay/xenon etiketleri geçer; x/y/x1/y2/xKonum/yKonum reddedilir.
+- Ajv 8.17.1 ve geçişli bağımlılıkları package-lock.json ile kilitlenir.
+- CI push tetikleri main dalını kapsar; kurulum npm ci kullanır.
+- Adaptör eksikliği politikası açık Fable talebine göre ADT-006'da güncellenir.
+
+Fable K-02 devri:
+- Gerçek motor/motor.js uçtan uca Node testleri: başlangıç, yükleme, pointer, Çalıştır,
+  ipucu, oturum değiştirme, tahta kayıt yasağı, geçersiz seed ve isteğe bağlı etiketler.
+- D01 JS/JSON 1.0.1; tamam:false, yanParca:false, neden:yarimKaldi; kayıt/yıldız yok.
+- Geçersiz URL seed: RNG_SEED_GECERSIZ; eski tarayıcı mesajı gizlenir.
+- Ortak etiketler eksikse kontroller gizlenir; açık sahne metni çağrıları hâlâ doğrulanır.
+
+Kuru komutu:
+node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum
+İlk 30 satır isteği için tam çıktı (toplam 26 satır):
+{"ad":"temizle","arg":[]}
+{"ad":"katman","arg":["alt"]}
+{"ad":"parca","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimB","ad":"B","x":474,"y":750},{"renk":"gri","id":"baglanti"}]}
+{"ad":"pim","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimA","ad":"A","renk":"mavi"}]}
+{"ad":"pim","arg":[{"id":"pimB","ad":"B","x":474,"y":750},{"id":"pimB","ad":"B","renk":"mavi"}]}
+{"ad":"dugme","arg":[{"id":"calistir","anahtar":"calistir","konum":"alt"}]}
+{"ad":"vurgula","arg":["pimA"]}
+{"ad":"temizle","arg":[]}
+{"ad":"katman","arg":["alt"]}
+{"ad":"parca","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimB","ad":"B","x":474,"y":750},{"renk":"gri","id":"baglanti"}]}
+{"ad":"pim","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimA","ad":"A","renk":"mavi"}]}
+{"ad":"pim","arg":[{"id":"pimB","ad":"B","x":474,"y":750},{"id":"pimB","ad":"B","renk":"mavi"}]}
+{"ad":"dugme","arg":[{"id":"calistir","anahtar":"calistir","konum":"alt"}]}
+{"ad":"temizle","arg":[]}
+{"ad":"katman","arg":["alt"]}
+{"ad":"parca","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimB","ad":"B","x":474,"y":750},{"renk":"gri","id":"baglanti"}]}
+{"ad":"pim","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimA","ad":"A","renk":"mavi"}]}
+{"ad":"pim","arg":[{"id":"pimB","ad":"B","x":474,"y":750},{"id":"pimB","ad":"B","renk":"mavi"}]}
+{"ad":"dugme","arg":[{"id":"calistir","anahtar":"calistir","konum":"alt"}]}
+{"ad":"temizle","arg":[]}
+{"ad":"katman","arg":["alt"]}
+{"ad":"parca","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimB","ad":"B","x":474,"y":750},{"renk":"gri","id":"baglanti"}]}
+{"ad":"pim","arg":[{"id":"pimA","ad":"A","x":551,"y":250},{"id":"pimA","ad":"A","renk":"mavi"}]}
+{"ad":"pim","arg":[{"id":"pimB","ad":"B","x":474,"y":750},{"id":"pimB","ad":"B","renk":"mavi"}]}
+{"ad":"dugme","arg":[{"id":"calistir","anahtar":"calistir","konum":"alt"}]}
+{"id":"D01","seed":42,"atlandi":false,"sonuc":{"tamam":false,"yanParca":false,"neden":"yarimKaldi"},"sayi":0,"parametreDenetimsiz":[]}
+
+Sınırlar:
+- ADT-002 geçmiş aktarımı ve ADT-003 araç eşleme politikası hâlâ karar bekler.
+- ADT-006 iç seed adaptörlerini, lazer bağlantısını ve iskelet yer tutucularını açıklar.
+- Sonraki widget/Defter fabrikaları bilete göre IMZA_EKSIK olarak bekler.
+- Tarayıcı/telefon fiziksel denemesi bu oturumda yapılmadı; Node testleri tarayıcı sınırlarını taklit eder.

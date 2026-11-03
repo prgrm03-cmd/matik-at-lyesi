@@ -180,7 +180,11 @@ export function arayuzBagla(kok, komut) {
     ac: veri => duzenekGoster(bag, veri),
     dolap: () => dolapGoster(bag),
     soyle: metin => { bul('matik').textContent = metin; },
-    hata: kod => { bul('hata').textContent = kod; bul('hata').hidden = false; },
+    hata: kod => {
+      bul('hata').textContent = kod;
+      bul('hata').hidden = false;
+      bul('fallback').hidden = true;
+    },
     ifade: ad => { bul('matik').dataset.ifade = ad; },
     kivilcim: () => kivilcimGoster(bag),
     sembol: metin => { bul('sembol').textContent = metin; },
@@ -222,16 +226,16 @@ function dolapListele(bag, liste, sec) {
 function duzenekGoster(bag, veri) {
   for (const eleman of bag.kok.querySelectorAll('[data-etiket]')) {
     const metin = veri.etiketler?.[eleman.dataset.etiket];
-    if (typeof metin !== 'string') throw new Error('MATIK_ANAHTAR_YOK');
-    eleman.textContent = metin;
-    eleman.setAttribute('aria-label', metin);
+    eleman.hidden = typeof metin !== 'string';
+    eleman.textContent = typeof metin === 'string' ? metin : '';
+    eleman.setAttribute('aria-label', eleman.textContent);
   }
   bag.bul('hata').hidden = true;
   bag.bul('baslik').textContent = veri.baslik;
   bag.bul('durum').textContent = '';
   bag.bul('dolap').hidden = true;
   bag.bul('uygulama').hidden = false;
-  bag.bul('ipucu').hidden = bag.mod.ipucuKapali;
+  bag.bul('ipucu').hidden = bag.bul('ipucu').hidden || bag.mod.ipucuKapali;
   defterGoster(bag, bag.mod.tahta);
 }
 
@@ -244,9 +248,9 @@ function kemerGoster(bag, araclar, etiketler) {
   const kemer = bag.bul('kemer');
   kemer.replaceChildren();
   for (const ad of araclar.kemer) {
+    const metin = etiketler?.[ad];
+    if (typeof metin !== 'string') continue;
     const dugme = bag.kok.ownerDocument.createElement('button');
-    const metin = etiketler[ad];
-    if (typeof metin !== 'string') throw new Error('MATIK_ANAHTAR_YOK');
     dugme.type = 'button';
     dugme.textContent = metin;
     dugme.setAttribute('aria-label', metin);
