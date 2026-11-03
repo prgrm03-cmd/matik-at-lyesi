@@ -1,0 +1,15 @@
+[
+  { "tur": "bas", "x": 452.871477, "y": 827.452623, "hedef": "pergelMerkez" },
+  { "tur": "surukle", "x": 475, "y": 670, "dx": 22.128523, "dy": -157.452623, "hedef": "pergelMerkez" },
+  { "tur": "birak", "x": 475, "y": 670, "hedef": "pergelMerkez" },
+  { "tur": "bas", "x": 635, "y": 670, "hedef": "pergelUc" },
+  { "tur": "surukle", "x": 387.734268, "y": 512.568453, "hedef": "pergelUc" },
+  { "tur": "birak", "x": 387.734268, "y": 512.568453, "hedef": "pergelUc" },
+  { "tur": "bas", "x": 676, "y": 487, "hedef": "cubukA" },
+  { "tur": "surukle", "x": 387.734268, "y": 512.568453, "hedef": "cubukA" },
+  { "tur": "birak", "x": 387.734268, "y": 512.568453, "hedef": "cubukA" },
+  { "tur": "bas", "x": 380, "y": 684, "hedef": "cubukB" },
+  { "tur": "surukle", "x": 562.265732, "y": 827.431547, "hedef": "cubukB" },
+  { "tur": "birak", "x": 562.265732, "y": 827.431547, "hedef": "cubukB" },
+  { "tur": "dugme", "x": 500, "y": 950, "dugmeId": "calistir" }
+]

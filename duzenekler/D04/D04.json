@@ -1,0 +1,74 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D04",
+  "kod": "D04",
+  "surum": "1.0.0",
+  "arac": "B",
+  "baslik": "Kapak Kesme",
+  "zorluk": 1,
+  "sureDk": 1,
+  "kapsam": ["5.3.1", "5.3.4"],
+  "turSayisi": 1,
+  "bolumler": ["kapak", "ek"],
+  "bayraklar": {
+    "olcuKilidi": false,
+    "kartSayisi": 0,
+    "tahminRafi": false,
+    "sinama": false,
+    "sensorSokme": false,
+    "aciolcerGorunur": false,
+    "yanParca": true
+  },
+  "matik": {
+    "giris": "Konserveye yuvarlak kapak lazım, üç LED'in hepsinden geçsin!",
+    "basari": "Kapak tam oturdu. Merkeze olan uzaklık her yerde aynıydı, demek ki.",
+    "tekrar": "Bir daha dene; merkez pimini LED'lere göre yerleştir.",
+    "ekGiris": "Konserveye halka değil, dolu kapak lazım! Halkanın içinden fasulye kaçar."
+  },
+  "ipucu": [
+    {
+      "vurgu": ["led0", "led1", "led2", "cubukA", "kapak", "dolgu"],
+      "ne": "LED'lerden gizli merkeze hayalet çizgiler; EK'te çember kalınlaşır, iç bölge soluk yanar."
+    },
+    {
+      "metin": "Her LED merkezden aynı uzaklıkta olmalı. Halka yalnız çizgidir; kapak çizginin içini de alır."
+    },
+    {
+      "ne": "Kapakta pergel merkezi doğru yere oturur; EK'te yerini bulamamış ilk pim kendi bölgesine gider. Çalıştır öğrencinin."
+    }
+  ],
+  "nedenler": {
+    "tamam": "Kapak da halka da yerli yerinde!",
+    "yarimKaldi": "Pergeli yerleştirip Çalıştır'a bas.",
+    "ledKacti": "Bir LED karanlıkta kaldı; kapak kenarı ondan geçmedi.",
+    "cubukKenarda": "Çap çubuğunun iki ucu da kapak kenarında olmalı.",
+    "cubukKaydi": "Çap çubuğu kenarda ama merkezden geçmiyor.",
+    "kapakTamam": "Kapak kesildi! Şimdi: halka mı, kapak mı?",
+    "dolguYok": "Halkanın içi boş kaldı; Dolgu düğmesiyle kapağı doldur.",
+    "halkaKacti": "Bu pim halkanın tam üstünde olmalı, çizgide.",
+    "kapakKacti": "Bu pim kapağın içinde olmalı; çizgi halkaya ait.",
+    "disKacti": "Bu pim ikisine de ait değil, dışarıda kalmalı."
+  },
+  "yanParca": {
+    "metin": "İç kapak: aynı merkezden daha küçük bir çember kes.",
+    "basari": "İç kapak da oturdu; merkez aynı, açıklık küçük."
+  },
+  "etiketler": {
+    "calistir": "Çalıştır",
+    "dolgu": "Dolgu",
+    "hedefUzeri": "halkanın üstüne",
+    "hedefIc": "kapağın içine",
+    "hedefDis": "dışarıya",
+    "kutuHalka": "Halka (çember)",
+    "kutuKapak": "Kapak (daire)"
+  },
+  "parametreler": {
+    "yaricap": { "min": 120, "max": 220 },
+    "konum": { "min": 260, "max": 740 },
+    "aci": { "min": 0, "max": 359 },
+    "ayrim": { "min": 60, "max": 150 },
+    "kayma": { "min": 90, "max": 200 },
+    "sure": { "min": 900, "max": 900 }
+  },
+  "notlar": "Sınır: çevre, alan, π yok; kapak 'merkeze eş uzaklık' ile tamamlanır. Daire–çember ayrımı pim bölgesiyle (üzeri = tolerans bandı halkaya, içi kapağa). Çap çubuğu merkezden geçer ±4 px; uçlar kenarda %2 r."
+}
