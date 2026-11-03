@@ -1,25 +1,39 @@
 name: Node 20
 on:
   push:
-    branches:
-      - cx-m/K-03-sahte-seed
-      - main
+    branches: [main, cx-m/K-03-sahte-seed, cx-m/K-04-check]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 permissions:
   contents: read
 jobs:
   dogrula:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      PR_BODY: ${{ github.event.pull_request.body }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+      - name: Main karsilastirma dali
+        run: git update-ref refs/heads/main refs/remotes/origin/main
       - run: npm ci --ignore-scripts --no-audit --no-fund
-      - run: npm test
-      - run: npm run sema
-      - run: npm run seed
-      - run: node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum
+      - name: Dokuz komut (D01 en fazla 60 saniye)
+        run: /usr/bin/time -f 'CHECK_SURE_SN=%e' timeout 60s npm run check
+      - name: Tam lint bulgulari
+        if: failure()
+        run: npm run lint
+      - name: Kuru kosu (seed 42)
+        run: node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum
+      - name: Check raporu
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-${{ github.run_id }}
+          path: docs/check/*.txt

@@ -1,0 +1,239 @@
+{
+  "sozlesmeSurumu": "1.0-taslak",
+  "kaynaklar": {
+    "sozlesme": "docs/sozlesme_v1.md",
+    "geo": "§3.2",
+    "widget": "§3.3 ortak kalıp ve nesne arayüzleri",
+    "defter": "§3.4",
+    "duzenek": "§4.1",
+    "lazer": "docs/adt/ADT-006-K03-kuru-arayuz.md §2"
+  },
+  "notlar": [
+    "Sayılar sözleşmedeki parametre sayısıdır; mevcut dışa aktarımlar Function.length ile ölçülür.",
+    "Widget ortak ciz/girdi/durum/yukle yöntemleri §3.3 girişinden gelir.",
+    "Eksik modüller bekleniyor. Sözleşmede modül export adı tanımlanmayan dosya geldiğinde ADT eşlemesi gerekir.",
+    "İsteğe bağlı son parametreler arayüz listesinde yer alır; yeni fabrika eşlemesi gerekli Function.length değerini belirler."
+  ],
+  "duzenek": {
+    "kur": 2,
+    "ciz": 1,
+    "girdi": 2,
+    "calistir": 1,
+    "basari": 1,
+    "ipucu": 2,
+    "tahta": 2,
+    "id": "string",
+    "surum": "string"
+  },
+  "geo": {
+    "uzaklik": 2,
+    "ortaNokta": 2,
+    "yonAci": 2,
+    "ilerle": 3,
+    "esitMi": 3,
+    "aciNormalize": 1,
+    "aciFark": 2,
+    "aciOlc": 4,
+    "aciOku": 4,
+    "aciTuru": 1,
+    "aciTuruTol": 2,
+    "dikMi": 3,
+    "paralelMi": 3,
+    "dogruUzerindeMi": 3,
+    "dikme": 2,
+    "noktaDogruUzakligi": 2,
+    "dogruKenarKesisimi": 1,
+    "hangiTarafta": 2,
+    "cemberUzerindeMi": 3,
+    "cemberIcindeMi": 2,
+    "yayUzerindeMi": 3,
+    "kesisimDogruDogru": 2,
+    "kesisimDogruParca": 2,
+    "kesisimParcaParca": 2,
+    "kesisimCemberCember": 2,
+    "kesisimCemberDogru": 2,
+    "kesisimYayIsin": 2,
+    "ardisikKesisim": 1,
+    "kesenMi": 3,
+    "disBukeyMi": 1,
+    "kendiniKeserMi": 1,
+    "icAcilar": 1,
+    "disAci": 2,
+    "komsuMu": 3,
+    "duzgunMu": 3,
+    "ucgenKapanir": 2,
+    "ucgenTuru": 1,
+    "sekliDondur": 4,
+    "toleransIcinde": 3,
+    "tAci": 1,
+    "rastgeleAci": 3,
+    "rastgeleYon": 1,
+    "rastgeleEgim": 1,
+    "rastgeleKolUzunlugu": 2,
+    "rastgeleDisBukeyCokgen": 3,
+    "rastgeleUcgen": 2,
+    "kesisimGarantiliParametre": 2,
+    "rastgeleCemberParametre": 1,
+    "lazerSenaryosu": 1,
+    "TOLERANS": "object"
+  },
+  "arayuzler": {
+    "Widget": {
+      "aciolcer": 1,
+      "aciTablosu": 1,
+      "pergel": 1,
+      "gonye": 1,
+      "lazer": 1
+    },
+    "Aciolcer": {
+      "ciz": 1,
+      "girdi": 1,
+      "durum": 0,
+      "yukle": 1,
+      "merkez": "object",
+      "donus": "number",
+      "olcekYonu": "string",
+      "hizaliMi": 2,
+      "okuma": 1,
+      "hizala": 0
+    },
+    "AciTablosu": {
+      "ciz": 1,
+      "girdi": 1,
+      "durum": 0,
+      "yukle": 1,
+      "satirlar": "array",
+      "doluMu": 0,
+      "karsilastir": 2,
+      "ayniKartaKoy": 2,
+      "otomatikDoldur": 2
+    },
+    "Pergel": {
+      "ciz": 1,
+      "girdi": 1,
+      "durum": 0,
+      "yukle": 1,
+      "merkez": "object",
+      "aciklik": "number",
+      "kilit": "boolean",
+      "kilitle": 0,
+      "kopyala": 1,
+      "acikligiAl": 2,
+      "cemberCiz": 0,
+      "yayCiz": 3
+    },
+    "Gonye": {
+      "ciz": 1,
+      "girdi": 1,
+      "durum": 0,
+      "yukle": 1,
+      "oturdu": "boolean",
+      "t": "number",
+      "dikmeBirak": 1,
+      "otur": 0
+    },
+    "Lazer": {
+      "ciz": 1,
+      "girdi": 1,
+      "durum": 0,
+      "yukle": 1,
+      "mod": "string",
+      "A": "object|null",
+      "B": "object|null",
+      "yon": "number",
+      "hat": 0,
+      "gecerMi": 2
+    },
+    "Defter": {
+      "tahminRafi": 1,
+      "kuralKarti": 1,
+      "sina": 3,
+      "kisayolYuvasi": 1,
+      "ac": 0,
+      "kapat": 0
+    },
+    "TahminRafi": {
+      "deger": 0,
+      "kilitle": 0,
+      "sonucKoy": 1,
+      "karsilastir": 0
+    },
+    "KuralKarti": {
+      "anahtar": "string",
+      "ayar": 0,
+      "dogruMu": 0,
+      "takili": "boolean",
+      "tak": 0,
+      "otomatikDoldur": 0
+    },
+    "KisayolYuvasi": {
+      "kart": "object|null",
+      "tak": 1,
+      "sokulen": "array",
+      "sok": 1,
+      "tak_sensor": 1,
+      "degerlendir": 0
+    }
+  },
+  "moduller": [
+    {
+      "yol": "widget/aciolcer.js",
+      "arayuz": "Aciolcer",
+      "disarim": null
+    },
+    {
+      "yol": "widget/aciTablosu.js",
+      "arayuz": "AciTablosu",
+      "disarim": null
+    },
+    {
+      "yol": "widget/pergel.js",
+      "arayuz": "Pergel",
+      "disarim": null
+    },
+    {
+      "yol": "widget/gonye.js",
+      "arayuz": "Gonye",
+      "disarim": null
+    },
+    {
+      "yol": "widget/lazer.js",
+      "arayuz": "Lazer",
+      "disarim": {
+        "lazerOlustur": 2
+      },
+      "fabrika": "lazerOlustur",
+      "argumanlar": [
+        {
+          "mod": "parca"
+        }
+      ],
+      "kaynak": "ADT-006 §2"
+    },
+    {
+      "yol": "defter/defter.js",
+      "arayuz": "Defter",
+      "disarim": null
+    },
+    {
+      "yol": "defter/tahminRafi.js",
+      "arayuz": "TahminRafi",
+      "disarim": null
+    },
+    {
+      "yol": "defter/kuralKarti.js",
+      "arayuz": "KuralKarti",
+      "disarim": null
+    },
+    {
+      "yol": "defter/sinama.js",
+      "arayuz": "Defter.sina",
+      "disarim": null
+    },
+    {
+      "yol": "defter/kisayolYuvasi.js",
+      "arayuz": "KisayolYuvasi",
+      "disarim": null
+    }
+  ]
+}

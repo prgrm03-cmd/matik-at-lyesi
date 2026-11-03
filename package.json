@@ -6,13 +6,22 @@
   "scripts": {
     "test": "node --test test/",
     "seed": "node araclar/seedTesti.js",
-    "sema": "node araclar/semaDogrula.js",
-    "iskelet": "node iskelet.js"
+    "sema": "node araclar/semaDogrula.js && npm run --silent metin",
+    "iskelet": "node iskelet.js",
+    "check": "node araclar/check.js",
+    "lint": "eslint --config araclar/lint.config.js .",
+    "yasak": "node araclar/yasak.js",
+    "sahiplik": "node araclar/sahiplik.js",
+    "satir": "node araclar/satir.js",
+    "imza": "node araclar/imza.js",
+    "boyut": "node araclar/boyut.js",
+    "metin": "node araclar/metin.js"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
-    "ajv": "8.17.1"
+    "ajv": "8.17.1",
+    "eslint": "9.39.1"
   }
 }
