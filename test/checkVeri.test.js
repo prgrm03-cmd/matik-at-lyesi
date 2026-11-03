@@ -160,6 +160,19 @@ describe('K-04 metin kanitlari', () => {
     assert.deepEqual(metinBulgular(veri), []);
   });
 
+  it('sayisal kart ve raf secenekleri kilitte reddedilir, kilit disinda gecerlidir', () => {
+    const veri = veriOlustur('D17');
+    veri.kartlar = { k: { kalip: '[ad]', disliler: [{ secenekler: [1, 2] }] } };
+    veri.tahminRafi = [{ etiket: 'Pimler', secenekler: [3, 4] }];
+    assert.deepEqual(metinBulgular(veri), []);
+    veri.bayraklar.olcuKilidi = true;
+    const bulgular = metinBulgular(veri);
+    assert.equal(bulgular.length, 4, JSON.stringify(bulgular));
+    assert.ok(bulgular.some(bulgu => bulgu.startsWith('kartlar.')));
+    assert.ok(bulgular.some(bulgu => bulgu.startsWith('tahminRafi.')));
+    assert.ok(bulgular.every(bulgu => bulgu.includes('olcu kilidinde rakam')));
+  });
+
   it('D15 JSON icindeki teknik 180 de reddedilir; pi pimin parcasi degildir', () => {
     const veri = veriOlustur('D15');
     veri.matik.giris = 'Pimi raya getir.';

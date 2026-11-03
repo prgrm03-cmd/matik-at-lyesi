@@ -14,9 +14,12 @@ const YASAK = [
 ];
 const TARAYICI = [
   ...YASAK, 'URL', 'URLSearchParams', 'location', 'ResizeObserver', 'Image',
-  'cancelAnimationFrame', 'matchMedia', 'queueMicrotask'
+  'cancelAnimationFrame', 'matchMedia', 'queueMicrotask', 'TextEncoder', 'TextDecoder'
 ];
-const NODE = ['process', 'Buffer', 'console', 'URL', 'URLSearchParams', 'structuredClone'];
+const NODE = [
+  'process', 'Buffer', 'console', 'URL', 'URLSearchParams', 'structuredClone',
+  'TextEncoder', 'TextDecoder'
+];
 
 function globaller(adlar) {
   return Object.fromEntries(adlar.map(ad => [ad, 'readonly']));

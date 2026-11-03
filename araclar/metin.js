@@ -16,7 +16,9 @@ function nesneMetinleri(nesne, yol) {
 function secenekMetinleri(secenekler, yol) {
   if (!Array.isArray(secenekler)) return [];
   return secenekler.flatMap((deger, i) => {
-    if (typeof deger === 'string') return [[yol + '.' + i, deger]];
+    if (typeof deger === 'string' || typeof deger === 'number') {
+      return [[yol + '.' + i, String(deger)]];
+    }
     if (deger && typeof deger === 'object') {
       return nesneMetinleri(deger, yol + '.' + i).filter(([, oge]) => typeof oge === 'string');
     }
