@@ -26,6 +26,23 @@ export function parametreleriDogrula(araliklar, degerler) {
   }
 }
 
+/** @param {Ctx} ctx @returns {Object} D02.json konumları üretici uzayındadır. */
+export function d02Parametreleri(ctx) {
+  const konum = [];
+  for (const ad of ['sensorler', 'alarmlar']) {
+    const noktalar = ctx.durum?.[ad];
+    dogrula(Array.isArray(noktalar) && noktalar.length > 0,
+      'D02NoktalarEksik:' + ad, 'IMZA_EKSIK');
+    for (const nokta of noktalar) {
+      dogrula(Number.isFinite(nokta?.x) && Number.isFinite(nokta?.y),
+        'parametreAraligi:konum');
+      // ADT-008: kur içindeki (+500, +500) ötelemesini yalnız gözlemde geri al.
+      konum.push(nokta.x - 500, nokta.y - 500);
+    }
+  }
+  return { konum };
+}
+
 /** @param {Object} cagri @returns {void} Gerçek tamHaric girdisi ve çıktısı. */
 export function gecmisiDogrula(cagri) {
   const { min, max, haric, komsuluk, deger } = cagri;

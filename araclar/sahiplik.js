@@ -80,7 +80,8 @@ export function yolYetkisi(ajan, yol) {
   return /^(motor|geo|widget|defter|stil|araclar|test)\//.test(yol) ||
     yol.startsWith('.github/workflows/') ||
     ['iskelet.js', 'sema.json', 'package.json', 'package-lock.json', 'index.html',
-      'main.js', '.gitignore', 'docs/hatalar.md', 'docs/yasakSozcuk.txt'].includes(yol);
+      'main.js', '.gitignore', 'docs/hatalar.md', 'docs/yasakSozcuk.txt',
+      'docs/kapsam.json'].includes(yol);
 }
 
 function jsonMetinYetkisi(kok, taban, yol) {
