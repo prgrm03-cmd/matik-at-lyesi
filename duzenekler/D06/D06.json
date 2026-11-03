@@ -1,0 +1,62 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D06",
+  "kod": "D06",
+  "surum": "1.0.2",
+  "arac": "C",
+  "baslik": "Yağ Damlası",
+  "zorluk": 1,
+  "sureDk": 2,
+  "kapsam": ["5.3.1", "5.3.2"],
+  "turSayisi": 3,
+  "bayraklar": {
+    "olcuKilidi": false,
+    "kartSayisi": 0,
+    "tahminRafi": false,
+    "sinama": false,
+    "sensorSokme": false,
+    "aciolcerGorunur": false,
+    "yanParca": false
+  },
+  "matik": {
+    "giris": "Yağ damlası tam raya inmeli. Gönye tezgâhta, biraz tozlu.",
+    "basari": "Damla dosdoğru indi. Dikme en kısa yol; terazide gör.",
+    "tekrar": "Gönyenin bir kenarı raya tam yapışmalı; arada hava var.",
+    "gonyeHavada": "Gönye raya oturmadı; bir kenarını raya yapıştır, sonra pime kaydır."
+  },
+  "ipucu": [
+    {
+      "vurgu": ["gonyeKose", "gonye"],
+      "ne": "Gönye oturmamışsa dik köşesi, oturmuşsa gönyenin kendisi yanıp söner."
+    },
+    {
+      "metin": "Gönyenin bir kenarı raya tam yapışsın. Sonra gönyeyi pime kaydır, dikmeyi bırak."
+    },
+    {
+      "ne": "Gönye raya kendisi oturur; dikme kesik gri hayalet olarak görünür. Kaydırma, bırakma ve Çalıştır öğrencinin."
+    }
+  ],
+  "nedenler": {
+    "tamam": "Damla raya en kısa yoldan indi.",
+    "yarimKaldi": "Parçayı bırakıp Çalıştır'a bas.",
+    "parcaYok": "Damlanın yolu yok; gönyeyle dikmeyi bırak ya da ucu sürükle.",
+    "rayaInmedi": "Damla raya inmedi; parçanın ucu rayın üstünde bitmeli.",
+    "dolasti": "Damla yolda dolaştı; parça raya dik değil, gönyeyi kullan."
+  },
+  "parametreler": {
+    "mesafe": { "min": 100, "max": 180 },
+    "konum": { "min": 400, "max": 600 },
+    "taraf": { "min": 0, "max": 1 },
+    "sure": { "min": 900, "max": 900 },
+    "terazi": { "min": 60, "max": 60 },
+    "teraziAralik": { "min": 30, "max": 30 }
+  },
+  "etiketler": {
+    "calistir": "Çalıştır",
+    "dikme": "Dikmeyi bırak",
+    "ray": "ray",
+    "terazi": "uzunluk terazisi",
+    "dik": "dik"
+  },
+  "notlar": "Sınır: uzaklık sayısı, ölçü, π yok; en kısa yol terazide görsel. Ray rastgele eğimli (asla yatay/dikey), P rayın rastgele yanında. Gönye oturup dikme bırakılır ya da uç elle sürüklenir; hüküm geometrik: ucu ray üstünde (hatBirim), açı 90° ± 2° (dikme). Üç tur; her turda eğim, konum, mesafe değişir. Yan parça ertelendi."
+}
