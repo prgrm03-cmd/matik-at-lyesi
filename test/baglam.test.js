@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import { hizmetleriOlustur, girdiDagit } from '../motor/baglam.js';
 import { sembolOlustur } from '../motor/sembolPaneli.js';
 import { rngOlustur } from '../motor/rng.js';
+import { sahteSahneOlustur } from '../motor/sahteSahne.js';
 
 function kur(kilitli = false) {
   const cagrilar = [];
@@ -18,6 +19,7 @@ function kur(kilitli = false) {
     },
     mod: { tahta: true }, rng: rngOlustur(42)
   };
+  ctx.sahne = sahteSahneOlustur(ctx.veri).sahne;
   const hizmetler = hizmetleriOlustur(ctx, arayuz, { ses: true });
   return { ctx, arayuz, cagrilar, hizmetler };
 }
@@ -36,10 +38,10 @@ describe('hizmetleriOlustur', () => {
 });
 
 describe('hizmetleriOlustur', () => {
-  it('sonraki biletlere ait bütün fabrikalar tanımlı hata koduyla bekler', () => {
+  it('Defter fabrikaları geçersiz ayarları tanımlı hata koduyla reddeder', () => {
     const { ctx } = kur();
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
-      assert.throws(() => ctx.defter[ad]({}), { message: 'IMZA_EKSIK' });
+      assert.throws(() => ctx.defter[ad]({}), { message: 'WIDGET_AYAR_GECERSIZ' });
     }
   });
 });

@@ -90,7 +90,7 @@ describe('ctxSahteOlustur', () => {
 });
 
 describe('ctxSahteOlustur', () => {
-  it('lazeri gerçek nesne olarak üretir ve henüz gelmeyen fabrikaları ayırır', () => {
+  it('lazeri gerçek nesne olarak üretir ve geçersiz defter ayarlarını atlamaz', () => {
     const ctx = kur();
     const lazer = ctx.widget.lazer({ mod: 'parca' });
     lazer.A = { x: 10, y: 20 };
@@ -99,7 +99,10 @@ describe('ctxSahteOlustur', () => {
     lazer.ciz(ctx.sahne);
     assert.equal(sahneKaydi(ctx).sayac.parca, 1);
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
-      assert.throws(() => ctx.defter[ad]({}), bekleyenMi);
+      assert.throws(() => ctx.defter[ad]({}), hata => {
+        assert.equal(hata.message, 'WIDGET_AYAR_GECERSIZ');
+        return !bekleyenMi(hata);
+      });
     }
     assert.equal(bekleyenMi(new Error('IMZA_EKSIK')), false);
   });

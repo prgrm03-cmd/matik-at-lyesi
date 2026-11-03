@@ -9,6 +9,7 @@ import { TOLERANS, ilerle } from '../geo/index.js';
 import { kuruKos } from '../araclar/kuruKos.js';
 import { IMZA_LISTESI, imzaDogrula } from '../araclar/imza.js';
 import { fileURLToPath } from 'node:url';
+import { rngOlustur } from '../motor/rng.js';
 
 const DOGRU = { A: { x: 200, y: 200 }, yon: 0 };
 const KOK = fileURLToPath(new URL('../', import.meta.url));
@@ -22,7 +23,7 @@ function veriOlustur(olcuKilidi) {
 function motorKur(olcuKilidi = false) {
   const veri = veriOlustur(olcuKilidi);
   const { sahne, kayit } = sahteSahneOlustur(veri);
-  const ctx = { veri, sahne, mod: { tahta: true } };
+  const ctx = { veri, sahne, rng: rngOlustur(1), mod: { tahta: true } };
   const arayuz = Object.fromEntries([
     'soyle', 'ifade', 'kivilcim', 'sembol', 'defterAc', 'defterKapat'
   ].map(ad => [ad, () => {}]));
@@ -53,13 +54,12 @@ describe('imzaDogrula', () => {
     assert.equal(JSON.stringify(IMZA_LISTESI), once);
   });
 
-  it('eksik veya tanımsız ortamı ve farklı ADT kaynağını sessizce tamamlamaz', async () => {
-    for (const tur of ['eksik', 'yanlis', 'kaynak']) {
+  it('eksik veya tanımsız ortamı sessizce tamamlamaz', async () => {
+    for (const tur of ['eksik', 'yanlis']) {
       const liste = JSON.parse(JSON.stringify(IMZA_LISTESI));
       for (const tanim of liste.moduller.filter(kayit => kayit.kaynak === 'ADT-013')) {
         if (tur === 'eksik') tanim.argumanlar.pop();
         if (tur === 'yanlis') tanim.argumanlar[1].pxToBirim = 'baska';
-        if (tur === 'kaynak') tanim.kaynak = 'ADT-006';
       }
       const sonuc = await imzaDogrula(KOK, liste);
       assert.equal(sonuc.hatalar.length, 2);
@@ -68,6 +68,14 @@ describe('imzaDogrula', () => {
           hata.endsWith('WIDGET_AYAR_GECERSIZ')));
       }
     }
+  });
+
+  it('ortam işaretlerini ADT kaynağından bağımsız çözer', async () => {
+    const liste = JSON.parse(JSON.stringify(IMZA_LISTESI));
+    for (const tanim of liste.moduller.filter(kayit => kayit.kaynak === 'ADT-013')) {
+      tanim.kaynak = 'ADT-006';
+    }
+    assert.deepEqual((await imzaDogrula(KOK, liste)).hatalar, []);
   });
 });
 
@@ -185,13 +193,13 @@ describe('ctxSahteOlustur', () => {
     assert.equal(sahneKaydi(ctx).sayac.sayi, 1);
   });
 
-  it('açı tablosunu kurar ve Defter fabrikalarını bekleyen imza olarak korur', () => {
+  it('açı tablosunu kurar ve Defter ayarlarını bekleyen imza saymaz', () => {
     const ctx = sahteKur();
     const tablo = ctx.widget.aciTablosu({ satir: 1, sutunlar: ['ad'] });
     assert.equal(tablo.satirlar.length, 1);
     assert.equal(tablo.doluMu(), false);
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
-      assert.throws(() => ctx.defter[ad]({}), bekleyenMi);
+      assert.throws(() => ctx.defter[ad]({}), hataDogrula('WIDGET_AYAR_GECERSIZ'));
     }
   });
 });
