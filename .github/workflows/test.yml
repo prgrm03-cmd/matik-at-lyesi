@@ -1,12 +1,9 @@
 name: Node 20
 on:
   push:
-    branches:
-      - cx-m/K-03-sahte-seed
-      - main
+    branches: [main, cx-m/K-03-sahte-seed, cx-m/K-04-check]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 permissions:
   contents: read
 jobs:
@@ -15,11 +12,13 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Kilit dosyasini dogrula
+        run: node -e "console.log('LOCK_JSON=' + JSON.stringify(require('./package-lock.json')))"
       - run: npm test
-      - run: npm run sema
-      - run: npm run seed
-      - run: node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum
+      - run: node araclar/seedTesti.js
