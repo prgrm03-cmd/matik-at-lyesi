@@ -3,7 +3,7 @@ import { bekleyenMi } from '../motor/sahteKayit.js';
 import { gozlemBagla, duzenekParametreleriniDogrula } from './seedGozlem.js';
 import {
   dogrula, sonucuDogrula, sahneyiDogrula, gecmisiDogrula,
-  prototipiDogrula, ozelKurallariDogrula
+  prototipiDogrula, ozelKurallariDogrula, parametreleriDogrula
 } from './seedKurallari.js';
 
 const IMZALAR = { kur: 2, ciz: 1, girdi: 2, calistir: 1, basari: 1, ipucu: 2, tahta: 2 };
@@ -51,6 +51,9 @@ function canlandir(duzenek, ctx, gozlem) {
   dogrula(animasyon && Number.isFinite(animasyon.sure) && animasyon.sure >= 0 &&
     typeof animasyon.kare === 'function' && typeof animasyon.bitti === 'function',
   'animasyonImzasi', 'IMZA_EKSIK');
+  if (ctx.id === 'D03') {
+    parametreleriDogrula({ sure: ctx.veri.parametreler.sure }, { sure: [animasyon.sure] });
+  }
   for (const t of [0, 0.5, 1]) animasyon.kare(t);
   animasyon.bitti();
 }
