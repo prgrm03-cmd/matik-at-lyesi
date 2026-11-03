@@ -4,7 +4,8 @@ import { aciNormalize, dogruUzerindeMi, ilerle, uzaklik, yonAci } from '../geo/i
 /** @typedef {{A:Nokta, B:Nokta}} Parca */
 /** @typedef {{A:Nokta, yon:number}} Isin */
 /** @typedef {{A:Nokta, yon:number}} Dogru */
-/** @typedef {{mod?:'parca'|'isin'|'dogru',donenIsin?:boolean,carkAdim?:number}} LazerAyar */
+/** @typedef {{mod?:'parca'|'isin'|'dogru', donenIsin?:boolean,
+ * carkAdim?:number, sabitA?:boolean}} LazerAyar */
 /** @typedef {Object} Lazer
  * @property {'parca'|'isin'|'dogru'} mod
  * @property {Nokta|null} A
@@ -46,12 +47,13 @@ function ayarDogrula(ayar, sembol) {
   if (ayar !== undefined && (!ayar || typeof ayar !== 'object' || Array.isArray(ayar))) {
     gecersiz();
   }
-  const { mod = 'parca', donenIsin = false, carkAdim = 1 } = ayar || {};
+  const { mod = 'parca', donenIsin = false, carkAdim = 1, sabitA = false } = ayar || {};
+  if (typeof sabitA !== 'boolean') gecersiz();
   if (typeof donenIsin !== 'boolean' || !Number.isSafeInteger(carkAdim) || carkAdim <= 0) {
     gecersiz();
   }
   if (sembol !== undefined && (!sembol || typeof sembol.goster !== 'function')) gecersiz();
-  return { mod: modDogrula(mod, donenIsin), donenIsin, carkAdim };
+  return { mod: modDogrula(mod, donenIsin), donenIsin, carkAdim, sabitA };
 }
 
 function hatOlustur(durum, donenIsin) {
@@ -85,7 +87,8 @@ function noktalariDene(durum, donenIsin, noktalar, tolBirim) {
     dogruUzerindeMi(P, dogru, tolBirim) && sinirIcinde(P, durum, donenIsin));
 }
 
-function lazerCiz(durum, donenIsin, sahne) {
+function lazerCiz(durum, ayar, sahne) {
+  const { donenIsin, sabitA } = ayar;
   sahne.katman('ust');
   const hat = hatOlustur(durum, donenIsin);
   if (hat) {
@@ -93,7 +96,11 @@ function lazerCiz(durum, donenIsin, sahne) {
     if (durum.mod === 'parca') sahne.parca(hat.A, hat.B, secenek);
     else sahne[durum.mod](hat.A, hat.yon, secenek);
   }
-  if (durum.A) sahne.pim(durum.A, { id: 'lazerA', ad: 'A', renk: 'mavi' });
+  if (durum.A) {
+    const secenek = { ad: 'A', renk: 'mavi' };
+    if (!sabitA) secenek.id = 'lazerA';
+    sahne.pim(durum.A, secenek);
+  }
   if (durum.B && !donenIsin) {
     sahne.pim(durum.B, { id: 'lazerB', ad: 'B', renk: 'mavi' });
   }
@@ -104,14 +111,15 @@ function lazerCiz(durum, donenIsin, sahne) {
   }
 }
 
-function hedefGecerli(hedef, donenIsin) {
+function hedefGecerli(hedef, donenIsin, sabitA) {
+  if (hedef === 'lazerA' && sabitA) return false;
   return hedef === 'lazerA' || (donenIsin ? hedef === 'lazerCark' : hedef === 'lazerB');
 }
 
 function girdiyiIsle(olay, durum, ayar, secim) {
   if (!olay || !['bas', 'surukle', 'birak'].includes(olay.tur)) return false;
   const hedef = olay.hedef || secim.hedef;
-  if (!hedefGecerli(hedef, ayar.donenIsin)) return false;
+  if (!hedefGecerli(hedef, ayar.donenIsin, ayar.sabitA)) return false;
   if (olay.tur === 'bas') {
     secim.hedef = hedef;
     return true;
@@ -169,7 +177,7 @@ function nesneOlustur(durum, ayar, sembol) {
     gecerMi(noktalar, tolBirim) {
       return noktalariDene(durum, ayar.donenIsin, noktalar, tolBirim);
     },
-    ciz(sahne) { lazerCiz(durum, ayar.donenIsin, sahne); },
+    ciz(sahne) { lazerCiz(durum, ayar, sahne); },
     girdi(olay) { return girdiyiIsle(olay, durum, ayar, secim); },
     durum() { return durumuKopyala(durum); },
     yukle(kayit) { durumuYukle(durum, kayit, ayar, sembol, secim); }
