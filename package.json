@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test \"test/**/*.js\"",
+    "test": "node araclar/testCalistir.js",
     "seed": "node araclar/seedTesti.js",
     "sema": "node araclar/semaDogrula.js && npm run --silent metin",
     "iskelet": "node iskelet.js",
