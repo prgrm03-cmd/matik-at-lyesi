@@ -83,7 +83,7 @@ describe('yukle', () => {
     globalThis.fetch = async adres => ({
       ok: true, json: async () => JSON.parse(await readFile(adres, 'utf8'))
     });
-    assert.deepEqual(await kapsamOku(), ['D01', 'D02', 'D09a', 'D03', 'D04']);
+    assert.deepEqual(await kapsamOku(), ['D01', 'D02', 'D09a', 'D03', 'D04', 'D05']);
     const { duzenek, veri } = await yukle('D02');
     assert.equal(duzenek.id, 'D02');
     assert.equal(veri.id, 'D02');

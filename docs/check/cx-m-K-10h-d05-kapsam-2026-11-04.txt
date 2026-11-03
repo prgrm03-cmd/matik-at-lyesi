@@ -1,0 +1,9 @@
+✓ npm run lint
+✓ npm run yasak
+✓ npm run sahiplik
+✓ npm run satir
+✓ npm run sema | { | "dosyaSayisi": 6, | "hatalar": [] | } | metin: uygun
+✓ npm run imza | İmza: tüm mevcut dışa aktarımlar geçerli.
+✓ npm run test | ▶ D01.imzalar | ✔ dokuz dışa aktarımı ve sözleşmedeki parametre sayılarını korur (1.64743ms) | ✔ D01.imzalar (2.784637ms) | ▶ D01.kur | ✔ bin seed boyunca aynı sahneyi üretir ve parametre aralığında kalır (44.841917ms) | ✔ D01.kur (45.058446ms) | ▶ D01.ciz | ✔ bin seed boyunca durumu değiştirmeden iki pim ve bağlantıyı çizer (65.208865ms) | ✔ D01.ciz (65.470932ms) | ▶ D01.girdi
+✓ npm run seed | {"gecti":6000,"atlandi":0,"hata":0,"sayi":12000,"ilkHatalar":[],"sureMs":5988,"parametreDenetimsiz":[]}
+✓ npm run boyut | ilkYukleme=164015; varlik=0 bayt

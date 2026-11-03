@@ -1,6 +1,6 @@
 import {
   parametreleriDogrula, d02Parametreleri, d03Parametreleri, d04Parametreleri,
-  d09aParametreleri
+  d05Parametreleri, d09aParametreleri
 } from './seedKurallari.js';
 
 const URETICILER = new Set([
@@ -13,6 +13,7 @@ const PARAMETRE_UYARLAYICILARI = {
   D02: d02Parametreleri,
   D03: d03Parametreleri,
   D04: d04Parametreleri,
+  D05: d05Parametreleri,
   D09a: d09aParametreleri
 };
 
@@ -91,8 +92,10 @@ export function duzenekParametreleriniDogrula(ctx) {
   const uyarlayici = PARAMETRE_UYARLAYICILARI[ctx.id];
   if (typeof uyarlayici !== 'function') return [ctx.id];
   const araliklar = { ...ctx.veri.parametreler };
-  // D03/D04 süresi kurulumda yoktur; gerçek animasyon döndüğünde kuruKos denetler.
-  if (['D03', 'D04'].includes(ctx.id)) delete araliklar.sure;
+  // D03/D04/D05 süresi kurulumda yoktur; gerçek animasyon döndüğünde kuruKos denetler.
+  if (['D03', 'D04', 'D05'].includes(ctx.id)) delete araliklar.sure;
+  // D05 ayrım aralığını yalnız ureticiYap varyant üreticisinde kullanır; kur tüketmez.
+  if (ctx.id === 'D05') delete araliklar.ayrim;
   parametreleriDogrula(araliklar, uyarlayici(ctx, GOZLEMLER.get(ctx)));
   return [];
 }
