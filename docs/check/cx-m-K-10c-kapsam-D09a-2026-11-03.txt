@@ -1,0 +1,9 @@
+✓ npm run lint
+✓ npm run yasak
+✓ npm run sahiplik
+✓ npm run satir
+✓ npm run sema | { | "dosyaSayisi": 3, | "hatalar": [] | } | metin: uygun
+✓ npm run imza | İmza: tüm mevcut dışa aktarımlar geçerli. | ⚠ widget/aciTablosu.js: bekleniyor | ⚠ widget/pergel.js: bekleniyor | ⚠ widget/gonye.js: bekleniyor | ⚠ defter/defter.js: bekleniyor | ⚠ defter/tahminRafi.js: bekleniyor | ⚠ defter/kuralKarti.js: bekleniyor | ⚠ defter/sinama.js: bekleniyor | ⚠ defter/kisayolYuvasi.js: bekleniyor
+✓ npm run test | # tests 418 | # pass 418 | # fail 0 | # duration_ms 9194.775283
+✓ npm run seed | {"gecti":3000,"atlandi":0,"hata":0,"sayi":12000,"ilkHatalar":[],"sureMs":5027,"parametreDenetimsiz":[]}
+✓ npm run boyut | ilkYukleme=125289; varlik=0 bayt

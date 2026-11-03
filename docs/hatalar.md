@@ -1,7 +1,7 @@
 # Hata kodları
 
 Kaynak: [Sözleşme v1, §6.5](sozlesme_v1.md#65-tanımlı-hata-kodları-docshatalarmd-cx-m-başlatır).
-Kodlar motor ve geo tarafından `throw new Error('KOD')` biçiminde kullanılır.
+Kodlar motor, geo ve CLI araçlarında `throw new Error('KOD')` biçiminde kullanılır.
 
 | Kod | Açıklama |
 | --- | --- |
@@ -15,3 +15,4 @@ Kodlar motor ve geo tarafından `throw new Error('KOD')` biçiminde kullanılır
 | `KAYIT_SEMA_GOCU` | Saklanan kaydın şema sürümü güncel kayıt biçimine dönüştürülmelidir. |
 | `SAHNE_ID_CAKISMA` | Aynı sahnede birden fazla öğe aynı kimliği kullanır. |
 | `WIDGET_AYAR_GECERSIZ` | Araç fabrikasına verilen ayarlar sözleşmedeki gereksinimleri sağlamaz. |
+| `CLI_ARGUMAN_GECERSIZ` | Komut satırı argümanları desteklenen kullanıma uymaz; seed komutuna en fazla bir düzenek kimliği verilebilir. CX-M, K-10c kapsamında eklenmiştir. |

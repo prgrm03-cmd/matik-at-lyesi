@@ -52,11 +52,41 @@ describe('seed düzenek seçimi', () => {
     assert.equal(await readFile(kapsamYolu, 'utf8'), '["D02"]');
   });
 
-  it('geçersiz kimlik ve yol geçişini reddeder', async () => {
-    for (const id of ['', '../D02', 'D00', 'D19', 'D02/../D01', 2, null]) {
+  it('geçersiz kimlik türü ve yol geçişini reddeder', async () => {
+    for (const id of ['', '.', '..', '../D02', '..\\D02', '/D02', 'C:\\D02',
+      'D02/../D01', 'D02\0', 2, null]) {
       await assert.rejects(seedTesti(KOK, id),
         { message: 'DUZENEK_YOK', denetim: 'duzenekSecimi' });
     }
+  });
+
+  it('dosyası bulunmayan kimlikleri hata özetinde bildirir', async () => {
+    for (const id of ['D00', 'D19', 'D09f']) {
+      const ozet = await seedTesti(KOK, id);
+      assert.equal(ozet.gecti, 0);
+      assert.equal(ozet.hata, 1);
+      assert.equal(ozet.ilkHatalar[0].id, id);
+      assert.equal(ozet.ilkHatalar[0].kod, 'DUZENEK_YOK');
+    }
+  });
+
+  it('seçim için hem JSON hem modül dosyası gerekir', async t => {
+    const kok = await mkdtemp(join(tmpdir(), 'matik-seed-dosya-'));
+    t.after(() => rm(kok, { recursive: true, force: true }));
+    const dizin = join(kok, 'duzenekler', 'D01');
+    await mkdir(dizin, { recursive: true });
+    await writeFile(join(kok, 'package.json'), '{"type":"module"}');
+    await copyFile(join(KOK, 'duzenekler', 'D01', 'D01.json'), join(dizin, 'D01.json'));
+    const jsEksik = await seedTesti(kok, 'D01');
+    assert.equal(jsEksik.gecti, 0);
+    assert.equal(jsEksik.hata, 1);
+    assert.equal(jsEksik.ilkHatalar[0].kod, 'DUZENEK_YOK');
+    await copyFile(join(KOK, 'duzenekler', 'D01', 'D01.js'), join(dizin, 'D01.js'));
+    await rm(join(dizin, 'D01.json'));
+    const jsonEksik = await seedTesti(kok, 'D01');
+    assert.equal(jsonEksik.gecti, 0);
+    assert.equal(jsonEksik.hata, 1);
+    assert.equal(jsonEksik.ilkHatalar[0].kod, 'DUZENEK_YOK');
   });
 
   it('geçersiz kimlik ve fazla argümanda sıfırdan farklı çıkar', () => {
@@ -73,6 +103,6 @@ describe('seed düzenek seçimi', () => {
     assert.equal(fazla.status, 1);
     assert.equal(fazla.stdout, '');
     assert.deepEqual(JSON.parse(fazla.stderr.trim()),
-      { hata: 'PARAMETRE_ARALIK_DISI', denetim: 'duzenekSecimi' });
+      { hata: 'CLI_ARGUMAN_GECERSIZ', denetim: 'duzenekSecimi' });
   });
 });

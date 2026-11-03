@@ -1,4 +1,4 @@
-import { resolve, join } from 'node:path';
+import { resolve, join, basename, win32 } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { performance } from 'node:perf_hooks';
 import { kuruKos, ipucuTekrariniDene } from './kuruKos.js';
@@ -38,8 +38,11 @@ export async function seedTesti(kok, secilenId) {
     parametreDenetimsiz: []
   };
   if (secilenId !== undefined) {
-    dogrula(typeof secilenId === 'string' && /^D(0[1-9]|1[0-8])[a-f]?$/.test(secilenId),
-      'duzenekSecimi', 'DUZENEK_YOK');
+    // Kimlik listesi dosyalardan gelir; yalnız kök dışına çıkan yolları engelle.
+    dogrula(typeof secilenId === 'string' && secilenId.length > 0 &&
+      !['.', '..'].includes(secilenId) && !secilenId.includes('\0') &&
+      basename(secilenId) === secilenId && win32.basename(secilenId) === secilenId,
+    'duzenekSecimi', 'DUZENEK_YOK');
   }
   const kapsam = secilenId === undefined ?
     await kapsamOku(join(kok, 'docs', 'kapsam.json')) : [secilenId];
@@ -61,7 +64,7 @@ export async function seedTesti(kok, secilenId) {
 }
 
 async function ana() {
-  dogrula(process.argv.length <= 3, 'duzenekSecimi', 'PARAMETRE_ARALIK_DISI');
+  dogrula(process.argv.length <= 3, 'duzenekSecimi', 'CLI_ARGUMAN_GECERSIZ');
   const kok = fileURLToPath(new URL('../', import.meta.url));
   const ozet = await seedTesti(kok, process.argv[2]);
   for (const id of ozet.parametreDenetimsiz) {

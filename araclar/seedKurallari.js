@@ -1,5 +1,8 @@
 import * as geo from '../geo/index.js';
 
+// ADT-008: üretici uzayından tezgâha uygulanan ötelemenin merkezi.
+const TEZGAH_MERKEZ = { x: 500, y: 500 };
+
 /** @param {boolean} kosul @param {string} denetim @param {string} [kod] */
 export function dogrula(kosul, denetim, kod = 'PARAMETRE_ARALIK_DISI') {
   if (kosul) return;
@@ -36,11 +39,18 @@ export function d02Parametreleri(ctx) {
     for (const nokta of noktalar) {
       dogrula(Number.isFinite(nokta?.x) && Number.isFinite(nokta?.y),
         'parametreAraligi:konum');
-      // ADT-008: kur içindeki (+500, +500) ötelemesini yalnız gözlemde geri al.
-      konum.push(nokta.x - 500, nokta.y - 500);
+      // ADT-008: kur içindeki ötelemeyi yalnız gözlemde geri al.
+      konum.push(nokta.x - TEZGAH_MERKEZ.x, nokta.y - TEZGAH_MERKEZ.y);
     }
   }
   return { konum };
+}
+
+/** @param {Ctx} ctx @returns {Object} D09a.json aci aralığı sipariş hedefini tanımlar. */
+export function d09aParametreleri(ctx) {
+  dogrula(ctx.durum && Object.prototype.hasOwnProperty.call(ctx.durum, 'hedef'),
+    'D09aHedefEksik', 'IMZA_EKSIK');
+  return { aci: [ctx.durum.hedef] };
 }
 
 /** @param {Object} cagri @returns {void} Gerçek tamHaric girdisi ve çıktısı. */
