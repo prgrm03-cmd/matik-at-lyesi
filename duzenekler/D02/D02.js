@@ -35,7 +35,7 @@ export function kur(ctx, seed) {
 }
 
 function toleransBirim(ctx) {
-  return ctx.sahne.pxToBirim(ctx.geo.TOLERANS.pimYakalamaPx);
+  return ctx.geo.TOLERANS.hatBirim;
 }
 
 function isikCiz(ctx) {
