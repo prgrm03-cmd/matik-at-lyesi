@@ -37,10 +37,10 @@ test('K-04: imza listesi sözleşme §3.2/3.3/3.4/4.1 kaynaklarıyla eşleşir',
   assert.ok(hatalar.some(hata => hata.includes('Pergel')));
 });
 
-test('K-04: mevcut D01, geo ve lazer geçer; eksik dosyalar bekleniyor', async () => {
+test('K-04: mevcut düzenek, geo, widget ve defter imzaları geçer', async () => {
   const sonuc = await imzaDogrula(KOK);
   assert.deepEqual(sonuc.hatalar, []);
-  assert.ok(sonuc.uyarilar.includes('defter/defter.js: bekleniyor'));
+  assert.deepEqual(sonuc.uyarilar, []);
 });
 
 const BOZUK_DUZENEKLER = [

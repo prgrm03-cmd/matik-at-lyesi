@@ -1,6 +1,6 @@
 import * as geo from '../geo/index.js';
 import { rngOlustur } from './rng.js';
-import { hizmetleriOlustur } from './baglam.js';
+import { hizmetleriOlustur, aciTablosuKilidiniDogrula } from './baglam.js';
 import { araclariHazirla } from './ilerleme.js';
 import { sahteSahneOlustur } from './sahteSahne.js';
 import { aciTablosuOlustur } from '../widget/aciTablosu.js';
@@ -15,10 +15,13 @@ function dondur(nesne) {
   return nesne;
 }
 
-function arayuzOlustur() {
+function arayuzOlustur(kayit) {
   const bos = () => {};
   return {
-    soyle: bos, ifade: bos, kivilcim: bos, sembol: bos, defterAc: bos, defterKapat: bos
+    soyle() {
+      kayit.sayac.soyle = (kayit.sayac.soyle || 0) + 1;
+    },
+    ifade: bos, kivilcim: bos, sembol: bos, defterAc: bos, defterKapat: bos
   };
 }
 
@@ -39,12 +42,9 @@ export function ctxSahteOlustur(id, veri, seed, secenek) {
     id, veri: donmus, durum: {}, rng, sahne, geo, mod, tur: 0,
     araclar: araclariHazirla(donmus, rng.alt('araclar'), { ilerleme: {} }, mod)
   };
-  hizmetleriOlustur(ctx, arayuzOlustur(), { ses: false });
+  hizmetleriOlustur(ctx, arayuzOlustur(kayit), { ses: false });
   ctx.widget.aciTablosu = (ayar) => {
-    if (donmus.bayraklar.olcuKilidi && Array.isArray(ayar?.sutunlar) &&
-        ayar.sutunlar.includes('olcu')) {
-      throw new Error('WIDGET_AYAR_GECERSIZ');
-    }
+    aciTablosuKilidiniDogrula(ctx, ayar);
     return aciTablosuOlustur(ayar, undefined);
   };
   kayitlar.set(ctx, kayit);

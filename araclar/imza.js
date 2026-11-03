@@ -2,6 +2,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { dosyalar, dogrudan, raporla } from './checkOrtak.js';
+import { rngOlustur } from '../motor/rng.js';
+import { sahteSahneOlustur } from '../motor/sahteSahne.js';
 
 export const IMZA_LISTESI = JSON.parse(
   readFileSync(new URL('./imzaListesi.json', import.meta.url), 'utf8')
@@ -113,17 +115,40 @@ async function modulOku(kok, yol, liste, hatalar) {
   }
 }
 
+const ORTAM_ISARETLERI = {
+  birim: () => px => px,
+  rng: () => rngOlustur(1),
+  sahne: () => sahteSahneOlustur({}).sahne,
+  matik: () => ({ soyle() {} }),
+  arayuz: () => ({ defterAc() {}, defterKapat() {} }),
+  kayit: () => () => {},
+  kalip: () => 'kalip'
+};
+
 function argumanlariHazirla(tanim) {
-  const argumanlar = tanim.argumanlar || [];
-  const ortamli = ['widget/pergel.js', 'widget/gonye.js'].includes(tanim.yol);
-  if (tanim.kaynak !== 'ADT-013' || !ortamli) return argumanlar;
-  // JSON isareti yalniz ADT-013 ortamindaki ozdes birim donusumunu temsil eder.
-  return argumanlar.map((arg, i) => i === 1 && arg?.pxToBirim === 'birim'
-    ? { ...arg, pxToBirim: px => px } : arg);
+  return (tanim.argumanlar || []).map(arg => {
+    if (!arg || typeof arg !== 'object' || Array.isArray(arg)) return arg;
+    const sonuc = { ...arg };
+    for (const [ad, deger] of Object.entries(sonuc)) {
+      if (typeof deger === 'string' && Object.hasOwn(ORTAM_ISARETLERI, deger)) {
+        sonuc[ad] = ORTAM_ISARETLERI[deger]();
+      }
+    }
+    return sonuc;
+  });
+}
+
+function arayuzDogrula(nesne, tanim, liste) {
+  const yol = tanim.yol + ':' + tanim.arayuz;
+  const arayuz = liste.arayuzler[tanim.arayuz];
+  if (typeof arayuz === 'number') {
+    return turUygun(nesne, arayuz) ? [] : [yol + ': length=' + arayuz];
+  }
+  return nesneDogrula(nesne, { ...arayuz, ...tanim.ekUyeler }, yol);
 }
 
 async function aracDogrula(kok, tanim, liste, sonuc) {
-  const { yol, disarim, fabrika, arayuz } = tanim;
+  const { yol, disarim, fabrika } = tanim;
   if (!existsSync(resolve(kok, yol))) {
     sonuc.uyarilar.push(yol + ': bekleniyor');
     return;
@@ -136,7 +161,7 @@ async function aracDogrula(kok, tanim, liste, sonuc) {
   if (!modul || typeof modul[fabrika] !== 'function') return;
   try {
     const nesne = modul[fabrika](...argumanlariHazirla(tanim));
-    sonuc.hatalar.push(...nesneDogrula(nesne, liste.arayuzler[arayuz], yol + ':' + arayuz));
+    sonuc.hatalar.push(...arayuzDogrula(nesne, tanim, liste));
   } catch (hata) {
     sonuc.hatalar.push(yol + ': fabrika arayüzü okunamadı: ' + hata.message);
   }

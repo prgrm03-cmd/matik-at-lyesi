@@ -5,7 +5,7 @@ import { aciolcerOlustur } from '../widget/aciolcer.js';
 import { pergelOlustur } from '../widget/pergel.js';
 import { gonyeOlustur } from '../widget/gonye.js';
 import { aciTablosuOlustur } from '../widget/aciTablosu.js';
-import { bekleyenFabrika as bekleyen } from './sahteKayit.js';
+import { defterOlustur } from '../defter/defter.js';
 
 function pergelBagla(ctx, hizmetler, ayar) {
   if (ctx.veri.bayraklar.olcuKilidi === true && ayar?.olcuKilidi === false) {
@@ -37,7 +37,7 @@ function widgetOlustur(ctx, hizmetler) {
       hizmetler.widgetler.push(nesne);
       return nesne;
     },
-    aciTablosu: bekleyen,
+    aciTablosu: aciTablosuBagla(ctx, hizmetler),
     pergel(ayar) { return pergelBagla(ctx, hizmetler, ayar); },
     gonye(ayar) {
       const nesne = gonyeOlustur(ayar, {
@@ -56,15 +56,20 @@ function widgetOlustur(ctx, hizmetler) {
 
 function aciTablosuBagla(ctx, hizmetler) {
   return (ayar) => {
-    if (ctx.veri.bayraklar.olcuKilidi && Array.isArray(ayar?.sutunlar) &&
-        ayar.sutunlar.includes('olcu')) {
-      throw new Error('WIDGET_AYAR_GECERSIZ');
-    }
+    aciTablosuKilidiniDogrula(ctx, ayar);
     const konum = ctx.mod.tahta ? ACI_TABLOSU_TAHTA : ACI_TABLOSU_TELEFON;
     const nesne = aciTablosuOlustur(ayar, konum);
     hizmetler.widgetler.push(nesne);
     return nesne;
   };
+}
+
+/** @param {Ctx} ctx @param {Object} ayar @returns {void} */
+export function aciTablosuKilidiniDogrula(ctx, ayar) {
+  if (ctx.veri.bayraklar.olcuKilidi && Array.isArray(ayar?.sutunlar) &&
+      ayar.sutunlar.includes('olcu')) {
+    throw new Error('WIDGET_AYAR_GECERSIZ');
+  }
 }
 
 function matikOlustur(veri, arayuz) {
@@ -93,20 +98,13 @@ function matikOlustur(veri, arayuz) {
 export function hizmetleriOlustur(ctx, arayuz, ayarlar) {
   const hizmetler = { widgetler: [], defterler: [] };
   ctx.widget = widgetOlustur(ctx, hizmetler);
-  ctx.widget.aciTablosu = aciTablosuBagla(ctx, hizmetler);
-  ctx.defter = {
-    tahminRafi: bekleyen,
-    kuralKarti: bekleyen,
-    sina(kart, uretici, n) {
-      void uretici;
-      void n;
-      return bekleyen(kart);
-    },
-    kisayolYuvasi: bekleyen,
-    ac() { arayuz.defterAc(); },
-    kapat() { arayuz.defterKapat(); }
-  };
   ctx.matik = matikOlustur(ctx.veri, arayuz);
+  ctx.defter = defterOlustur({
+    bayraklar: ctx.veri.bayraklar, kartlar: ctx.veri.kartlar ?? {},
+    rng: ctx.rng, sahne: ctx.sahne, matik: ctx.matik,
+    arayuz: { defterAc: () => arayuz.defterAc(), defterKapat: () => arayuz.defterKapat() },
+    kayit: nesne => hizmetler.defterler.push(nesne)
+  });
   ctx.sembol = sembolOlustur((metin) => arayuz.sembol(metin));
   ctx.ses = sesOlustur(ctx.mod, ayarlar);
   return hizmetler;

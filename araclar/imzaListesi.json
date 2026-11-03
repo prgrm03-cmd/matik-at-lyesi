@@ -153,6 +153,7 @@
       "ac": 0,
       "kapat": 0
     },
+    "Defter.sina": 2,
     "TahminRafi": {
       "deger": 0,
       "kilitle": 0,
@@ -253,27 +254,65 @@
     {
       "yol": "defter/defter.js",
       "arayuz": "Defter",
-      "disarim": null
+      "disarim": { "defterOlustur": 1 },
+      "fabrika": "defterOlustur",
+      "argumanlar": [{
+        "rng": "rng", "sahne": "sahne", "matik": "matik", "arayuz": "arayuz",
+        "kayit": "kayit", "bayraklar": {}, "kartlar": { "k1": { "kalip": "x" } }
+      }],
+      "kaynak": "ADT-015"
     },
     {
       "yol": "defter/tahminRafi.js",
       "arayuz": "TahminRafi",
-      "disarim": null
+      "disarim": { "tahminRafiOlustur": 2 },
+      "fabrika": "tahminRafiOlustur",
+      "ekUyeler": { "hucreKoy": 2 },
+      "argumanlar": [
+        { "hucreler": [{ "ad": "a", "tur": "sayac", "min": 0, "max": 1 }],
+          "etiketAnahtari": "raf" },
+        { "rng": "rng", "sahne": "sahne", "matik": "matik", "arayuz": "arayuz",
+          "kayit": "kayit", "bayraklar": {}, "kartlar": { "k1": { "kalip": "x" } } }
+      ],
+      "kaynak": "ADT-015"
     },
     {
       "yol": "defter/kuralKarti.js",
       "arayuz": "KuralKarti",
-      "disarim": null
+      "disarim": { "kuralKartiOlustur": 2 },
+      "fabrika": "kuralKartiOlustur",
+      "ekUyeler": { "kalip": "string", "disliCevir": 2 },
+      "argumanlar": [
+        { "kalipAnahtari": "k1", "disliler": [{ "ad": "a", "secenekler": [1, 2] }],
+          "dogru": { "a": 2 } },
+        { "rng": "rng", "sahne": "sahne", "matik": "matik", "arayuz": "arayuz",
+          "kayit": "kayit", "bayraklar": {}, "kartlar": { "k1": { "kalip": "x" } },
+          "kalip": "kalip" }
+      ],
+      "kaynak": "ADT-015"
     },
     {
       "yol": "defter/sinama.js",
       "arayuz": "Defter.sina",
-      "disarim": null
+      "disarim": { "sinaOlustur": 1 },
+      "fabrika": "sinaOlustur",
+      "argumanlar": [{
+        "rng": "rng", "sahne": "sahne", "matik": "matik", "arayuz": "arayuz",
+        "kayit": "kayit", "bayraklar": {}, "kartlar": { "k1": { "kalip": "x" } }
+      }],
+      "kaynak": "ADT-015"
     },
     {
       "yol": "defter/kisayolYuvasi.js",
       "arayuz": "KisayolYuvasi",
-      "disarim": null
+      "disarim": { "kisayolYuvasiOlustur": 2 },
+      "fabrika": "kisayolYuvasiOlustur",
+      "argumanlar": [
+        { "kabulEdilen": ["k1"], "sensorler": ["a"], "cozucu": "kayit" },
+        { "rng": "rng", "sahne": "sahne", "matik": "matik", "arayuz": "arayuz",
+          "kayit": "kayit", "bayraklar": {}, "kartlar": { "k1": { "kalip": "x" } } }
+      ],
+      "kaynak": "ADT-015"
     }
   ]
 }
