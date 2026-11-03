@@ -45,3 +45,20 @@ test('başlatılamayan ve zaman aşımına uğrayan komutlar kırmızıdır', ()
     assert.match(sonuc.satirlar[1], /SIGTERM/);
   } finally { rmSync(kok, { recursive: true, force: true }); }
 });
+
+test('başarısız komutun stderr bulgusu uzun stdout içinde kaybolmaz', () => {
+  const kok = mkdtempSync(join(tmpdir(), 'matik-rapor-'));
+  try {
+    const sonuc = check(kok, {
+      dal: 'main',
+      kos() {
+        return {
+          status: 1,
+          stdout: Array.from({ length: 20 }, (_, i) => 'ok ' + i).join('\n'),
+          stderr: 'ASIL_HATA'
+        };
+      }
+    });
+    assert.ok(sonuc.satirlar.every(satir => satir.includes('ASIL_HATA')));
+  } finally { rmSync(kok, { recursive: true, force: true }); }
+});

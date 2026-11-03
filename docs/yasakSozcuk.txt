@@ -1,0 +1,31 @@
+soru
+cevap
+yanlış
+hata
+puan
+not
+sınav
+test
+başarısız
+kaybettin
+kazandın
+aferin
+bravo
+tebrikler
+çabuk
+acele
+son şans
+formül
+toplam
+alan
+çevre
+pi
+π
+derece toplamı
+köşegen sayısı
+yöndeş
+iç ters
+dış ters
+kural şu
+unutma ki
+bilmelisin

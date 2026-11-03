@@ -19,9 +19,14 @@ function dalAdi(kok) {
 }
 
 function ilkBulgular(sonuc) {
-  const satirlar = ((sonuc.stdout || '') + '\n' + (sonuc.stderr || '')).split(/\r?\n/);
-  const dolu = satirlar.map(satir => satir.trim()).filter(Boolean);
-  const bulgular = dolu.filter(satir => !satir.startsWith('>') && satir !== 'TAP version 13');
+  const stdout = (sonuc.stdout || '').split(/\r?\n/);
+  const stderr = (sonuc.stderr || '').split(/\r?\n/);
+  const hatalar = stdout.filter(satir => /^\s*(not ok|error:|location:|failureType:)/.test(satir));
+  const satirlar = sonuc.status === 0 ? stdout.concat(stderr) : stderr.concat(hatalar, stdout);
+  const dolu = [...new Set(satirlar.map(satir => satir.trim()).filter(Boolean))];
+  const ozet = dolu.filter(satir => /^# (tests|pass|fail|duration_ms) /.test(satir));
+  const secilen = sonuc.status === 0 && ozet.length ? ozet : dolu;
+  const bulgular = secilen.filter(satir => !satir.startsWith('>') && satir !== 'TAP version 13');
   if (sonuc.error) bulgular.unshift(sonuc.error.message);
   if (sonuc.signal) bulgular.unshift('Sinyal: ' + sonuc.signal);
   return bulgular.slice(0, 10);

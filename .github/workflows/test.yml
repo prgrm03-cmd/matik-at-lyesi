@@ -10,15 +10,27 @@ jobs:
   dogrula:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      PR_BODY: ${{ github.event.pull_request.body }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install --ignore-scripts --no-audit --no-fund
-      - name: Kilit dosyasini dogrula
-        run: node -e "console.log('LOCK_JSON=' + JSON.stringify(require('./package-lock.json')))"
-      - run: npm test
-      - run: node araclar/seedTesti.js
+          cache: npm
+      - name: Main karsilastirma dali
+        run: git update-ref refs/heads/main refs/remotes/origin/main
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Dokuz komut (D01 en fazla 60 saniye)
+        run: /usr/bin/time -f 'CHECK_SURE_SN=%e' timeout 60s npm run check
+      - name: Kuru kosu (seed 42)
+        run: node araclar/kuru.js duzenekler/D01/D01.js duzenekler/D01/D01.json 42 --dokum
+      - name: Check raporu
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-${{ github.run_id }}
+          path: docs/check/*.txt
