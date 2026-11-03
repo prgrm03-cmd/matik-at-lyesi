@@ -1,0 +1,75 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D09a",
+  "kod": "D09",
+  "surum": "1.0.0",
+  "arac": "C",
+  "baslik": "Robot Kolu",
+  "zorluk": 1,
+  "sureDk": 3,
+  "kapsam": ["5.3.2"],
+  "turSayisi": 2,
+  "bayraklar": {
+    "olcuKilidi": false,
+    "kartSayisi": 0,
+    "tahminRafi": false,
+    "sinama": false,
+    "sensorSokme": false,
+    "aciolcerGorunur": true,
+    "yanParca": false
+  },
+  "matik": {
+    "giris": "Açıölçeri geçen vardiyadan dönük bırakmışım. Önce onu yerine oturt.",
+    "basari": "Kol sipariş rafında durdu. Parça tam yerine oturdu.",
+    "tekrar": "Kolu sıfırladım. Bu sefer açı başka yere bakıyor.",
+    "yanlisArac": "Bu kolun yanında açıölçere yer ayırmıştım. Kemere bir bak.",
+    "kilit": "Bu makine henüz dolaptan çıkmadı. Öncekiler bitince anahtarı veririm."
+  },
+  "ipucu": [
+    {
+      "vurgu": [],
+      "ne": "Açıölçerin merkezi yerinde değilse A pimi, yerindeyse sipariş rafı vurgulanır."
+    },
+    {
+      "metin": "Sıfır çizgisi kolun üstünde mi? Açıölçer iki yerden sıfır başlatır."
+    },
+    {
+      "ne": "Açıölçerin merkezi A pimine oturtulur, sıfır çizgisi kol üstüne getirilir."
+    }
+  ],
+  "nedenler": {
+    "tamam": "Kol sipariş rafında durdu. Parça tam yerine oturdu.",
+    "olcekTers": "Kol durdu ama sipariş rafının dışında. Açıölçerin öbür sırasına baktın galiba.",
+    "rafDisi": "Kol durdu ama raf uzakta kaldı. Parça kolun ucunu bekliyor.",
+    "aciolcerYerindeDegil": "Açıölçer pimin yanına kaymış, sıfır çizgisi de kola bakmıyor.",
+    "yarimKaldi": "Bir şey eksik. Makine çalıştı, yarı yolda sustu."
+  },
+  "parametreler": {
+    "aci": {
+      "min": 25,
+      "max": 155,
+      "adim": 1,
+      "cirkinOran": 0.5
+    }
+  },
+  "etiketler": {
+    "calistir": "Çalıştır",
+    "raf": "Sipariş rafı",
+    "okuma": "Açıölçer okuması",
+    "okumaIc": "İç sıra okuması",
+    "okumaDis": "Dış sıra okuması",
+    "olcekIc": "İçten oku",
+    "olcekDis": "Dıştan oku",
+    "ipucu": "İpucu al",
+    "dolap": "Dolabı aç",
+    "defterAc": "Defteri aç",
+    "defterKapat": "Defteri kapat",
+    "defter": "Defter",
+    "lazer": "Lazer",
+    "pergel": "Pergel",
+    "gonye": "Gönye",
+    "aciolcer": "Açıölçer",
+    "cetvel": "Cetvel"
+  },
+  "notlar": "sınır: yalnız tam derece, ölçek yönü iç/dış"
+}
