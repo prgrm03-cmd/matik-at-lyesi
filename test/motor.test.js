@@ -63,6 +63,27 @@ describe('duzenekAc', () => {
   });
 });
 
+describe('duzenekAc', () => {
+  it('açıölçer saklanan gerçek sahnenin yeni boyutunu sonraki karede kullanır', async t => {
+    const ortam = motorOrtami(t);
+    await baslat({ kok: ortam.kok, url: new URLSearchParams('seed=42') });
+    const ctx = await duzenekAc('D01', 42);
+    const aciolcer = ctx.widget.aciolcer({ hizasiz: false, olcekYonu: 'ic' });
+    aciolcer.ciz(ctx.sahne);
+    const sahne = ctx.sahne;
+    const hedef = { x: aciolcer.merkez.x + 30, y: aciolcer.merkez.y };
+    assert.equal(aciolcer.hizaliMi(hedef, 0).merkezTamam, true);
+    ortam.ogeler.tezgah.getBoundingClientRect = () => ({ width: 720, height: 720 });
+    const kare = [...ortam.kareler.values()].at(-1);
+    ortam.kareler.clear();
+    kare();
+    assert.equal(ctx.sahne, sahne);
+    assert.equal(sahne.olcek, 1000 / 720);
+    assert.equal(aciolcer.hizaliMi(hedef, 0).merkezTamam, false);
+    assert.equal(ortam.ogeler.hata.hidden, true);
+  });
+});
+
 describe('baslat', () => {
   it('tahta bağlantısını açar, ipucu kapalıyken durumu ve kaydı korur', async t => {
     const ortam = motorOrtami(t);
