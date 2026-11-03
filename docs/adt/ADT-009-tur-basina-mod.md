@@ -16,10 +16,8 @@ v1'de mod **`ctx.tur`'dan sabit döngüyle** seçilir; `lazerSenaryosu`'nun `mod
 5. `kuru.js` (Matematikçe): sahte ctx'te `tur: 0` açıkça verilir; isteğe bağlı `--tur 1|2` denetimi K-03'e not.
 6. Seed-bağımlı sıra istenirse (v2): motor `ctx.kokRng = rngOlustur(oturum.seed).alt('duzenek')` verir (K-03 sahibi); D02 o zaman 2. maddeyi tek satırla `ctx.kokRng.karistir(MOD_SIRASI)[ctx.tur]` yapar. Bu ADT olmadan düzenek kendi rng'sini kurmaz.
 
-**Erteleme notu (Matematikçe, 3 Kas):** Seed'e bağlı mod sırası (`ctx.kokRng`) G-01 kapsamında uygulanmaz; sonraki bir motor biletine ertelenmiştir. K-03 birleşmiş olduğundan sahiplik yeni motor biletinde belirlenir.
-
-**Koordinat notu:** `karistir` kaldırılınca rng tüketimi değişti; seed 42 tur 0 kuru uç noktaları tezgâh uzayında (342,659)/(640,423)'tür (Gemini teslim v3).
+**Erteleme notu (4 Kas 2026 · Hakem onayı: verildi):** v2 `ctx.kokRng` ertelendi; sahip, K-03 birleşmişse açılacak yeni motor bileti.
 
 ## Etkilenen dosyalar / bilet
-`duzenekler/D02/D02.js` (`kur`), G-01 bilet metni ("rng.karistir" ibaresi askıda); `araclar/kuru.js` sahte ctx `tur:0` (K-03); v2 için motor/`baglam.js` (K-03, henüz açılmadı).
+`duzenekler/D02/D02.js` (`kur`), G-01 bilet metni ("rng.karistir" ibaresi askıda); `araclar/kuru.js` sahte ctx `tur:0` (K-03); v2 için motor/`baglam.js` (yeni motor bileti; ertelendi).
 
