@@ -1,0 +1,7 @@
+[
+  { "tur": "bas", "x": 500, "y": 500, "hedef": "lazerCark" },
+  { "tur": "surukle", "x": 448, "y": 500, "dx": -52, "dy": 0, "hedef": "lazerCark" },
+  { "tur": "surukle", "x": 396, "y": 500, "dx": -52, "dy": 0, "hedef": "lazerCark" },
+  { "tur": "birak", "x": 396, "y": 500, "hedef": "lazerCark" },
+  { "tur": "dugme", "x": 500, "y": 950, "dugmeId": "calistir" }
+]
