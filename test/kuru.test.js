@@ -9,6 +9,7 @@ import { spawnSync } from 'node:child_process';
 import { kuruKos, ipucuTekrariniDene } from '../araclar/kuruKos.js';
 import { olaylariOku, seedOku, kuruDosyasiOku } from '../araclar/kuruDosya.js';
 import * as D01 from '../duzenekler/D01/D01.js';
+import * as sahteKayit from '../motor/sahteKayit.js';
 
 const D01_VERI = JSON.parse(readFileSync(
   new URL('../duzenekler/D01/D01.json', import.meta.url), 'utf8'));
@@ -52,7 +53,9 @@ describe('kuruKos', () => {
 describe('kuruKos', () => {
   it('yer tutucuyu atlar ancak aynı kodlu sıradan hatayı kırmızı sayar', () => {
     const { duzenek, veri } = ornek();
-    duzenek.kur = function(ctx, seed) { void seed; ctx.defter.kuralKarti({}); };
+    duzenek.kur = function(ctx, seed) {
+      void ctx; void seed; sahteKayit.bekleyenFabrika({});
+    };
     assert.equal(kuruKos(duzenek, veri, 42).atlandi, true);
     duzenek.kur = function(ctx, seed) {
       void ctx; void seed; throw new Error('IMZA_EKSIK');
@@ -68,7 +71,7 @@ describe('kuruKos', () => {
     duzenek.kur = function(ctx, seed) {
       void seed;
       ctx.sahne.sayi({ x: 0, y: 0 }, 90);
-      ctx.defter.kuralKarti({});
+      sahteKayit.bekleyenFabrika({});
     };
     assert.throws(() => kuruKos(duzenek, veri, 42), { message: 'OLCU_KILIDI_IHLALI' });
   });
@@ -160,7 +163,7 @@ describe('ipucuTekrariniDene', () => {
     duzenek.ipucu = function(ctx, seviye) {
       void seviye;
       ctx.sahne.sayi({ x: 0, y: 0 }, 90);
-      ctx.defter.kuralKarti({});
+      sahteKayit.bekleyenFabrika({});
     };
     assert.throws(() => ipucuTekrariniDene(duzenek, veri, 42),
       { message: 'OLCU_KILIDI_IHLALI' });
