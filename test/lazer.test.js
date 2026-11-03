@@ -220,3 +220,114 @@ describe('durum', () => {
     dogrula.deepEqual(lazer.durum(), once);
   });
 });
+
+const SABIT_AYARLAR = [
+  { mod: 'parca' }, { mod: 'isin' }, { mod: 'dogru' },
+  { mod: 'isin', donenIsin: true }
+];
+
+describe('girdi', () => {
+  it('Sabit A hedefinin olaylarını reddeder ve sürükleme seçimi başlatmaz.', () => {
+    for (const ayar of SABIT_AYARLAR) {
+      const lazer = lazerOlustur({ ...ayar, sabitA: true });
+      lazer.A = A;
+      lazer.B = B;
+      const once = lazer.durum();
+      for (const tur of ['bas', 'surukle', 'birak', 'tik', 'dugme', 'tus']) {
+        dogrula.equal(lazer.girdi({ tur, hedef: 'lazerA' }), false);
+      }
+      dogrula.equal(lazer.girdi({ tur: 'bas', hedef: 'lazerA', ...A }), false);
+      dogrula.equal(lazer.girdi({ tur: 'surukle', x: 350, y: 400, dx: 20 }), false);
+      dogrula.equal(lazer.girdi({ tur: 'birak', x: 350, y: 400 }), false);
+      dogrula.deepEqual(lazer.durum(), once);
+    }
+  });
+
+  it('A sabitken parça, ışın ve doğru modlarında B pimini sürükler.', () => {
+    for (const mod of ['parca', 'isin', 'dogru']) {
+      const lazer = lazerOlustur({ mod, sabitA: true });
+      lazer.A = A;
+      lazer.B = B;
+      dogrula.equal(lazer.girdi({ tur: 'bas', hedef: 'lazerB', ...B }), true);
+      dogrula.equal(lazer.girdi({ tur: 'surukle', x: 350, y: 400 }), true);
+      dogrula.equal(lazer.girdi({ tur: 'birak', x: 350, y: 400 }), true);
+      dogrula.deepEqual(lazer.B, { x: 350, y: 400 });
+      dogrula.deepEqual(lazer.A, A);
+      dogrula.equal(lazer.girdi({ tur: 'surukle', x: 0, y: 0 }), false);
+    }
+  });
+
+  it('A sabitken dönen ışının çarkını sürükler ve yönünü değiştirir.', () => {
+    const lazer = lazerOlustur({ mod: 'isin', donenIsin: true, sabitA: true, carkAdim: 5 });
+    lazer.A = A;
+    dogrula.equal(lazer.girdi({ tur: 'bas', hedef: 'lazerCark' }), true);
+    dogrula.equal(lazer.girdi({ tur: 'bas', hedef: 'lazerA' }), false);
+    dogrula.equal(lazer.girdi({ tur: 'surukle', dx: -2 }), true);
+    dogrula.equal(lazer.girdi({ tur: 'birak' }), true);
+    dogrula.equal(lazer.yon, 350);
+    dogrula.deepEqual(lazer.A, A);
+    dogrula.deepEqual(lazer.hat(), { A, yon: 350 });
+    dogrula.equal(lazer.girdi({ tur: 'surukle', dx: 1 }), false);
+  });
+
+  it('Sabit A ayarı verilmediğinde veya kapalı olduğunda A pimini sürükler.', () => {
+    for (const ayar of [undefined, {}, { sabitA: false }]) {
+      const lazer = lazerOlustur(ayar);
+      lazer.A = A;
+      lazer.B = B;
+      dogrula.equal(lazer.girdi({ tur: 'bas', hedef: 'lazerA', ...A }), true);
+      dogrula.equal(lazer.girdi({ tur: 'surukle', x: 120, y: 130 }), true);
+      dogrula.equal(lazer.girdi({ tur: 'birak', x: 120, y: 130 }), true);
+      dogrula.deepEqual(lazer.A, { x: 120, y: 130 });
+      dogrula.deepEqual(lazer.B, B);
+    }
+  });
+});
+
+describe('lazerOlustur', () => {
+  it('Sabit A ayarı boolean değilse widget ayar hatası verir.', () => {
+    for (const sabitA of ['evet', 1, null]) {
+      dogrula.throws(() => lazerOlustur({ sabitA }), AYAR_HATASI);
+    }
+  });
+});
+
+describe('yukle', () => {
+  it('A sabitken yeni A noktasını yükler ve ayarı kalıcı duruma eklemez.', () => {
+    for (const ayar of SABIT_AYARLAR) {
+      const lazer = lazerOlustur({ ...ayar, sabitA: true });
+      lazer.A = A;
+      const yeniA = { x: 350, y: 400 };
+      const kayit = { mod: ayar.mod, A: yeniA, B, yon: 275 };
+      lazer.yukle(kayit);
+      dogrula.deepEqual(lazer.A, yeniA);
+      dogrula.deepEqual(lazer.durum(), kayit);
+      dogrula.equal(Object.prototype.hasOwnProperty.call(lazer.durum(), 'sabitA'), false);
+      dogrula.equal(lazer.girdi({ tur: 'bas', hedef: 'lazerA' }), false);
+      kayit.A.x = 0;
+      dogrula.equal(lazer.A.x, 350);
+    }
+  });
+});
+
+describe('ciz', () => {
+  it('A sabitken yalnız A tutamacını kaldırır ve bütün çizimleri korur.', () => {
+    for (const ayar of SABIT_AYARLAR) {
+      const serbest = lazerOlustur(ayar);
+      const sabit = lazerOlustur({ ...ayar, sabitA: true });
+      for (const lazer of [serbest, sabit]) {
+        lazer.A = A;
+        lazer.B = B;
+        lazer.yon = 45;
+      }
+      const beklenen = sahneHazirla();
+      const sonuc = sahneHazirla();
+      serbest.ciz(beklenen.sahne);
+      sabit.ciz(sonuc.sahne);
+      const pimA = beklenen.cagrilar.find(c => c.ad === 'pim' && c.arg[1].id === 'lazerA');
+      delete pimA.arg[1].id;
+      dogrula.deepEqual(sonuc.cagrilar, beklenen.cagrilar);
+      dogrula.deepEqual(sabit.durum(), serbest.durum());
+    }
+  });
+});
