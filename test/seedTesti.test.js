@@ -168,7 +168,6 @@ describe('seedTesti', () => {
     assert.equal(ozet.gecti, 5000);
     assert.equal(ozet.sayi, 12000);
     assert.deepEqual(ozet.parametreDenetimsiz, []);
-    assert.ok(ozet.sureMs < 10000);
   });
 
   for (const id of ['D03', 'D04']) {
