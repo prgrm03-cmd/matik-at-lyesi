@@ -14,7 +14,7 @@ Set 2'nin ilk biletlerinden K-07, `widget/pergel.js` ve `widget/gonye.js` widget
 6. `kopyala` ve `acikligiAl` kilidi öğrenci tıkıyla açılamaz (`kilitKaynagi`); yalnız `kilitli` ayarıyla ya da elle `kilitle()` ile konan kilit açılabilir. D07/D08/D17 bu kurala güvenir.
 7. `pergel.cemberCiz/yayCiz` sahneye çizmez, `Cember`/`Yay` nesnesi döner; `yayCiz` `yon` varsayılanı `'saat'`.
 8. `gonye.oturdu`: uzun kenar ↔ doğru `paralelMi(…, TOLERANS.dikme)` **ve** dik köşe doğruya `pxToBirim(TOLERANS.pimYakalamaPx)` içinde; `t` dik köşe ayağının `dogru.A`'dan imzalı uzaklığı.
-9. `araclar/imzaListesi.json` pergel/gonye satırları bu ADT kaynağıyla dolar; `sozlesmeSurumu` değişmez. Sözleşme §3.3'e üç satır ek (fabrika adı, `ortam`, id listesi) `[v1.0.x, ADT-013]` etiketiyle; eski metin silinmez.
+9. `araclar/imzaListesi.json` pergel/gonye satırları bu ADT kaynağıyla dolar; `sozlesmeSurumu` değişmez. Sözleşme §3.3'e üç satır ek (fabrika adı, `ortam`, id listesi) `[v1.0.x, ADT-013]` etiketiyle; eski metin silinmez. Bu sözleşme/değişiklik düzenlemeleri Matematikçe'nin ayrı bir docs PR'ıdır; K-07/K-08 PR'ları docs/sozlesme_v1.md ve docs/degisiklik.md'ye dokunmaz. Bu PR K-07/K-08 birleşmeden önce açılır.
 10. Bozucu etki: yok (hiçbir mevcut düzenek değişmez; D02/D09a bu widget'ları kullanmaz).
 
 ## Uygulayıcının izleyeceği kural
