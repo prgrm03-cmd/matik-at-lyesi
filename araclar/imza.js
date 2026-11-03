@@ -113,6 +113,15 @@ async function modulOku(kok, yol, liste, hatalar) {
   }
 }
 
+function argumanlariHazirla(tanim) {
+  const argumanlar = tanim.argumanlar || [];
+  const ortamli = ['widget/pergel.js', 'widget/gonye.js'].includes(tanim.yol);
+  if (tanim.kaynak !== 'ADT-013' || !ortamli) return argumanlar;
+  // JSON isareti yalniz ADT-013 ortamindaki ozdes birim donusumunu temsil eder.
+  return argumanlar.map((arg, i) => i === 1 && arg?.pxToBirim === 'birim'
+    ? { ...arg, pxToBirim: px => px } : arg);
+}
+
 async function aracDogrula(kok, tanim, liste, sonuc) {
   const { yol, disarim, fabrika, arayuz } = tanim;
   if (!existsSync(resolve(kok, yol))) {
@@ -126,7 +135,7 @@ async function aracDogrula(kok, tanim, liste, sonuc) {
   const modul = await modulOku(kok, yol, disarim, sonuc.hatalar);
   if (!modul || typeof modul[fabrika] !== 'function') return;
   try {
-    const nesne = modul[fabrika](...(tanim.argumanlar || []));
+    const nesne = modul[fabrika](...argumanlariHazirla(tanim));
     sonuc.hatalar.push(...nesneDogrula(nesne, liste.arayuzler[arayuz], yol + ':' + arayuz));
   } catch (hata) {
     sonuc.hatalar.push(yol + ': fabrika arayüzü okunamadı: ' + hata.message);
