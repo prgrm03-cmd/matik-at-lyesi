@@ -98,7 +98,9 @@ test('K-04: listede olmayan widget dosyası kırmızı', async t => {
 
 test('K-04: yeni planlı dosyada tanımsız modül export adı sessiz kabul edilmez', async t => {
   const kok = geciciDepo(t);
+  const liste = structuredClone(IMZA_LISTESI);
+  liste.moduller.find(tanim => tanim.yol === 'widget/aciTablosu.js').disarim = null;
   writeFileSync(join(kok, 'widget/aciTablosu.js'), 'export function aciTablosu(ayar) {}\n');
-  const sonuc = await imzaDogrula(kok);
+  const sonuc = await imzaDogrula(kok, liste);
   assert.ok(sonuc.hatalar.some(hata => hata.includes('export eşlemesi için ADT gerekli')));
 });

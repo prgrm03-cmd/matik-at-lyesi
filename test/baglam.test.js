@@ -38,9 +38,6 @@ describe('hizmetleriOlustur', () => {
 describe('hizmetleriOlustur', () => {
   it('sonraki biletlere ait bütün fabrikalar tanımlı hata koduyla bekler', () => {
     const { ctx } = kur();
-    for (const ad of ['aciTablosu']) {
-      assert.throws(() => ctx.widget[ad]({}), { message: 'IMZA_EKSIK' });
-    }
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
       assert.throws(() => ctx.defter[ad]({}), { message: 'IMZA_EKSIK' });
     }

@@ -195,7 +195,12 @@
     {
       "yol": "widget/aciTablosu.js",
       "arayuz": "AciTablosu",
-      "disarim": null
+      "disarim": {
+        "aciTablosuOlustur": 2
+      },
+      "fabrika": "aciTablosuOlustur",
+      "argumanlar": [{ "satir": 2, "sutunlar": ["ad", "olcu"] }],
+      "kaynak": "ADT-014"
     },
     {
       "yol": "widget/pergel.js",

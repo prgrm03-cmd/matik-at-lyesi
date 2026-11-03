@@ -185,13 +185,11 @@ describe('ctxSahteOlustur', () => {
     assert.equal(sahneKaydi(ctx).sayac.sayi, 1);
   });
 
-  it('açı tablosunu ve Defter fabrikalarını bekleyen imza olarak korur', () => {
+  it('açı tablosunu kurar ve Defter fabrikalarını bekleyen imza olarak korur', () => {
     const ctx = sahteKur();
-    // K-08 aciTablosu fabrikasini bagladiginda bu bekleme beklentisini guncelleyecek.
-    assert.throws(() => ctx.widget.aciTablosu({}), hata => {
-      assert.equal(hata.message, 'IMZA_EKSIK');
-      return bekleyenMi(hata);
-    });
+    const tablo = ctx.widget.aciTablosu({ satir: 1, sutunlar: ['ad'] });
+    assert.equal(tablo.satirlar.length, 1);
+    assert.equal(tablo.doluMu(), false);
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
       assert.throws(() => ctx.defter[ad]({}), bekleyenMi);
     }
