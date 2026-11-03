@@ -40,7 +40,6 @@ test('K-04: imza listesi sözleşme §3.2/3.3/3.4/4.1 kaynaklarıyla eşleşir',
 test('K-04: mevcut D01, geo ve lazer geçer; eksik dosyalar bekleniyor', async () => {
   const sonuc = await imzaDogrula(KOK);
   assert.deepEqual(sonuc.hatalar, []);
-  assert.ok(sonuc.uyarilar.includes('widget/aciolcer.js: bekleniyor'));
   assert.ok(sonuc.uyarilar.includes('defter/defter.js: bekleniyor'));
 });
 
@@ -99,7 +98,7 @@ test('K-04: listede olmayan widget dosyası kırmızı', async t => {
 
 test('K-04: yeni planlı dosyada tanımsız modül export adı sessiz kabul edilmez', async t => {
   const kok = geciciDepo(t);
-  writeFileSync(join(kok, 'widget/aciolcer.js'), 'export function aciolcer(ayar) {}\n');
+  writeFileSync(join(kok, 'widget/aciTablosu.js'), 'export function aciTablosu(ayar) {}\n');
   const sonuc = await imzaDogrula(kok);
   assert.ok(sonuc.hatalar.some(hata => hata.includes('export eşlemesi için ADT gerekli')));
 });
