@@ -4,6 +4,7 @@ import { lazerOlustur } from '../widget/lazer.js';
 import { aciolcerOlustur } from '../widget/aciolcer.js';
 import { pergelOlustur } from '../widget/pergel.js';
 import { gonyeOlustur } from '../widget/gonye.js';
+import { aciTablosuOlustur } from '../widget/aciTablosu.js';
 import { bekleyenFabrika as bekleyen } from './sahteKayit.js';
 
 function pergelBagla(ctx, hizmetler, ayar) {
@@ -16,6 +17,10 @@ function pergelBagla(ctx, hizmetler, ayar) {
   hizmetler.widgetler.push(nesne);
   return nesne;
 }
+
+// ADT-014: tablo sağ sütun payı; bütün değerler tezgâh birimidir.
+const ACI_TABLOSU_TELEFON = Object.freeze({ x: 620, y: 40, genislik: 360 });
+const ACI_TABLOSU_TAHTA = Object.freeze({ x: 660, y: 40, genislik: 320 });
 
 function widgetOlustur(ctx, hizmetler) {
   const veri = ctx.veri;
@@ -49,6 +54,19 @@ function widgetOlustur(ctx, hizmetler) {
   };
 }
 
+function aciTablosuBagla(ctx, hizmetler) {
+  return (ayar) => {
+    if (ctx.veri.bayraklar.olcuKilidi && Array.isArray(ayar?.sutunlar) &&
+        ayar.sutunlar.includes('olcu')) {
+      throw new Error('WIDGET_AYAR_GECERSIZ');
+    }
+    const konum = ctx.mod.tahta ? ACI_TABLOSU_TAHTA : ACI_TABLOSU_TELEFON;
+    const nesne = aciTablosuOlustur(ayar, konum);
+    hizmetler.widgetler.push(nesne);
+    return nesne;
+  };
+}
+
 function matikOlustur(veri, arayuz) {
   return {
     soyle(anahtar, ek) {
@@ -75,6 +93,7 @@ function matikOlustur(veri, arayuz) {
 export function hizmetleriOlustur(ctx, arayuz, ayarlar) {
   const hizmetler = { widgetler: [], defterler: [] };
   ctx.widget = widgetOlustur(ctx, hizmetler);
+  ctx.widget.aciTablosu = aciTablosuBagla(ctx, hizmetler);
   ctx.defter = {
     tahminRafi: bekleyen,
     kuralKarti: bekleyen,

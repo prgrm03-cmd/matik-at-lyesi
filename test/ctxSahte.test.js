@@ -98,12 +98,6 @@ describe('ctxSahteOlustur', () => {
     assert.deepEqual(lazer.gecerMi([{ x: 20, y: 20 }, { x: 40, y: 20 }], 1), [true, false]);
     lazer.ciz(ctx.sahne);
     assert.equal(sahneKaydi(ctx).sayac.parca, 1);
-    for (const ad of ['aciTablosu']) {
-      assert.throws(() => ctx.widget[ad]({}), hata => {
-        assert.equal(hata.message, 'IMZA_EKSIK');
-        return bekleyenMi(hata);
-      });
-    }
     for (const ad of ['tahminRafi', 'kuralKarti', 'sina', 'kisayolYuvasi']) {
       assert.throws(() => ctx.defter[ad]({}), bekleyenMi);
     }

@@ -3,6 +3,7 @@ import { rngOlustur } from './rng.js';
 import { hizmetleriOlustur } from './baglam.js';
 import { araclariHazirla } from './ilerleme.js';
 import { sahteSahneOlustur } from './sahteSahne.js';
+import { aciTablosuOlustur } from '../widget/aciTablosu.js';
 
 const kayitlar = new WeakMap();
 
@@ -39,6 +40,13 @@ export function ctxSahteOlustur(id, veri, seed, secenek) {
     araclar: araclariHazirla(donmus, rng.alt('araclar'), { ilerleme: {} }, mod)
   };
   hizmetleriOlustur(ctx, arayuzOlustur(), { ses: false });
+  ctx.widget.aciTablosu = (ayar) => {
+    if (donmus.bayraklar.olcuKilidi && Array.isArray(ayar?.sutunlar) &&
+        ayar.sutunlar.includes('olcu')) {
+      throw new Error('WIDGET_AYAR_GECERSIZ');
+    }
+    return aciTablosuOlustur(ayar, undefined);
+  };
   kayitlar.set(ctx, kayit);
   return ctx;
 }
