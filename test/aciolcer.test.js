@@ -10,6 +10,7 @@ import * as geo from '../geo/index.js';
 
 const SOKET = Object.freeze({ x: 500, y: 450 });
 const AYAR_HATASI = /^Error: WIDGET_AYAR_GECERSIZ$/;
+const RNG_HATASI = 'aciolcer: rng gerekli (hizasiz veya olcekYonu:rastgele)';
 
 function kur(ayar = {}, olcek = 1) {
   const veri = { id: 'D09a', bayraklar: {}, matik: {}, nedenler: {}, etiketler: {} };
@@ -19,7 +20,6 @@ function kur(ayar = {}, olcek = 1) {
     { soket: SOKET, hizasiz: false, olcekYonu: 'ic', ...ayar }, rngOlustur(17));
   return { w, ctx, sahne: ctx.sahne, kayit: sahneKaydi(ctx) };
 }
-
 function cizilmis(ayar, olcek) {
   const ortam = kur(ayar, olcek);
   ortam.w.ciz(ortam.sahne);
@@ -27,11 +27,9 @@ function cizilmis(ayar, olcek) {
   ortam.r = Math.max(...koseler.map(P => geo.uzaklik(ortam.w.merkez, P)));
   return ortam;
 }
-
 function olay(tur, P, ek = {}) {
   return { tur, x: P.x, y: P.y, ...ek };
 }
-
 function yakin(a, b) {
   dogrula.ok(Math.abs(a - b) < 1e-7, a + ' / ' + b);
 }
@@ -50,7 +48,6 @@ describe('aciolcerOlustur', () => {
     dogrula.equal(w.donus, 0);
     dogrula.equal(w.olcekYonu, 'ic');
   });
-
   it('Bin seed aynı sonucu üretir; dönüş, kayma ve merkez dışlaması korunur.', () => {
     const kovalar = Array(12).fill(0);
     const yonler = new Set();
@@ -73,7 +70,6 @@ describe('aciolcerOlustur', () => {
     dogrula.ok(yonler.size > 320);
     dogrula.ok(Math.abs(xToplam / 1000) < 20 && Math.abs(yToplam / 1000) < 20);
   });
-
   it('Rastgele ölçek bin seed içinde yaklaşık yarı yarıya seçilir.', () => {
     let ic = 0;
     for (let seed = 1; seed <= 1000; seed++) {
@@ -86,15 +82,16 @@ describe('aciolcerOlustur', () => {
       dogrula.equal(aciolcerOlustur({ olcekYonu }, rngOlustur(1)).olcekYonu, olcekYonu);
     }
   });
-
   it('RNG ve ayar doğrulaması rastgeleliği sessiz bir varsayılanla değiştirmez.', () => {
-    dogrula.throws(() => aciolcerOlustur(), AYAR_HATASI);
-    dogrula.throws(() => aciolcerOlustur({ hizasiz: false }), AYAR_HATASI);
+    dogrula.throws(() => aciolcerOlustur(), { message: RNG_HATASI });
+    dogrula.throws(() => aciolcerOlustur({ hizasiz: false }), { message: RNG_HATASI });
+    dogrula.throws(() => aciolcerOlustur({ olcekYonu: 'ic' }), { message: RNG_HATASI });
     for (const ayar of [null, [], { hizasiz: 'yes' }, { kilitli: 1 }, { r: 240 },
       { olcekYonu: 'saat' }, { soket: { x: NaN, y: 5 } }, { toleransGoster: 'yes' }]) {
       dogrula.throws(() => aciolcerOlustur(ayar, rngOlustur(1)), AYAR_HATASI);
     }
-    dogrula.throws(() => aciolcerOlustur({}, {}), AYAR_HATASI);
+    dogrula.throws(() => aciolcerOlustur({}, {}), { message: RNG_HATASI });
+    dogrula.throws(() => aciolcerOlustur({ soket: { x: NaN, y: 5 } }), AYAR_HATASI);
     const { w } = kur();
     w.donus = -1.2;
     dogrula.equal(w.donus, 359);
@@ -102,6 +99,22 @@ describe('aciolcerOlustur', () => {
     dogrula.equal(w.donus, 0);
     dogrula.throws(() => { w.donus = Infinity; }, AYAR_HATASI);
     dogrula.throws(() => { w.olcekYonu = 'rastgele'; }, AYAR_HATASI);
+  });
+  it('Hizalı ve sabit ölçekli widget RNG olmadan kurulur, verilen RNG tüketilmez.', () => {
+    const rng = { tam: dogrula.fail, bool: dogrula.fail };
+    for (const olcekYonu of ['ic', 'dis']) {
+      const ayar = { soket: SOKET, hizasiz: false, olcekYonu };
+      const w = aciolcerOlustur(ayar);
+      dogrula.deepEqual(w.durum(), { merkez: SOKET, donus: 0, olcekYonu });
+      dogrula.deepEqual(aciolcerOlustur(ayar, rng).durum(), w.durum());
+    }
+  });
+  it('Hizalı ve rastgele ölçekli widget eksik RNG hatasında araç adını ve gereği belirtir.', () => {
+    const ayar = { hizasiz: false, olcekYonu: 'rastgele' };
+    for (const rng of [undefined, null, {}, { tam() {} }, { bool() {} },
+      { tam: 1, bool() {} }, { tam() {}, bool: false }]) {
+      dogrula.throws(() => aciolcerOlustur(ayar, rng), { message: RNG_HATASI });
+    }
   });
 });
 

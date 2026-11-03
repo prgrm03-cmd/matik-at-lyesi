@@ -74,10 +74,12 @@ function ayarDogrula(ayar, rng) {
     toleransGoster = false } = a;
   if ([hizasiz, kilitli, toleransGoster].some(v => typeof v !== 'boolean')) gecersiz();
   if (!['ic', 'dis', 'rastgele'].includes(olcekYonu)) gecersiz();
+  const soket = noktaKopyala(a.soket === undefined ? VARSAYILAN_SOKET : a.soket);
   if ((hizasiz || olcekYonu === 'rastgele') &&
-      (!rng || typeof rng.tam !== 'function' || typeof rng.bool !== 'function')) gecersiz();
-  return { soket: noktaKopyala(a.soket === undefined ? VARSAYILAN_SOKET : a.soket),
-    hizasiz, olcekYonu, kilitli, toleransGoster };
+      (!rng || typeof rng.tam !== 'function' || typeof rng.bool !== 'function')) {
+    throw new Error('aciolcer: rng gerekli (hizasiz veya olcekYonu:rastgele)');
+  }
+  return { soket, hizasiz, olcekYonu, kilitli, toleransGoster };
 }
 
 function merkezUret(soket, rng, tol) {
