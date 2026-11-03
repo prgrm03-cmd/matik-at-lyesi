@@ -28,3 +28,7 @@ Hangi akışın verileceği (ana `ctx.rng` mi, `rng.alt('widget:aciolcer')` alt 
 - K-05 (PR #8) — birleşme sırası: imza PR → PR #8
 - K-05b (bağlantı PR'ı) — CX-M: ana akış / `rng.alt('widget:aciolcer')` kararı, tohum testi
 - `docs/sozlesme_v1.md` §3.3 — "fabrika ikinci parametre rng" maddesi (Hakem yazar)
+
+## Ek A (2026-11-03, Hakem)
+
+rng, rastgelelik gerektiren her ayarda (`hizasiz:true` veya `olcekYonu:'rastgele'`) zorunlu ve tüketilir; `hizasiz:false && olcekYonu∈{ic,dis}` ise tüketilmez, `undefined` geçerlidir. Eksik rng hatası widget adını ve "rng gerekli" ifadesini içerir (örn. `aciolcer: rng gerekli (hizasiz veya olcekYonu:rastgele)`). ADT gövdesi değişmez; bu ek, K-05 (PR #8) incelemesinde görülen dar ifadeyi genişletir.
