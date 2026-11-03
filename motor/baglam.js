@@ -2,7 +2,20 @@ import { sembolOlustur } from './sembolPaneli.js';
 import { sesOlustur } from './ses.js';
 import { lazerOlustur } from '../widget/lazer.js';
 import { aciolcerOlustur } from '../widget/aciolcer.js';
+import { pergelOlustur } from '../widget/pergel.js';
+import { gonyeOlustur } from '../widget/gonye.js';
 import { bekleyenFabrika as bekleyen } from './sahteKayit.js';
+
+function pergelBagla(ctx, hizmetler, ayar) {
+  if (ctx.veri.bayraklar.olcuKilidi === true && ayar?.olcuKilidi === false) {
+    throw new Error('OLCU_KILIDI_IHLALI');
+  }
+  const nesne = pergelOlustur(ayar, {
+    pxToBirim: ctx.sahne.pxToBirim, sembol: ctx.sembol
+  });
+  hizmetler.widgetler.push(nesne);
+  return nesne;
+}
 
 function widgetOlustur(ctx, hizmetler) {
   const veri = ctx.veri;
@@ -20,8 +33,14 @@ function widgetOlustur(ctx, hizmetler) {
       return nesne;
     },
     aciTablosu: bekleyen,
-    pergel: bekleyen,
-    gonye: bekleyen,
+    pergel(ayar) { return pergelBagla(ctx, hizmetler, ayar); },
+    gonye(ayar) {
+      const nesne = gonyeOlustur(ayar, {
+        pxToBirim: ctx.sahne.pxToBirim, sembol: ctx.sembol
+      });
+      hizmetler.widgetler.push(nesne);
+      return nesne;
+    },
     lazer(ayar) {
       const nesne = lazerOlustur(ayar, ctx.sembol);
       hizmetler.widgetler.push(nesne);

@@ -200,12 +200,36 @@
     {
       "yol": "widget/pergel.js",
       "arayuz": "Pergel",
-      "disarim": null
+      "disarim": {
+        "pergelOlustur": 2
+      },
+      "fabrika": "pergelOlustur",
+      "argumanlar": [
+        {
+          "olcuKilidi": false
+        },
+        {
+          "pxToBirim": "birim"
+        }
+      ],
+      "kaynak": "ADT-013"
     },
     {
       "yol": "widget/gonye.js",
       "arayuz": "Gonye",
-      "disarim": null
+      "disarim": {
+        "gonyeOlustur": 2
+      },
+      "fabrika": "gonyeOlustur",
+      "argumanlar": [
+        {
+          "dogru": { "A": { "x": 200, "y": 200 }, "yon": 0 }
+        },
+        {
+          "pxToBirim": "birim"
+        }
+      ],
+      "kaynak": "ADT-013"
     },
     {
       "yol": "widget/lazer.js",

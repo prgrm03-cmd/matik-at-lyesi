@@ -52,7 +52,7 @@ describe('kuruKos', () => {
 describe('kuruKos', () => {
   it('yer tutucuyu atlar ancak aynı kodlu sıradan hatayı kırmızı sayar', () => {
     const { duzenek, veri } = ornek();
-    duzenek.kur = function(ctx, seed) { void seed; ctx.widget.pergel({}); };
+    duzenek.kur = function(ctx, seed) { void seed; ctx.defter.kuralKarti({}); };
     assert.equal(kuruKos(duzenek, veri, 42).atlandi, true);
     duzenek.kur = function(ctx, seed) {
       void ctx; void seed; throw new Error('IMZA_EKSIK');
@@ -68,7 +68,7 @@ describe('kuruKos', () => {
     duzenek.kur = function(ctx, seed) {
       void seed;
       ctx.sahne.sayi({ x: 0, y: 0 }, 90);
-      ctx.widget.pergel({});
+      ctx.defter.kuralKarti({});
     };
     assert.throws(() => kuruKos(duzenek, veri, 42), { message: 'OLCU_KILIDI_IHLALI' });
   });
@@ -160,7 +160,7 @@ describe('ipucuTekrariniDene', () => {
     duzenek.ipucu = function(ctx, seviye) {
       void seviye;
       ctx.sahne.sayi({ x: 0, y: 0 }, 90);
-      ctx.widget.pergel({});
+      ctx.defter.kuralKarti({});
     };
     assert.throws(() => ipucuTekrariniDene(duzenek, veri, 42),
       { message: 'OLCU_KILIDI_IHLALI' });
