@@ -100,6 +100,8 @@ describe('K-04 yasak kanıtları', () => {
     const kotu = "import { x } from '../motor/x.js'; void x;";
     assert.deepEqual(await ornek(t, 'geo/x.js', iyi), { hatalar: [], yasaklar: [] });
     assert.ok((await ornek(t, 'geo/x.js', kotu)).hatalar.length > 0);
+    const dolayli = "import { x } from './../motor/x.js'; void x;";
+    assert.ok((await ornek(t, 'geo/x.js', dolayli)).hatalar.length > 0);
   });
 
   it('motor/x.js depolama erişimi kırmızıdır.', async t => {

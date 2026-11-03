@@ -9,8 +9,9 @@ export const KOMUTLAR = Object.freeze([
   'lint', 'yasak', 'sahiplik', 'satir', 'sema', 'imza', 'test', 'seed', 'boyut'
 ]);
 
-function dalAdi(kok) {
-  if (process.env.GITHUB_HEAD_REF) return process.env.GITHUB_HEAD_REF;
+function dalAdi(kok, ortam) {
+  if (ortam.GITHUB_HEAD_REF) return ortam.GITHUB_HEAD_REF;
+  if (ortam.GITHUB_REF_TYPE === 'branch' && ortam.GITHUB_REF_NAME) return ortam.GITHUB_REF_NAME;
   try {
     return execFileSync('git', ['branch', '--show-current'], { cwd: kok, encoding: 'utf8' }).trim();
   } catch {
@@ -55,7 +56,8 @@ export function check(kok, secenek = {}) {
     const ek = bulgular.length ? ' | ' + bulgular.join(' | ') : '';
     satirlar.push((gecti ? '✓' : '✗') + ' npm run ' + komut + ek);
   }
-  const dal = (secenek.dal || dalAdi(kok) || 'HEAD').replace(/[^A-Za-z0-9._-]/g, '-');
+  const ad = secenek.dal || dalAdi(kok, secenek.ortam || process.env) || 'HEAD';
+  const dal = ad.replace(/[^A-Za-z0-9._-]/g, '-');
   const tarih = secenek.tarih || new Intl.DateTimeFormat('sv-SE', {
     timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit'
   }).format(new Date());

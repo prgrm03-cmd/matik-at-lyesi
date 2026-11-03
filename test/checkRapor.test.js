@@ -62,3 +62,15 @@ test('başarısız komutun stderr bulgusu uzun stdout içinde kaybolmaz', () => 
     assert.ok(sonuc.satirlar.every(satir => satir.includes('ASIL_HATA')));
   } finally { rmSync(kok, { recursive: true, force: true }); }
 });
+
+test('CI detached HEAD koşusunda push dalı rapor adına yansır', () => {
+  const kok = mkdtempSync(join(tmpdir(), 'matik-rapor-'));
+  try {
+    const sonuc = check(kok, {
+      ortam: { GITHUB_REF_TYPE: 'branch', GITHUB_REF_NAME: 'cx-m/K-04-check' },
+      tarih: '2026-11-03',
+      kos: () => ({ status: 0 })
+    });
+    assert.equal(sonuc.yol, join(kok, 'docs/check/cx-m-K-04-check-2026-11-03.txt'));
+  } finally { rmSync(kok, { recursive: true, force: true }); }
+});
