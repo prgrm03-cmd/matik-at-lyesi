@@ -1,0 +1,9 @@
+[
+  { "tur": "bas", "x": 342, "y": 659, "hedef": "lazerA" },
+  { "tur": "surukle", "x": 342, "y": 659, "dx": 0, "dy": 0, "hedef": "lazerA" },
+  { "tur": "birak", "x": 342, "y": 659, "hedef": "lazerA" },
+  { "tur": "bas", "x": 640, "y": 423, "hedef": "lazerB" },
+  { "tur": "surukle", "x": 640, "y": 423, "dx": 0, "dy": 0, "hedef": "lazerB" },
+  { "tur": "birak", "x": 640, "y": 423, "hedef": "lazerB" },
+  { "tur": "dugme", "x": 500, "y": 950, "dugmeId": "calistir" }
+]
