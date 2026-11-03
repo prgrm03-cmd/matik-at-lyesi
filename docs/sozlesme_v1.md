@@ -385,7 +385,7 @@ Ortak kalıp: fabrika `ctx.widget.X(ayar) → Nesne`; nesne `ciz(sahne)`, `girdi
  */
 
 // lazer.js
-/** @typedef {{ mod?:'parca'|'isin'|'dogru', donenIsin?:boolean (D03), carkAdim?:number }} LazerAyar */
+/** @typedef {{ mod?:'parca'|'isin'|'dogru', donenIsin?:boolean (D03), carkAdim?:number, sabitA?:boolean }} LazerAyar */ // sabitA: lazerA sürüklenemez, varsayılan false [v1.0.x, ADT-016]
 /** @typedef {Object} Lazer
  * @property {'parca'|'isin'|'dogru'} mod
  * @property {Nokta|null} A
