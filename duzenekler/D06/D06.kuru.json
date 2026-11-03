@@ -1,0 +1,7 @@
+[
+  {"tur": "dugme", "dugmeId": "dikme", "x": 0, "y": 0},
+  {"tur": "bas", "hedef": "damlaUc", "x": 657.036892145396, "y": 608.7907293049178},
+  {"tur": "surukle", "hedef": "damlaUc", "x": 570.9999999999998, "y": 534.0},
+  {"tur": "birak", "hedef": "damlaUc", "x": 570.9999999999998, "y": 534.0},
+  {"tur": "dugme", "dugmeId": "calistir", "x": 0, "y": 0}
+]
