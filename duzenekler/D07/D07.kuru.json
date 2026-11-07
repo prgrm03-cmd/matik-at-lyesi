@@ -1,0 +1,19 @@
+[
+  { "tur": "bas", "hedef": "uc1", "x": 0, "y": 0 },
+  { "tur": "surukle", "hedef": "uc1", "x": 0, "y": 0 },
+  { "tur": "birak", "hedef": "uc1", "x": 0, "y": 0 },
+  { "tur": "dugme", "dugmeId": "pergelAc", "x": 0, "y": 0 },
+  { "tur": "bas", "hedef": "uc2", "x": 0, "y": 0 },
+  { "tur": "surukle", "hedef": "uc2", "x": 0, "y": 0 },
+  { "tur": "birak", "hedef": "uc2", "x": 0, "y": 0 },
+  { "tur": "bas", "hedef": "uc3", "x": 0, "y": 0 },
+  { "tur": "surukle", "hedef": "uc3", "x": 0, "y": 0 },
+  { "tur": "birak", "hedef": "uc3", "x": 0, "y": 0 },
+  { "tur": "bas", "hedef": "lazerA", "x": 0, "y": 0 },
+  { "tur": "surukle", "hedef": "lazerA", "x": 0, "y": 0 },
+  { "tur": "birak", "hedef": "lazerA", "x": 0, "y": 0 },
+  { "tur": "bas", "hedef": "lazerB", "x": 0, "y": 0 },
+  { "tur": "surukle", "hedef": "lazerB", "x": 0, "y": 0 },
+  { "tur": "birak", "hedef": "lazerB", "x": 0, "y": 0 },
+  { "tur": "dugme", "dugmeId": "calistir", "x": 0, "y": 0 }
+]

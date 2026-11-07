@@ -1,0 +1,85 @@
+{
+  "semaSurumu": "1.0",
+  "id": "D07",
+  "kod": "D07",
+  "surum": "1.0.0",
+  "arac": "C",
+  "baslik": "Tren Rayı",
+  "zorluk": 2,
+  "sureDk": 3,
+  "kapsam": ["5.3.2", "5.3.4"],
+  "turSayisi": 3,
+  "bayraklar": {
+    "olcuKilidi": true,
+    "kartSayisi": 1,
+    "tahminRafi": false,
+    "sinama": true,
+    "sensorSokme": false,
+    "aciolcerGorunur": false,
+    "yanParca": false
+  },
+  "kartlar": {
+    "paralel": {
+      "kalip": "Bir doğruya eşit uzaklıktaki noktalardan geçen doğru ilkiyle [kesisme] (d // k)",
+      "disliler": [
+        {
+          "ad": "kesisme",
+          "secenekler": ["kesismez", "kesisir"]
+        }
+      ],
+      "dogru": {
+        "kesisme": "kesismez"
+      }
+    }
+  },
+  "matik": {
+    "giris": "İkinci rayı yamuk döşersem tren yan yatar! Üç yerden dik çık, hepsini aynı boyda kes.",
+    "basari": "İki ray hiç buluşmadı, tren rahat. Paralellik böyle bir şey.",
+    "tekrar": "Ray başka yöne döndü. Dikmeleri yeniden döşe, pergelin kilidini unutma.",
+    "sinamaBasladi": "Kural kartını üç yeni ray örneğiyle deniyorum.",
+    "sinamaTamam": "Üç örnekte de eşit uzaklıktaki raylar hiç buluşmadı.",
+    "karsiOrnek": "Bu örnekte eşit uzaklıktaki doğrular birbirine değmiyor, kartı kontrol et."
+  },
+  "ipucu": [
+    {
+      "vurgu": ["uc2"],
+      "ne": "Gönyeyi raya oturtup pimden dik doğrultuda hayalet halkaya doğru uç çek."
+    },
+    {
+      "metin": "Pergeli ilk dikme kadar aç, kilitle, ötekilere taşı."
+    },
+    {
+      "ne": "İki dikme otomatik döşenir, pergel ilk dikmeye kilitlenir; üçüncü dikme, lazer ve Çalıştır öğrencinin."
+    }
+  ],
+  "nedenler": {
+    "tamam": "İki ray hiç buluşmadı, tren rahat. Paralellik böyle bir şey.",
+    "eksik": "Üç pimden de rayın dışına birer dikme çıkmalısın.",
+    "dikDegil": "Dikmeler raya tam dik değil; gönyeyi raya oturtarak çek.",
+    "pergelAcik": "Eş uzunluğu taşımak için pergeli ilk dikmeye açıp kilitlemelisin.",
+    "esDegil": "Dikmelerin boyları birbirine eş değil; kilitli pergelle aynı boyda kes.",
+    "tarafFarkli": "Dikmelerin üçü de rayın aynı tarafında olmalı.",
+    "kYok": "Lazer doğrusunu üç dikmenin ucundan da geçecek biçimde yerleştir.",
+    "kesisir": "İkinci ray ilkiyle paralel uzanmıyor; uçları ve lazeri hizala.",
+    "calistirilmadi": "Treni rayların üzerinde yürütmek için Çalıştır düğmesine bas.",
+    "kartYok": "Defterdeki kural kartını yerine takmalısın.",
+    "kartTers": "Kural kartındaki seçimi gözleminle uyumlu olacak biçimde çevir.",
+    "sinaYok": "Kural kartını doğrulamak için Sına düğmesine bas."
+  },
+  "parametreler": {
+    "t1": { "min": -150, "max": -70 },
+    "t2": { "min": -30, "max": 30 },
+    "t3": { "min": 70, "max": 150 },
+    "VARSAYILAN_BOY": { "min": 80, "max": 80 },
+    "UC_EN_KISA": { "min": 24, "max": 24 },
+    "sure": { "min": 1200, "max": 1200 }
+  },
+  "etiketler": {
+    "pergelAc": "Pergeli dikmeye aç",
+    "calistir": "Çalıştır",
+    "sina": "Sına",
+    "ray": "ray",
+    "k": "k"
+  },
+  "notlar": "Sınır: uzaklık sayısı, ölçü, π yok. Eş uzunluk pergel kilidiyle taşınır, paralellik lazer doğrusunun kesişmemesiyle gözlenir. Yan parça ertelendi."
+}
