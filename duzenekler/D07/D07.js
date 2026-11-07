@@ -1,6 +1,6 @@
 // D07 · Tren Rayı · sahip GM-D · sözleşme v1.0
 export const id = 'D07';
-export const surum = '1.0.0';
+export const surum = '1.0.1';
 
 const RAY_ORTA = { x: 400, y: 260 };
 const RAY_YARI = 200;
@@ -11,7 +11,7 @@ const BAG = new WeakMap();
 
 export function kur(ctx, seed) {
   void seed;
-  const { rastgeleEgim, ilerle } = ctx.geo;
+  const { rastgeleEgim } = ctx.geo;
   const rng = ctx.rng;
   const yon = rastgeleEgim(rng);
   const t1 = rng.tam(-150, -70);
@@ -19,9 +19,9 @@ export function kur(ctx, seed) {
   const t3 = rng.tam(70, 150);
   const ray = { A: { x: RAY_ORTA.x, y: RAY_ORTA.y }, yon };
   const pimler = [
-    ilerle(RAY_ORTA, yon, t1),
-    ilerle(RAY_ORTA, yon, t2),
-    ilerle(RAY_ORTA, yon, t3)
+    imzaliIlerle(ctx, RAY_ORTA, yon, t1),
+    imzaliIlerle(ctx, RAY_ORTA, yon, t2),
+    imzaliIlerle(ctx, RAY_ORTA, yon, t3)
   ];
   const w = {
     gonye: ctx.widget.gonye({ dogru: ray }),
@@ -39,6 +39,14 @@ export function kur(ctx, seed) {
     ray, pimler, dikmeler: [null, null, null], surukle: null, secili: null,
     calisti: false, ilerleme: 0, sapma: 0, ipucu: 0, kart, sinama
   };
+}
+
+function imzaliIlerle(ctx, P, yon, t) {
+  if (t === 0) return { x: P.x, y: P.y };
+  const { aciNormalize, ilerle } = ctx.geo;
+  return t > 0
+    ? ilerle(P, aciNormalize(yon), t)
+    : ilerle(P, aciNormalize(yon + 180), -t);
 }
 
 function tarafYonu(ctx, ray, taraf) {
@@ -120,10 +128,10 @@ function kBul(w) {
 }
 
 function kParalelMi(ctx, k, ray) {
-  const { paralelMi, ilerle, hangiTarafta, TOLERANS } = ctx.geo;
+  const { paralelMi, hangiTarafta, TOLERANS } = ctx.geo;
   if (!paralelMi(k.yon, ray.yon, TOLERANS.dikme)) return false;
-  const u1 = ilerle(ray.A, ray.yon, RAY_YARI);
-  const u2 = ilerle(ray.A, ray.yon, -RAY_YARI);
+  const u1 = imzaliIlerle(ctx, ray.A, ray.yon, RAY_YARI);
+  const u2 = imzaliIlerle(ctx, ray.A, ray.yon, -RAY_YARI);
   const s1 = hangiTarafta(u1, k);
   const s2 = hangiTarafta(u2, k);
   return s1 !== 0 && s1 === s2;
@@ -171,13 +179,12 @@ function trenKonum(ctx, d, t) {
 }
 
 function ornekCiz(ctx, sahne, dDogru, kDogru, noktalar, uclarN) {
-  const { ilerle } = ctx.geo;
   sahne.dogru(dDogru.A, dDogru.yon, { renk: 'gri', kalinlik: 'kalin' });
   for (let i = 0; i < 3; i++) {
     sahne.parca(noktalar[i], uclarN[i], { renk: 'mavi', kalinlik: 'ince' });
   }
-  const k1 = ilerle(kDogru.A, kDogru.yon, RAY_YARI);
-  const k2 = ilerle(kDogru.A, kDogru.yon, -RAY_YARI);
+  const k1 = imzaliIlerle(ctx, kDogru.A, kDogru.yon, RAY_YARI);
+  const k2 = imzaliIlerle(ctx, kDogru.A, kDogru.yon, -RAY_YARI);
   sahne.parca(k2, k1, { renk: 'turuncu' });
 }
 
@@ -189,7 +196,7 @@ function ureticiYap(ctx) {
     const r = rng.tam(40, 110);
     const tList = [rng.tam(-150, -70), rng.tam(-30, 30), rng.tam(70, 150)];
     const dikYon = tarafYonu(ctx, dDogru, 1);
-    const noktalar = tList.map(ti => ilerle(dDogru.A, dDogru.yon, ti));
+    const noktalar = tList.map(ti => imzaliIlerle(ctx, dDogru.A, dDogru.yon, ti));
     const uclarN = noktalar.map(P => ilerle(P, dikYon, r));
     const kDogru = { A: uclarN[0], yon: dDogru.yon };
     const durumStr = kParalelMi(ctx, kDogru, dDogru) ? 'kesismez' : 'kesisir';

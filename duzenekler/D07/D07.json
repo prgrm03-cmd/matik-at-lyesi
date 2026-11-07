@@ -2,7 +2,7 @@
   "semaSurumu": "1.0",
   "id": "D07",
   "kod": "D07",
-  "surum": "1.0.0",
+  "surum": "1.0.1",
   "arac": "C",
   "baslik": "Tren Rayı",
   "zorluk": 2,
@@ -33,7 +33,7 @@
     }
   },
   "matik": {
-    "giris": "İkinci rayı yamuk döşersem tren yan yatar! Üç yerden dik çık, hepsini aynı boyda kes.",
+    "giris": "İkinci rayı eğik döşersem tren yan yatar! Üç yerden dik çık, hepsini aynı boyda kes.",
     "basari": "İki ray hiç buluşmadı, tren rahat. Paralellik böyle bir şey.",
     "tekrar": "Ray başka yöne döndü. Dikmeleri yeniden döşe, pergelin kilidini unutma.",
     "sinamaBasladi": "Kural kartını üç yeni ray örneğiyle deniyorum.",
