@@ -137,6 +137,7 @@ function turuKur(oturum, seed) {
   ctx.durum = {};
   oturum.hizmetler.widgetler.length = 0;
   oturum.hizmetler.defterler.length = 0;
+  ana.arayuz.defterTemizle?.();
   duzenek.kur(ctx, seed);
   if (ctx.mod.tahta) duzenek.tahta(ctx, ana.ayarlar);
   oturum.ipucu = 0;
@@ -219,6 +220,7 @@ function sonucuDogrula(ctx, sonuc) {
 async function calistirmayiYurut(oturum) {
   const { ctx, duzenek, ana } = oturum;
   oturum.hizmetler.defterler.forEach(d => typeof d.kilitle === 'function' && d.kilitle());
+  ana.arayuz.defterKilitle?.();
   const animasyon = duzenek.calistir(ctx);
   await canlandir(oturum, animasyon);
   if (!oturum.canli) throw new Error('DUZENEK_YOK');
