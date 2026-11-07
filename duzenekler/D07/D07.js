@@ -1,6 +1,6 @@
 // D07 · Tren Rayı · sahip GM-D · sözleşme v1.0
 export const id = 'D07';
-export const surum = '1.0.1';
+export const surum = '1.0.2';
 
 const RAY_ORTA = { x: 400, y: 260 };
 const RAY_YARI = 200;
@@ -44,9 +44,7 @@ export function kur(ctx, seed) {
 function imzaliIlerle(ctx, P, yon, t) {
   if (t === 0) return { x: P.x, y: P.y };
   const { aciNormalize, ilerle } = ctx.geo;
-  return t > 0
-    ? ilerle(P, aciNormalize(yon), t)
-    : ilerle(P, aciNormalize(yon + 180), -t);
+  return t > 0 ? ilerle(P, aciNormalize(yon), t) : ilerle(P, aciNormalize(yon + 180), -t);
 }
 
 function tarafYonu(ctx, ray, taraf) {
@@ -91,10 +89,9 @@ function hepsiVar(ctx, d) {
   for (let i = 0; i < 3; i++) {
     if (esitMi(m[i].A, m[i].B, eps)) return false;
   }
-  if (esitMi(m[0].B, m[1].B, eps)) return false;
-  if (esitMi(m[1].B, m[2].B, eps)) return false;
-  if (esitMi(m[0].B, m[2].B, eps)) return false;
-  return true;
+  return !esitMi(m[0].B, m[1].B, eps) &&
+    !esitMi(m[1].B, m[2].B, eps) &&
+    !esitMi(m[0].B, m[2].B, eps);
 }
 
 function hepsiDik(ctx, d, ray) {
@@ -112,8 +109,7 @@ function esBoyMu(ctx, d) {
   const r = uzaklik(d.dikmeler[0].A, d.dikmeler[0].B);
   const limit = TOLERANS.uzunlukOran * r;
   for (let i = 1; i < 3; i++) {
-    const u = uzaklik(d.dikmeler[i].A, d.dikmeler[i].B);
-    if (Math.abs(u - r) > limit) return false;
+    if (Math.abs(uzaklik(d.dikmeler[i].A, d.dikmeler[i].B) - r) > limit) return false;
   }
   return true;
 }
@@ -249,19 +245,16 @@ function cizDikmeler(d, sahne) {
 }
 
 function cizTren(ctx, d, sahne) {
-  if (!d.calisti && d.ilerleme <= 0) return;
-  if (!hepsiVar(ctx, d)) return;
+  if ((!d.calisti && d.ilerleme <= 0) || !hepsiVar(ctx, d)) return;
   const { ilerle } = ctx.geo;
   const tk = trenKonum(ctx, d, d.ilerleme);
   const a = d.ray.yon + d.sapma;
-  const yariBoy = TREN_EN;
-  const yariEn = TREN_EN / 2;
-  const onOrta = ilerle(tk.orta, a, yariBoy);
-  const arkaOrta = ilerle(tk.orta, a + 180, yariBoy);
-  const k1 = ilerle(onOrta, a + 90, yariEn);
-  const k2 = ilerle(onOrta, a - 90, yariEn);
-  const k3 = ilerle(arkaOrta, a - 90, yariEn);
-  const k4 = ilerle(arkaOrta, a + 90, yariEn);
+  const onOrta = ilerle(tk.orta, a, TREN_EN);
+  const arkaOrta = ilerle(tk.orta, a + 180, TREN_EN);
+  const k1 = ilerle(onOrta, a + 90, TREN_EN / 2);
+  const k2 = ilerle(onOrta, a - 90, TREN_EN / 2);
+  const k3 = ilerle(arkaOrta, a - 90, TREN_EN / 2);
+  const k4 = ilerle(arkaOrta, a + 90, TREN_EN / 2);
   sahne.parca(k1, k2, { renk: 'yesil', kalinlik: 'kalin' });
   sahne.parca(k2, k3, { renk: 'yesil', kalinlik: 'kalin' });
   sahne.parca(k3, k4, { renk: 'yesil', kalinlik: 'kalin' });
@@ -289,11 +282,9 @@ function ucGirdi(ctx, d, w, olay) {
   const idx = ['uc1', 'uc2', 'uc3'].indexOf(h);
   if (idx < 0) return;
   const nokta = { x: olay.x, y: olay.y };
-  if (olay.tur === 'bas') {
-    d.surukle = { i: idx, nokta };
-  } else if (olay.tur === 'surukle' && d.surukle) {
-    d.surukle.nokta = nokta;
-  } else if (olay.tur === 'birak' && d.surukle) {
+  if (olay.tur === 'bas') d.surukle = { i: idx, nokta };
+  else if (olay.tur === 'surukle' && d.surukle) d.surukle.nokta = nokta;
+  else if (olay.tur === 'birak' && d.surukle) {
     d.dikmeler[d.surukle.i] = dikmeYap(ctx, d, d.surukle.i, nokta, w);
     d.surukle = null;
   }
@@ -305,8 +296,7 @@ function dugmeGirdi(ctx, d, w, dugmeId) {
     w.pergel.acikligiAl(m.A, m.B);
     w.pergel.kilitle();
   } else if (dugmeId === 'calistir' && hepsiVar(ctx, d)) {
-    const cal = calistir(ctx);
-    cal.bitti();
+    calistir(ctx).bitti();
   } else if (dugmeId === 'sina' && d.kart.takili) {
     const kartAyar = d.kart.ayar();
     ctx.defter.sina(d.kart, ureticiYap(ctx)).then(s => {
@@ -320,20 +310,14 @@ export function girdi(ctx, olay) {
   if (!olay) return;
   const d = ctx.durum;
   const w = BAG.get(ctx);
-  if (w.gonye.girdi(olay)) return;
-  if (w.pergel.girdi(olay)) return;
+  if (w.gonye.girdi(olay) || w.pergel.girdi(olay)) return;
   if (w.lazer.girdi(olay)) {
     d.calisti = false;
     d.ilerleme = 0;
     return;
   }
-  if (olay.tur === 'dugme') {
-    dugmeGirdi(ctx, d, w, olay.dugmeId || olay.ad);
-    return;
-  }
-  if (['bas', 'surukle', 'birak'].includes(olay.tur)) {
-    ucGirdi(ctx, d, w, olay);
-  }
+  if (olay.tur === 'dugme') dugmeGirdi(ctx, d, w, olay.dugmeId || olay.ad);
+  else if (['bas', 'surukle', 'birak'].includes(olay.tur)) ucGirdi(ctx, d, w, olay);
 }
 
 export function calistir(ctx) {
